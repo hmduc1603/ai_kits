@@ -12,11 +12,19 @@ dependencies:
     sdk: flutter
   dart_openai: ^1.5.5
   dio: ^4.0.6
+  is_open_proxy: ^0.0.3
+  objectbox: ^1.6.0
+  objectbox_flutter_libs: any
+  json_annotation: ^4.6.0
+  copy_with_extension: ^4.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  objectbox_generator: ^1.6.2
+  json_serializable: ^6.2.0
+  copy_with_extension_gen: ^4.0.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
