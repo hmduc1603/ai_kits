@@ -1,11 +1,8 @@
 import 'dart:developer';
 import 'package:ai_kits/ai_kits.dart';
-import 'package:ai_kits/src/chat_gpt/entity/chat_gpt_config.dart';
 import 'package:dart_openai/openai.dart';
 import 'package:dio/dio.dart';
 import 'package:is_open_proxy/is_open_proxy.dart';
-
-import 'entity/prompting_entity.dart';
 
 class ChatGPTService {
   static final ChatGPTService _instance = ChatGPTService._internal();
@@ -101,7 +98,11 @@ class ChatGPTService {
     log(prompt, name: 'promptRequest');
     if (_config.shouldUseDirectApi) {
       final result2 = await _promptChatGptRequest(prompt);
-      return result2;
+      if (result2 == null) {
+        return _promptCustomRequest(prompt);
+      } else {
+        return result2;
+      }
     } else {
       final result1 = await _promptCustomRequest(prompt);
       if (result1 == null) {
