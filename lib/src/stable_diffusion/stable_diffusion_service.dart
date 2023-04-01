@@ -4,8 +4,6 @@ import 'package:ai_kits/ai_kits.dart';
 import 'package:ai_kits/src/stable_diffusion/entity/stable_diffusion_config.dart';
 import 'package:dio/dio.dart';
 
-import 'entity/image_entity.dart';
-
 class StableDiffusionService {
   static final StableDiffusionService _instance =
       StableDiffusionService._internal();

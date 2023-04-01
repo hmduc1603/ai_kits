@@ -16,9 +16,14 @@ class LocalStorage {
   Box? box;
 
   Future<void> init() async {
+    if (box != null) {
+      return;
+    }
     // Hive
     final dir = await getApplicationDocumentsDirectory();
     Hive.init('${dir.path}/ai_kits');
+    Hive.registerAdapter(PromptingCounterAdapter());
+    Hive.registerAdapter(ImaginatingCounterAdapter());
     box = await Hive.openBox(_kPrefBoxName);
     return;
   }

@@ -71,7 +71,7 @@ class ChatGPTService {
           model: model,
           messages: [
             OpenAIChatCompletionChoiceMessageModel(
-                content: prompt, role: "user"),
+                role: "user", content: prompt),
           ],
           maxTokens: 1000,
         );

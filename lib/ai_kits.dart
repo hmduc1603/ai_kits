@@ -1,6 +1,7 @@
 library ai_kits;
 
 import 'package:ai_kits/src/chat_gpt/chat_gpt_service.dart';
+import 'package:ai_kits/src/local_storage/local_storage.dart';
 import 'package:ai_kits/src/stable_diffusion/stable_diffusion_service.dart';
 
 import 'ai_kits.dart';
@@ -24,12 +25,13 @@ class AIKits {
 
   late AIKitsAnalysisMixin analysisMixin;
 
-  void init({
+  Future<void> init({
     required AIKitsAnalysisMixin mixin,
     PromptingLimitation? promptingLimitation,
     ImaginatingLimitation? imaginatingLimitation,
-  }) {
+  }) async {
     analysisMixin = mixin;
+    await LocalStorage().init();
     if (promptingLimitation != null) {
       PromptingCountingManager().setUpLimitation(promptingLimitation);
     }
