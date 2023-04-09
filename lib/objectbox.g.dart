@@ -112,7 +112,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(3, 525896355937857294),
       name: 'ChatSession',
-      lastPropertyId: const IdUid(3, 8541672966602051204),
+      lastPropertyId: const IdUid(4, 238554322190816895),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -121,14 +121,14 @@ final _entities = <ModelEntity>[
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 4579458851321007951),
-            name: 'title',
-            type: 9,
-            flags: 0),
-        ModelProperty(
             id: const IdUid(3, 8541672966602051204),
             name: 'createdDate',
             type: 10,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 238554322190816895),
+            name: 'resultsAsJson',
+            type: 30,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -161,7 +161,7 @@ ModelDefinition getObjectBoxModel() {
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [],
+      retiredPropertyUids: const [4579458851321007951],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -270,11 +270,13 @@ ModelDefinition getObjectBoxModel() {
           object.id = id;
         },
         objectToFB: (ChatSession object, fb.Builder fbb) {
-          final titleOffset = fbb.writeString(object.title);
-          fbb.startTable(4);
+          final resultsAsJsonOffset = fbb.writeList(object.resultsAsJson
+              .map(fbb.writeString)
+              .toList(growable: false));
+          fbb.startTable(5);
           fbb.addInt64(0, object.id ?? 0);
-          fbb.addOffset(1, titleOffset);
           fbb.addInt64(2, object.createdDate.millisecondsSinceEpoch);
+          fbb.addOffset(3, resultsAsJsonOffset);
           fbb.finish(fbb.endTable());
           return object.id ?? 0;
         },
@@ -283,8 +285,10 @@ ModelDefinition getObjectBoxModel() {
           final rootOffset = buffer.derefObject(0);
 
           final object = ChatSession(
-              title: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 6, ''),
+              resultsAsJson: const fb.ListReader<String>(
+                      fb.StringReader(asciiOptimization: true),
+                      lazy: false)
+                  .vTableGet(buffer, rootOffset, 10, []),
               createdDate: DateTime.fromMillisecondsSinceEpoch(
                   const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0)))
             ..id =
@@ -365,11 +369,11 @@ class ChatSession_ {
   static final id =
       QueryIntegerProperty<ChatSession>(_entities[2].properties[0]);
 
-  /// see [ChatSession.title]
-  static final title =
-      QueryStringProperty<ChatSession>(_entities[2].properties[1]);
-
   /// see [ChatSession.createdDate]
   static final createdDate =
-      QueryIntegerProperty<ChatSession>(_entities[2].properties[2]);
+      QueryIntegerProperty<ChatSession>(_entities[2].properties[1]);
+
+  /// see [ChatSession.resultsAsJson]
+  static final resultsAsJson =
+      QueryStringVectorProperty<ChatSession>(_entities[2].properties[2]);
 }

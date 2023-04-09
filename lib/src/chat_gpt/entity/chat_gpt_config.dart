@@ -5,6 +5,7 @@ class ChatGPTConfig {
   final List<String> chatGPTKeys;
   final String model;
   final bool shouldUseDirectApi;
+  final bool shouldUseDirectApiOnChat;
   final ChatGPTCustomHost customHost;
   ChatGPTConfig({
     required this.enableTurbo,
@@ -12,6 +13,7 @@ class ChatGPTConfig {
     required this.model,
     required this.shouldUseDirectApi,
     this.customHost = const ChatGPTCustomHost(),
+    this.shouldUseDirectApiOnChat = true,
   });
 }
 

@@ -1,8 +1,10 @@
 import 'package:copy_with_extension/copy_with_extension.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:objectbox/objectbox.dart';
 
 part 'prompting_entity.g.dart';
 
+@JsonSerializable()
 @Entity()
 @CopyWith()
 class PromptingEntity {
@@ -28,4 +30,9 @@ class PromptingEntity {
     this.hasError = false,
     this.hashtags = const [],
   });
+
+  factory PromptingEntity.fromJson(Map<String, dynamic> json) =>
+      _$PromptingEntityFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PromptingEntityToJson(this);
 }

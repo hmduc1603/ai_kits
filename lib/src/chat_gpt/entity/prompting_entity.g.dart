@@ -144,3 +144,36 @@ extension $PromptingEntityCopyWith on PromptingEntity {
   // ignore: library_private_types_in_public_api
   _$PromptingEntityCWProxy get copyWith => _$PromptingEntityCWProxyImpl(this);
 }
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+PromptingEntity _$PromptingEntityFromJson(Map<String, dynamic> json) =>
+    PromptingEntity(
+      mood: json['mood'] as String?,
+      prompt: json['prompt'] as String,
+      id: json['id'] as int?,
+      input: json['input'] as String,
+      rawType: json['rawType'] as String,
+      result: json['result'] as String?,
+      createdDate: DateTime.parse(json['createdDate'] as String),
+      hasError: json['hasError'] as bool? ?? false,
+      hashtags: (json['hashtags'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+    );
+
+Map<String, dynamic> _$PromptingEntityToJson(PromptingEntity instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'rawType': instance.rawType,
+      'prompt': instance.prompt,
+      'input': instance.input,
+      'hashtags': instance.hashtags,
+      'mood': instance.mood,
+      'result': instance.result,
+      'createdDate': instance.createdDate.toIso8601String(),
+      'hasError': instance.hasError,
+    };

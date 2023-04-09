@@ -39,7 +39,9 @@ class ChatGPTService {
     }
     final list = lastPrompts.toList();
     list.add(prompt);
-    final String? result = await _promptTurboRequest(list);
+    final String? result = _config.shouldUseDirectApiOnChat
+        ? await _promptTurboRequest(list)
+        : await _promptCustomRequest(prompt.prompt);
     if (result == null) {
       AIKits().analysisMixin.sendEvent("error_api_prompting_request");
       throw Exception("AI is busy with large requests, please try again later");
