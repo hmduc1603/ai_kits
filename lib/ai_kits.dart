@@ -13,7 +13,9 @@ export 'src/chat_gpt/manager/prompt_counting_manager/prompt_counting_manager.dar
 export 'src/chat_gpt/manager/imagination_counting_manager/imagination_counting_manager.dart';
 export 'src/ai_kits_analysis_mixin.dart';
 export 'src/chat_gpt/manager/prompt_counting_manager/prompting_counter.dart';
-export 'objectbox.g.dart';
+export 'src/chat_gpt/entity/chat_session.dart';
+export 'src/database/database.dart';
+export 'src/chat_gpt/manager/imagination_counting_manager/imaginating_counter.dart';
 
 class AIKits {
   static final AIKits _instance = AIKits._internal();
@@ -32,6 +34,7 @@ class AIKits {
   }) async {
     analysisMixin = mixin;
     await LocalStorage().init();
+    await AIKitsDatabase().init();
     if (promptingLimitation != null) {
       PromptingCountingManager().setUpLimitation(promptingLimitation);
     }

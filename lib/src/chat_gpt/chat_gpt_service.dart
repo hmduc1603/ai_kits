@@ -31,6 +31,51 @@ class ChatGPTService {
     return promptingEntity.copyWith.result(result);
   }
 
+  Future<PromptingEntity> promptAnChat(
+      List<PromptingEntity> lastPrompts, PromptingEntity prompt) async {
+    log('promptAnChat', name: 'ApiService');
+    if (await IsOpenProxy.isOpenProxy) {
+      throw Exception('Please turn off your VPN or Proxy to continue');
+    }
+    final list = lastPrompts.toList();
+    list.add(prompt);
+    final String? result = await _promptTurboRequest(list);
+    if (result == null) {
+      AIKits().analysisMixin.sendEvent("error_api_prompting_request");
+      throw Exception("AI is busy with large requests, please try again later");
+    }
+
+    log("Prompting result: $result", name: "ApiService");
+
+    return prompt.copyWith.result(result);
+  }
+
+  Future<String?> _promptTurboRequest(
+      List<PromptingEntity> promptingEntities) async {
+    AIKits().analysisMixin.sendEvent("prompt_turbo_chat_gpt_request");
+    final listKeys = _config.chatGPTKeys;
+    if (listKeys.isEmpty) {
+      return null;
+    }
+    final String key = (listKeys.toList()..shuffle()).first;
+    try {
+      OpenAI.apiKey = key;
+      final OpenAIChatCompletionModel chatCompletion =
+          await OpenAI.instance.chat.create(
+        model: "gpt-3.5-turbo",
+        messages: promptingEntities
+            .map((e) => OpenAIChatCompletionChoiceMessageModel(
+                content: e.prompt, role: "user"))
+            .toList(),
+        maxTokens: 500,
+      );
+      return chatCompletion.choices.first.message.content.trim();
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
+
   Future<String?> _promptCustomRequest(String prompt) async {
     AIKits().analysisMixin.sendEvent("prompt_custom_request");
     try {

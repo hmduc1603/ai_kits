@@ -22,10 +22,16 @@ class LocalStorage {
     // Hive
     final dir = await getApplicationDocumentsDirectory();
     Hive.init('${dir.path}/ai_kits');
-    Hive.registerAdapter(PromptingCounterAdapter());
-    Hive.registerAdapter(ImaginatingCounterAdapter());
-    box = await Hive.openBox(_kPrefBoxName);
-    return;
+    try {
+      Hive.registerAdapter(PromptingCounterAdapter());
+      Hive.registerAdapter(ImaginatingCounterAdapter());
+      box = await Hive.openBox(_kPrefBoxName);
+    } catch (_) {
+      if (await Hive.boxExists(_kPrefBoxName, path: dir.path)) {
+        await Hive.deleteBoxFromDisk(_kPrefBoxName, path: dir.path);
+        box = await Hive.openBox(_kPrefBoxName);
+      }
+    }
   }
 
   PromptingCounter? get promptingCounter => box?.get(_kPromptingCounter);

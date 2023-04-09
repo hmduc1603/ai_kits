@@ -14,6 +14,7 @@ import 'package:objectbox/internal.dart'; // generated code can access "internal
 import 'package:objectbox/objectbox.dart';
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
+import 'src/chat_gpt/entity/chat_session.dart';
 import 'src/chat_gpt/entity/prompting_entity.dart';
 import 'src/stable_diffusion/entity/image_entity.dart';
 
@@ -107,6 +108,30 @@ final _entities = <ModelEntity>[
             flags: 0)
       ],
       relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(3, 525896355937857294),
+      name: 'ChatSession',
+      lastPropertyId: const IdUid(3, 8541672966602051204),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 7248663862844725630),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 4579458851321007951),
+            name: 'title',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 8541672966602051204),
+            name: 'createdDate',
+            type: 10,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[])
 ];
 
@@ -130,7 +155,7 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(2, 6198307822093762743),
+      lastEntityId: const IdUid(3, 525896355937857294),
       lastIndexId: const IdUid(0, 0),
       lastRelationId: const IdUid(0, 0),
       lastSequenceId: const IdUid(0, 0),
@@ -235,6 +260,37 @@ ModelDefinition getObjectBoxModel() {
               hashtags: const fb.ListReader<String>(fb.StringReader(asciiOptimization: true), lazy: false).vTableGet(buffer, rootOffset, 12, []));
 
           return object;
+        }),
+    ChatSession: EntityDefinition<ChatSession>(
+        model: _entities[2],
+        toOneRelations: (ChatSession object) => [],
+        toManyRelations: (ChatSession object) => {},
+        getId: (ChatSession object) => object.id,
+        setId: (ChatSession object, int id) {
+          object.id = id;
+        },
+        objectToFB: (ChatSession object, fb.Builder fbb) {
+          final titleOffset = fbb.writeString(object.title);
+          fbb.startTable(4);
+          fbb.addInt64(0, object.id ?? 0);
+          fbb.addOffset(1, titleOffset);
+          fbb.addInt64(2, object.createdDate.millisecondsSinceEpoch);
+          fbb.finish(fbb.endTable());
+          return object.id ?? 0;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = ChatSession(
+              title: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 6, ''),
+              createdDate: DateTime.fromMillisecondsSinceEpoch(
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0)))
+            ..id =
+                const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 4);
+
+          return object;
         })
   };
 
@@ -301,4 +357,19 @@ class PromptingEntity_ {
   /// see [PromptingEntity.hasError]
   static final hasError =
       QueryBooleanProperty<PromptingEntity>(_entities[1].properties[8]);
+}
+
+/// [ChatSession] entity fields to define ObjectBox queries.
+class ChatSession_ {
+  /// see [ChatSession.id]
+  static final id =
+      QueryIntegerProperty<ChatSession>(_entities[2].properties[0]);
+
+  /// see [ChatSession.title]
+  static final title =
+      QueryStringProperty<ChatSession>(_entities[2].properties[1]);
+
+  /// see [ChatSession.createdDate]
+  static final createdDate =
+      QueryIntegerProperty<ChatSession>(_entities[2].properties[2]);
 }

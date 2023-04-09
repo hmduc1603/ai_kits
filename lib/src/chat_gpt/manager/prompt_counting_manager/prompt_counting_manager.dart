@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:ai_kits/src/chat_gpt/manager/prompt_counting_manager/prompting_counter.dart';
-import 'package:ai_kits/src/local_storage/local_storage.dart';
 import 'package:json_annotation/json_annotation.dart';
+import '../../../local_storage/local_storage.dart';
 
 part 'prompt_counting_manager.g.dart';
 

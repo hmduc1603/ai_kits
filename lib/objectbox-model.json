@@ -90,9 +90,33 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "3:525896355937857294",
+      "lastPropertyId": "3:8541672966602051204",
+      "name": "ChatSession",
+      "properties": [
+        {
+          "id": "1:7248663862844725630",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4579458851321007951",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:8541672966602051204",
+          "name": "createdDate",
+          "type": 10
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "2:6198307822093762743",
+  "lastEntityId": "3:525896355937857294",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

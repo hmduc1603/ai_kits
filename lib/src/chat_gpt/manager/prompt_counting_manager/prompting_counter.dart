@@ -18,5 +18,3 @@ class PromptingCounter extends HiveObject {
     counting = 0;
   }
 }
-
-
