@@ -9,9 +9,11 @@ part 'prompt_counting_manager.g.dart';
 @JsonSerializable()
 class PromptingLimitation {
   final int dailyPromptingLimit;
+  final int dailyChatLimit;
 
   const PromptingLimitation({
     required this.dailyPromptingLimit,
+    this.dailyChatLimit = 1,
   });
 
   factory PromptingLimitation.fromJson(Map<String, dynamic> json) =>
@@ -30,6 +32,29 @@ class PromptingCountingManager {
 
   setUpLimitation(PromptingLimitation limitation) {
     _limitation = limitation;
+  }
+
+  checkShouldChat(
+      {required Function(bool shouldProceed, PromptingCounter? counter)
+          onShouldProceed}) {
+    bool shouldProceed = false;
+    PromptingCounter? counter = LocalStorage().chatCounter;
+    if (counter == null) {
+      shouldProceed = true;
+    } else {
+      if (counter.updatedDate.day == DateTime.now().day) {
+        if (counter.counting < _limitation.dailyChatLimit) {
+          shouldProceed = true;
+        }
+      } else {
+        // reset to new day
+        counter.resetToNewDay();
+        shouldProceed = true;
+      }
+    }
+    log("checkShouldChat: $shouldProceed - $counter",
+        name: "PromptingCountingManager");
+    onShouldProceed(shouldProceed, counter);
   }
 
   checkShouldProceed(

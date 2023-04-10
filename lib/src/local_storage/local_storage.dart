@@ -12,6 +12,7 @@ class LocalStorage {
   static const _kPrefBoxName = "aiKits";
   static const _kPromptingCounter = 'kPromptingCounter';
   static const _kImaginatingCounter = 'kImaginatingCounter';
+  static const _kChatCounter = '_kChatCounter';
 
   Box? box;
 
@@ -38,6 +39,12 @@ class LocalStorage {
 
   Future<void> setPromptingCounter(PromptingCounter counter) async {
     return box?.put(_kPromptingCounter, counter);
+  }
+
+  PromptingCounter? get chatCounter => box?.get(_kChatCounter);
+
+  Future<void> setChatCounter(PromptingCounter counter) async {
+    return box?.put(_kChatCounter, counter);
   }
 
   ImaginatingCounter? get imaginatingCounter => box?.get(_kImaginatingCounter);

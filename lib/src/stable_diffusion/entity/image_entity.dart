@@ -55,7 +55,7 @@ class ImageEntity {
   // Number of result getting request (max = 3)
   @JsonKey(ignore: true)
   int gettingAttempts = 0;
-  bool get reachMiximumAttempt => gettingAttempts == 3;
+  bool get reachMiximumAttempt => gettingAttempts == 5;
 
   String? get getUrl => urls?["get"];
   String? get canceltUrl => urls?["cancel"];
