@@ -67,7 +67,7 @@ class ChatGPTService {
         model: "gpt-3.5-turbo",
         messages: promptingEntities
             .map((e) => OpenAIChatCompletionChoiceMessageModel(
-                content: e.prompt, role: "user"))
+                content: e.prompt, role: OpenAIChatMessageRole.user))
             .toList(),
         maxTokens: 500,
       );
@@ -96,7 +96,7 @@ class ChatGPTService {
       }
     } catch (e) {
       log(e.toString());
-      AIKits().analysisMixin.sendEvent("error_stealing_request");
+      AIKits().analysisMixin.sendEvent("error_custom_request");
     }
     return null;
   }
@@ -118,7 +118,7 @@ class ChatGPTService {
           model: model,
           messages: [
             OpenAIChatCompletionChoiceMessageModel(
-                role: "user", content: prompt),
+                role: OpenAIChatMessageRole.user, content: prompt),
           ],
           maxTokens: 1000,
         );

@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  dart_openai: ^1.5.5
+  dart_openai: ^1.9.1
   dio: ^4.0.6
   is_open_proxy: ^0.0.3
   objectbox: ^1.6.0

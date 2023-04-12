@@ -92,4 +92,17 @@ class PromptingCountingManager {
       LocalStorage().setPromptingCounter(counter);
     }
   }
+
+  increaseChatCounter({PromptingCounter? counter}) {
+    if (counter == null) {
+      LocalStorage().setChatCounter(PromptingCounter(
+        updatedDate: DateTime.now(),
+        counting: 1,
+      ));
+    } else {
+      counter.counting += 1;
+      counter.updatedDate = DateTime.now();
+      LocalStorage().setChatCounter(counter);
+    }
+  }
 }

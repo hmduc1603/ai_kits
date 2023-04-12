@@ -32,11 +32,18 @@ class AIKitsDatabase extends _AIKitsDatabase {
 
   @override
   Future<void> init() async {
-    final dir = await getApplicationSupportDirectory();
-    if (store?.isClosed() == false) {
-      store?.close();
+    try {
+      final dir = await getApplicationSupportDirectory();
+      if (store?.isClosed() == false) {
+        store?.close();
+      }
+      store = await openStore(directory: '${dir.path}/AIKitsDatabase');
+    } catch (e) {
+      log(e.toString());
+      store?.box<PromptingEntity>().removeAll();
+      store?.box<ImageResult>().removeAll();
+      store?.box<ChatSession>().removeAll();
     }
-    store = await openStore(directory: '${dir.path}/AIKitsDatabase');
   }
 
   @override
