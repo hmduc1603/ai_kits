@@ -112,7 +112,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(3, 525896355937857294),
       name: 'ChatSession',
-      lastPropertyId: const IdUid(4, 238554322190816895),
+      lastPropertyId: const IdUid(5, 5969696846256470571),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -128,6 +128,11 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(4, 238554322190816895),
             name: 'resultsAsJson',
+            type: 30,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 5969696846256470571),
+            name: 'relations',
             type: 30,
             flags: 0)
       ],
@@ -273,10 +278,13 @@ ModelDefinition getObjectBoxModel() {
           final resultsAsJsonOffset = fbb.writeList(object.resultsAsJson
               .map(fbb.writeString)
               .toList(growable: false));
-          fbb.startTable(5);
+          final relationsOffset = fbb.writeList(
+              object.relations.map(fbb.writeString).toList(growable: false));
+          fbb.startTable(6);
           fbb.addInt64(0, object.id ?? 0);
           fbb.addInt64(2, object.createdDate.millisecondsSinceEpoch);
           fbb.addOffset(3, resultsAsJsonOffset);
+          fbb.addOffset(4, relationsOffset);
           fbb.finish(fbb.endTable());
           return object.id ?? 0;
         },
@@ -290,7 +298,11 @@ ModelDefinition getObjectBoxModel() {
                       lazy: false)
                   .vTableGet(buffer, rootOffset, 10, []),
               createdDate: DateTime.fromMillisecondsSinceEpoch(
-                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0)))
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0)),
+              relations: const fb.ListReader<String>(
+                      fb.StringReader(asciiOptimization: true),
+                      lazy: false)
+                  .vTableGet(buffer, rootOffset, 12, []))
             ..id =
                 const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 4);
 
@@ -376,4 +388,8 @@ class ChatSession_ {
   /// see [ChatSession.resultsAsJson]
   static final resultsAsJson =
       QueryStringVectorProperty<ChatSession>(_entities[2].properties[2]);
+
+  /// see [ChatSession.relations]
+  static final relations =
+      QueryStringVectorProperty<ChatSession>(_entities[2].properties[3]);
 }

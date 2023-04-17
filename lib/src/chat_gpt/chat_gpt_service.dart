@@ -22,7 +22,7 @@ class ChatGPTService {
     }
     final String? result = await _promptRequest(promptingEntity.prompt);
     if (result == null) {
-      AIKits().analysisMixin.sendEvent("error_api_prompting_request");
+      AIKits().analysisMixin.sendEvent("error_promptAnInput");
       throw Exception("AI is busy with large requests, please try again later");
     }
 
@@ -43,7 +43,7 @@ class ChatGPTService {
         ? await _promptTurboRequest(list)
         : await _promptCustomRequest(prompt.prompt);
     if (result == null) {
-      AIKits().analysisMixin.sendEvent("error_api_prompting_request");
+      AIKits().analysisMixin.sendEvent("error_promptAnChat");
       throw Exception("AI is busy with large requests, please try again later");
     }
 

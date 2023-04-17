@@ -93,7 +93,7 @@
     },
     {
       "id": "3:525896355937857294",
-      "lastPropertyId": "4:238554322190816895",
+      "lastPropertyId": "5:5969696846256470571",
       "name": "ChatSession",
       "properties": [
         {
@@ -110,6 +110,11 @@
         {
           "id": "4:238554322190816895",
           "name": "resultsAsJson",
+          "type": 30
+        },
+        {
+          "id": "5:5969696846256470571",
+          "name": "relations",
           "type": 30
         }
       ],

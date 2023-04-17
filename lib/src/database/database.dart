@@ -21,6 +21,8 @@ abstract class _AIKitsDatabase {
   Stream<List<ChatSession>>? listenChatSession();
 
   Stream<List<ChatSession>>? listenChatSessionById(int id);
+
+  void removeAllChatSessions();
 }
 
 class AIKitsDatabase extends _AIKitsDatabase {
@@ -118,5 +120,10 @@ class AIKitsDatabase extends _AIKitsDatabase {
     log('saveChatSession', name: 'AIKitsDatabase');
     final id = await store?.box<ChatSession>().putAsync(chatSession);
     return id;
+  }
+
+  @override
+  void removeAllChatSessions() {
+    store?.box<ChatSession>().removeAll();
   }
 }
