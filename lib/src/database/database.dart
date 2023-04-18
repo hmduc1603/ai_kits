@@ -16,7 +16,7 @@ abstract class _AIKitsDatabase {
 
   Future<List<PromptingEntity>?> getLastPrompts(String type);
 
-  Future<int?> saveChatSession(ChatSession chatSession);
+  Future<ChatSession?> saveChatSession(ChatSession chatSession);
 
   Stream<List<ChatSession>>? listenChatSession();
 
@@ -116,10 +116,13 @@ class AIKitsDatabase extends _AIKitsDatabase {
   }
 
   @override
-  Future<int?> saveChatSession(ChatSession chatSession) async {
+  Future<ChatSession?> saveChatSession(ChatSession chatSession) async {
     log('saveChatSession', name: 'AIKitsDatabase');
     final id = await store?.box<ChatSession>().putAsync(chatSession);
-    return id;
+    if (id != null) {
+      return store?.box<ChatSession>().get(id);
+    }
+    return null;
   }
 
   @override

@@ -29,6 +29,12 @@ class ChatSession {
     resultsAsJson = newList;
   }
 
+  updateRelations(List<String> relations) {
+    if (relations.isNotEmpty) {
+      this.relations = relations;
+    }
+  }
+
   List<PromptingEntity> get results {
     return resultsAsJson
         .map((e) => PromptingEntity.fromJson(jsonDecode(e)))
