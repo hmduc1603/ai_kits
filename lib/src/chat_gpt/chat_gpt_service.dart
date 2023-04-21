@@ -132,7 +132,8 @@ class ChatGPTService {
     }
   }
 
-  Future<String?> promptChatGptRequest(String prompt) async {
+  Future<String?> promptChatGptRequest(String prompt,
+      {String? customModel}) async {
     AIKits().analysisMixin.sendEvent("prompt_chat_gpt_request");
     final listKeys = _config.chatGPTKeys;
     if (listKeys.isEmpty) {
@@ -142,7 +143,7 @@ class ChatGPTService {
     try {
       OpenAI.apiKey = key;
       if (_config.enableTurbo) {
-        const model = ChatGPTModel.turbo;
+        final model = customModel ?? ChatGPTModel.turbo;
         AIKits().analysisMixin.sendEvent("prompt_$model");
         final OpenAIChatCompletionModel chatCompletion =
             await OpenAI.instance.chat.create(
@@ -172,10 +173,11 @@ class ChatGPTService {
     }
   }
 
-  Future<String?> promptRequest(String prompt) async {
+  Future<String?> promptRequest(String prompt, {String? customModel}) async {
     log(prompt, name: 'promptRequest');
     if (_config.shouldUseDirectApi) {
-      final result2 = await promptChatGptRequest(prompt);
+      final result2 =
+          await promptChatGptRequest(prompt, customModel: customModel);
       if (result2 == null) {
         return promptCustomRequest(prompt);
       } else {
@@ -184,7 +186,7 @@ class ChatGPTService {
     } else {
       final result1 = await promptCustomRequest(prompt);
       if (result1 == null) {
-        return promptChatGptRequest(prompt);
+        return promptChatGptRequest(prompt, customModel: customModel);
       } else {
         return result1;
       }
