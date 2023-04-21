@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:html';
 
 import 'package:json_annotation/json_annotation.dart';
 
@@ -33,9 +34,16 @@ class ImaginatingCountingManager {
     _limitation = limitation;
   }
 
-  checkShouldProceed(
-      {required Function(bool shouldProceed, ImaginatingCounter? counter)
-          onShouldProceed}) {
+  checkShouldProceed({
+    required Function(bool shouldProceed, ImaginatingCounter? counter)
+        onShouldProceed,
+    required bool isPremium,
+    required VoidCallback onPremiumCallBack,
+  }) {
+    if (isPremium) {
+      onPremiumCallBack();
+      return;
+    }
     bool shouldProceed = false;
     ImaginatingCounter? counter = LocalStorage().imaginatingCounter;
     if (counter == null) {

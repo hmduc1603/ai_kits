@@ -17,6 +17,7 @@ export 'src/chat_gpt/entity/chat_session.dart';
 export 'src/database/database.dart';
 export 'src/chat_gpt/manager/imagination_counting_manager/imaginating_counter.dart';
 export 'src/stable_diffusion/entity/stable_diffusion_config.dart';
+export 'src/chat_gpt/entity/chat_gpt_model.dart';
 
 class AIKits {
   static final AIKits _instance = AIKits._internal();

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:ai_kits/src/chat_gpt/manager/prompt_counting_manager/prompting_counter.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -34,9 +35,16 @@ class PromptingCountingManager {
     _limitation = limitation;
   }
 
-  checkShouldChat(
-      {required Function(bool shouldProceed, PromptingCounter? counter)
-          onShouldProceed}) {
+  checkShouldChat({
+    required Function(bool shouldProceed, PromptingCounter? counter)
+        onShouldProceed,
+    required bool isPremium,
+    required VoidCallback onPremiumCallBack,
+  }) {
+    if (isPremium) {
+      onPremiumCallBack();
+      return;
+    }
     bool shouldProceed = false;
     PromptingCounter? counter = LocalStorage().chatCounter;
     if (counter == null) {
@@ -57,9 +65,16 @@ class PromptingCountingManager {
     onShouldProceed(shouldProceed, counter);
   }
 
-  checkShouldProceed(
-      {required Function(bool shouldProceed, PromptingCounter? counter)
-          onShouldProceed}) {
+  checkShouldProceed({
+    required Function(bool shouldProceed, PromptingCounter? counter)
+        onShouldProceed,
+    required bool isPremium,
+    required VoidCallback onPremiumCallBack,
+  }) {
+    if (isPremium) {
+      onPremiumCallBack();
+      return;
+    }
     bool shouldProceed = false;
     PromptingCounter? counter = LocalStorage().promptingCounter;
     if (counter == null) {
