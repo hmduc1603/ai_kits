@@ -30,6 +30,7 @@ class StabilityAIService {
         .setWidth(_config.imageWidth ?? 512)
         .setEngineType(_config.stabilityEngine)
         .setSampleCount(1)
+        .setUpSteps(_config.steps)
         .build();
     _clientSub?.cancel();
     final completer = Completer<Uint8List?>();
