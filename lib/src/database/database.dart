@@ -10,9 +10,9 @@ abstract class _AIKitsDatabase {
 
   Stream<List<PromptingEntity>>? listenPromptHistories({String? type});
 
-  Future<void> saveImage(ImageResult imageResult);
+  Future<void> saveImage(StabilityResult imageResult);
 
-  Stream<List<ImageResult>>? listenImageHistories();
+  Stream<List<StabilityResult>>? listenImageHistories();
 
   Future<List<PromptingEntity>?> getLastPrompts(String type);
 
@@ -68,9 +68,9 @@ class AIKitsDatabase extends _AIKitsDatabase {
   }
 
   @override
-  Stream<List<ImageResult>>? listenImageHistories() {
+  Stream<List<StabilityResult>>? listenImageHistories() {
     return store
-        ?.box<ImageResult>()
+        ?.box<StabilityResult>()
         .query()
         .watch(triggerImmediately: true)
         .map(
@@ -79,9 +79,9 @@ class AIKitsDatabase extends _AIKitsDatabase {
   }
 
   @override
-  Future<void> saveImage(ImageResult imageResult) async {
+  Future<void> saveImage(StabilityResult imageResult) async {
     log('saveImage', name: 'AIKitsDatabase');
-    await store?.box<ImageResult>().putAsync(imageResult);
+    await store?.box<StabilityResult>().putAsync(imageResult);
   }
 
   @override

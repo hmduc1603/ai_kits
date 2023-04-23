@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:ai_kits/ai_kits.dart';
-import 'package:ai_kits/src/stable_diffusion/entity/stable_diffusion_config.dart';
 import 'package:dio/dio.dart';
+import 'package:is_open_proxy/is_open_proxy.dart';
 
 class StableDiffusionService {
   static final StableDiffusionService _instance =
@@ -14,10 +14,16 @@ class StableDiffusionService {
 
   init(StableDiffusionConfig config) {
     _config = config;
+    ImaginatingCountingManager().setUpLimitation(
+      const ImaginatingLimitation(dailyImaginatingLimitation: 1),
+    );
   }
 
   Future<ImageEntity> getImagination(ImageEntity imageEntity) async {
     log('getImagination', name: 'ApiService');
+    if (await IsOpenProxy.isOpenProxy) {
+      throw Exception('Please turn off your VPN or Proxy to continue');
+    }
     final ImageEntity? result = await _getImagination(imageEntity.getUrl!);
     if (result == null) {
       AIKits().analysisMixin.sendEvent("error_api_imagination_request");

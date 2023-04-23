@@ -10,10 +10,10 @@ part 'imagination_counting_manager.g.dart';
 
 @JsonSerializable()
 class ImaginatingLimitation {
-  final int dailyPromptingLimit;
+  final int dailyImaginatingLimitation;
 
   const ImaginatingLimitation({
-    required this.dailyPromptingLimit,
+    this.dailyImaginatingLimitation = 1,
   });
 
   factory ImaginatingLimitation.fromJson(Map<String, dynamic> json) =>
@@ -50,7 +50,7 @@ class ImaginatingCountingManager {
       shouldProceed = true;
     } else {
       if (counter.updatedDate.day == DateTime.now().day) {
-        if (counter.counting < _limitation.dailyPromptingLimit) {
+        if (counter.counting < _limitation.dailyImaginatingLimitation) {
           shouldProceed = true;
         }
       } else {

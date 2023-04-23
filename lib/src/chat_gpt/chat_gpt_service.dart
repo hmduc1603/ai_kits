@@ -4,8 +4,6 @@ import 'package:dart_openai/openai.dart';
 import 'package:dio/dio.dart';
 import 'package:is_open_proxy/is_open_proxy.dart';
 
-import 'entity/chat_gpt_model.dart';
-
 class ChatGPTService {
   static final ChatGPTService _instance = ChatGPTService._internal();
   ChatGPTService._internal();
@@ -15,6 +13,7 @@ class ChatGPTService {
 
   void init(ChatGPTConfig config) {
     _config = config;
+    PromptingCountingManager().setUpLimitation(config.promptingLimitation);
   }
 
   Future<PromptingEntity> promptAnInput(PromptingEntity promptingEntity) async {
@@ -57,11 +56,7 @@ class ChatGPTService {
   Future<String?> promptTurboRequest(
       List<PromptingEntity> promptingEntities) async {
     AIKits().analysisMixin.sendEvent("prompt_turbo_chat_gpt_request");
-    final listKeys = _config.chatGPTKeys;
-    if (listKeys.isEmpty) {
-      return null;
-    }
-    final String key = (listKeys.toList()..shuffle()).first;
+    final String key = _config.key;
     try {
       OpenAI.apiKey = key;
       final OpenAIChatCompletionModel chatCompletion =
@@ -110,11 +105,7 @@ class ChatGPTService {
     int maxTokens = 1000,
   }) async {
     AIKits().analysisMixin.sendEvent("prompt_custom_mode_gpt_request");
-    final listKeys = _config.chatGPTKeys;
-    if (listKeys.isEmpty) {
-      return null;
-    }
-    final String key = (listKeys.toList()..shuffle()).first;
+    final String key = _config.key;
     try {
       OpenAI.apiKey = key;
       AIKits().analysisMixin.sendEvent("prompt_$model");
@@ -133,13 +124,9 @@ class ChatGPTService {
   }
 
   Future<String?> promptChatGptRequest(String prompt,
-      {String? customModel}) async {
+      {String? customModel, int? customMaxTokens}) async {
     AIKits().analysisMixin.sendEvent("prompt_chat_gpt_request");
-    final listKeys = _config.chatGPTKeys;
-    if (listKeys.isEmpty) {
-      return null;
-    }
-    final String key = (listKeys.toList()..shuffle()).first;
+    final String key = _config.key;
     try {
       OpenAI.apiKey = key;
       if (_config.enableTurbo) {
@@ -152,7 +139,7 @@ class ChatGPTService {
             OpenAIChatCompletionChoiceMessageModel(
                 role: OpenAIChatMessageRole.user, content: prompt),
           ],
-          maxTokens: 1000,
+          maxTokens: customMaxTokens ?? 1000,
         );
         return chatCompletion.choices.first.message.content.trim();
       } else {
@@ -173,11 +160,12 @@ class ChatGPTService {
     }
   }
 
-  Future<String?> promptRequest(String prompt, {String? customModel}) async {
+  Future<String?> promptRequest(String prompt,
+      {String? customModel, int? customMaxTokens}) async {
     log(prompt, name: 'promptRequest');
     if (_config.shouldUseDirectApi) {
-      final result2 =
-          await promptChatGptRequest(prompt, customModel: customModel);
+      final result2 = await promptChatGptRequest(prompt,
+          customModel: customModel, customMaxTokens: customMaxTokens);
       if (result2 == null) {
         return promptCustomRequest(prompt);
       } else {
@@ -186,7 +174,8 @@ class ChatGPTService {
     } else {
       final result1 = await promptCustomRequest(prompt);
       if (result1 == null) {
-        return promptChatGptRequest(prompt, customModel: customModel);
+        return promptChatGptRequest(prompt,
+            customModel: customModel, customMaxTokens: customMaxTokens);
       } else {
         return result1;
       }

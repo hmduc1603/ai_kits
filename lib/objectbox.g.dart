@@ -16,6 +16,7 @@ import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'src/chat_gpt/entity/chat_session.dart';
 import 'src/chat_gpt/entity/prompting_entity.dart';
+import 'src/stability_ai/entity/stability_result.dart';
 import 'src/stable_diffusion/entity/image_entity.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
@@ -137,6 +138,50 @@ final _entities = <ModelEntity>[
             flags: 0)
       ],
       relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(4, 1784758573933483716),
+      name: 'StabilityResult',
+      lastPropertyId: const IdUid(8, 900876486917535676),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 8289817659741099521),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 7604204431075426537),
+            name: 'input',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 1033911825300374610),
+            name: 'result',
+            type: 23,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 5140377939018604842),
+            name: 'createdDate',
+            type: 10,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 1616267524686543063),
+            name: 'isSavedToGallery',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 18055832766382061),
+            name: 'hasError',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(8, 900876486917535676),
+            name: 'cacheImageId',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[])
 ];
 
@@ -160,13 +205,13 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(3, 525896355937857294),
+      lastEntityId: const IdUid(4, 1784758573933483716),
       lastIndexId: const IdUid(0, 0),
       lastRelationId: const IdUid(0, 0),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [4579458851321007951],
+      retiredPropertyUids: const [4579458851321007951, 5351663449388968604],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -307,6 +352,52 @@ ModelDefinition getObjectBoxModel() {
                 const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 4);
 
           return object;
+        }),
+    StabilityResult: EntityDefinition<StabilityResult>(
+        model: _entities[3],
+        toOneRelations: (StabilityResult object) => [],
+        toManyRelations: (StabilityResult object) => {},
+        getId: (StabilityResult object) => object.id,
+        setId: (StabilityResult object, int id) {
+          object.id = id;
+        },
+        objectToFB: (StabilityResult object, fb.Builder fbb) {
+          final inputOffset = fbb.writeString(object.input);
+          final resultOffset =
+              object.result == null ? null : fbb.writeListInt8(object.result!);
+          final cacheImageIdOffset = fbb.writeString(object.cacheImageId);
+          fbb.startTable(9);
+          fbb.addInt64(0, object.id ?? 0);
+          fbb.addOffset(1, inputOffset);
+          fbb.addOffset(2, resultOffset);
+          fbb.addInt64(3, object.createdDate.millisecondsSinceEpoch);
+          fbb.addBool(4, object.isSavedToGallery);
+          fbb.addBool(5, object.hasError);
+          fbb.addOffset(7, cacheImageIdOffset);
+          fbb.finish(fbb.endTable());
+          return object.id ?? 0;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = StabilityResult(
+              id: const fb.Int64Reader()
+                  .vTableGetNullable(buffer, rootOffset, 4),
+              cacheImageId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 18, ''),
+              input: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 6, ''),
+              result: const fb.Uint8ListReader(lazy: false)
+                  .vTableGetNullable(buffer, rootOffset, 8) as Uint8List?,
+              createdDate: DateTime.fromMillisecondsSinceEpoch(
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0)),
+              isSavedToGallery: const fb.BoolReader()
+                  .vTableGet(buffer, rootOffset, 12, false),
+              hasError: const fb.BoolReader()
+                  .vTableGet(buffer, rootOffset, 14, false));
+
+          return object;
         })
   };
 
@@ -392,4 +483,35 @@ class ChatSession_ {
   /// see [ChatSession.relations]
   static final relations =
       QueryStringVectorProperty<ChatSession>(_entities[2].properties[3]);
+}
+
+/// [StabilityResult] entity fields to define ObjectBox queries.
+class StabilityResult_ {
+  /// see [StabilityResult.id]
+  static final id =
+      QueryIntegerProperty<StabilityResult>(_entities[3].properties[0]);
+
+  /// see [StabilityResult.input]
+  static final input =
+      QueryStringProperty<StabilityResult>(_entities[3].properties[1]);
+
+  /// see [StabilityResult.result]
+  static final result =
+      QueryByteVectorProperty<StabilityResult>(_entities[3].properties[2]);
+
+  /// see [StabilityResult.createdDate]
+  static final createdDate =
+      QueryIntegerProperty<StabilityResult>(_entities[3].properties[3]);
+
+  /// see [StabilityResult.isSavedToGallery]
+  static final isSavedToGallery =
+      QueryBooleanProperty<StabilityResult>(_entities[3].properties[4]);
+
+  /// see [StabilityResult.hasError]
+  static final hasError =
+      QueryBooleanProperty<StabilityResult>(_entities[3].properties[5]);
+
+  /// see [StabilityResult.cacheImageId]
+  static final cacheImageId =
+      QueryStringProperty<StabilityResult>(_entities[3].properties[6]);
 }

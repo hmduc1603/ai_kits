@@ -9,11 +9,12 @@ part of 'imagination_counting_manager.dart';
 ImaginatingLimitation _$ImaginatingLimitationFromJson(
         Map<String, dynamic> json) =>
     ImaginatingLimitation(
-      dailyPromptingLimit: json['dailyPromptingLimit'] as int,
+      dailyImaginatingLimitation:
+          json['dailyImaginatingLimitation'] as int? ?? 1,
     );
 
 Map<String, dynamic> _$ImaginatingLimitationToJson(
         ImaginatingLimitation instance) =>
     <String, dynamic>{
-      'dailyPromptingLimit': instance.dailyPromptingLimit,
+      'dailyImaginatingLimitation': instance.dailyImaginatingLimitation,
     };
