@@ -52,4 +52,11 @@ class LocalStorage {
   Future<void> setImaginatingCounter(ImaginatingCounter counter) async {
     return box?.put(_kImaginatingCounter, counter);
   }
+
+  Stream<ImaginatingCounter>? listenToImaginatingCounter() {
+    return box
+        ?.watch(key: _kImaginatingCounter)
+        .map<ImaginatingCounter>((e) => e.value ?? false)
+        .asBroadcastStream();
+  }
 }

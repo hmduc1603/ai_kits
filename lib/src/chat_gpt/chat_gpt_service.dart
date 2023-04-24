@@ -32,6 +32,13 @@ class ChatGPTService {
     return promptingEntity.copyWith.result(result);
   }
 
+  String _getFakeChatPrompt(List<String> lastPrompts, String prompt) {
+    if (lastPrompts.isNotEmpty) {
+      return "The previous question is about ${lastPrompts.last}, continue to answer this question: $prompt";
+    }
+    return prompt;
+  }
+
   Future<PromptingEntity> promptAnChat(
       List<PromptingEntity> lastPrompts, PromptingEntity prompt) async {
     log('promptAnChat', name: 'ApiService');
@@ -42,7 +49,10 @@ class ChatGPTService {
     list.add(prompt);
     final String? result = _config.shouldUseDirectApiOnChat
         ? await promptTurboRequest(list)
-        : await promptCustomRequest(prompt.prompt);
+        : await promptCustomRequest(
+            _getFakeChatPrompt(
+                lastPrompts.map((e) => e.prompt).toList(), prompt.prompt),
+          );
     if (result == null) {
       AIKits().analysisMixin.sendEvent("error_promptAnChat");
       throw Exception("AI is busy with large requests, please try again later");

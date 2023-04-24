@@ -30,8 +30,30 @@ class ImaginatingCountingManager {
 
   late ImaginatingLimitation _limitation;
 
+  ImaginatingCounter? get counter => LocalStorage().imaginatingCounter;
+
   setUpLimitation(ImaginatingLimitation limitation) {
     _limitation = limitation;
+  }
+
+  Stream<ImaginatingCounter>? listenToImaginatingCounter() {
+    return LocalStorage().listenToImaginatingCounter();
+  }
+
+  int todayLeft(ImaginatingCounter? counter) {
+    if (counter == null) {
+      return _limitation.dailyImaginatingLimitation;
+    } else {
+      if (counter.updatedDate.day == DateTime.now().day) {
+        if (counter.counting < _limitation.dailyImaginatingLimitation) {
+          return _limitation.dailyImaginatingLimitation - counter.counting;
+        } else {
+          return 0;
+        }
+      } else {
+        return _limitation.dailyImaginatingLimitation;
+      }
+    }
   }
 
   checkShouldProceed({

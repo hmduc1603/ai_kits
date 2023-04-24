@@ -10,6 +10,7 @@ class StabilityConfig {
   final int? imageWidth;
   final int? steps;
   final String? stabilityEngine;
+  final String? stylePreset;
   final ImaginatingLimitation imaginatingLimitation;
   StabilityConfig({
     required this.stabilityKey,
@@ -17,6 +18,7 @@ class StabilityConfig {
     this.imageWidth,
     this.stabilityEngine,
     this.steps,
+    this.stylePreset,
     required this.imaginatingLimitation,
   });
 

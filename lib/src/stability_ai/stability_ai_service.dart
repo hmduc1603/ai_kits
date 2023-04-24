@@ -1,9 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 import 'package:ai_kits/ai_kits.dart';
+import 'package:dio/dio.dart';
 import 'package:is_open_proxy/is_open_proxy.dart';
-import 'package:stability_sdk/stability_sdk.dart';
 
 class StabilityAIService {
   static final StabilityAIService _instance = StabilityAIService._internal();
@@ -11,12 +12,9 @@ class StabilityAIService {
   factory StabilityAIService() => _instance;
 
   late StabilityConfig _config;
-  late StabilityApiClient _client;
-  StreamSubscription? _clientSub;
 
   void init(StabilityConfig config) {
     _config = config;
-    _client = StabilityApiClient.init(config.key);
     ImaginatingCountingManager().setUpLimitation(_config.imaginatingLimitation);
   }
 
@@ -25,22 +23,29 @@ class StabilityAIService {
     if (await IsOpenProxy.isOpenProxy) {
       throw Exception('Please turn off your VPN or Proxy to continue');
     }
-    final request = RequestBuilder(prompt)
-        .setHeight(_config.imageHeight ?? 512)
-        .setWidth(_config.imageWidth ?? 512)
-        .setEngineType(_config.stabilityEngine)
-        .setSampleCount(1)
-        .setUpSteps(_config.steps)
-        .build();
-    _clientSub?.cancel();
-    final completer = Completer<Uint8List?>();
-    _client.generate(request).listen(
-      (answer) {
-        completer.complete(Uint8List.fromList(answer.artifacts!.first.binary!));
+    final response = await Dio().post(
+      "https://api.stability.ai/v1/generation/${_config.stabilityEngine}/text-to-image",
+      data: {
+        "height": _config.imageHeight ?? 768,
+        "width": _config.imageWidth ?? 768,
+        "steps": _config.steps ?? 30,
+        "text_prompts": [
+          {"text": prompt, "weight": 0.5}
+        ],
+        "style_preset": _config.stylePreset,
       },
-      onDone: () => !completer.isCompleted ? completer.complete() : null,
-      onError: (e) => completer.completeError(e),
+      options: Options(
+        receiveTimeout: 15000,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer ${_config.key}",
+        },
+      ),
     );
-    return completer.future.timeout(const Duration(seconds: 20));
+    if (response.statusCode == 200) {
+      return base64Decode(response.data["artifacts"][0]["base64"]);
+    } else {
+      throw Exception();
+    }
   }
 }

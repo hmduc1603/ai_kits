@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:objectbox/objectbox.dart';
-import 'dart:math';
+import 'package:random_string/random_string.dart';
 
 part 'stability_result.g.dart';
 
@@ -11,7 +11,7 @@ class StabilityResult {
   int? id;
   final String cacheImageId;
   final String input;
-  final Uint8List? result;
+  Uint8List? result;
   @Property(type: PropertyType.date)
   final DateTime createdDate;
   final bool isSavedToGallery;
@@ -31,6 +31,6 @@ class StabilityResult {
     return StabilityResult(
         input: input,
         createdDate: DateTime.now(),
-        cacheImageId: Random.secure().toString());
+        cacheImageId: randomString(10));
   }
 }

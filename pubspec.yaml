@@ -19,12 +19,7 @@ dependencies:
   copy_with_extension: ^4.0.2
   hive: ^2.2.3
   path_provider: ^2.0.11
-
-  stability_sdk:
-    path: /Users/dennish/Desktop/Flutter/stability-sdk-dart
-    #git:
-    #  url: git@github.com:hmduc1603/base-state-management.git
-    #  ref: v1.0.1
+  random_string: ^2.3.1
 
 dev_dependencies:
   flutter_test:
