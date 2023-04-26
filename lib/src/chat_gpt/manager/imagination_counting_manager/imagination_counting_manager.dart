@@ -11,12 +11,12 @@ part 'imagination_counting_manager.g.dart';
 class ImaginatingLimitation {
   final int dailyImaginatingLimitation;
   final int lifetimeLimitation;
-  final bool enableLifetimLimitation;
+  final bool enableLifetimeLimitation;
 
   const ImaginatingLimitation({
     this.dailyImaginatingLimitation = 1,
     this.lifetimeLimitation = 1,
-    this.enableLifetimLimitation = false,
+    this.enableLifetimeLimitation = false,
   });
 
   factory ImaginatingLimitation.fromJson(Map<String, dynamic> json) =>
@@ -41,6 +41,16 @@ class ImaginatingCountingManager {
 
   Stream<ImaginatingCounter>? listenToImaginatingCounter() {
     return LocalStorage().listenToImaginatingCounter();
+  }
+
+  Stream<int>? listenToImaginatingLifetimeCounter() {
+    return LocalStorage().listenToImaginatingLifetimeCounter();
+  }
+
+  int lifetimeLeft() {
+    final result = _limitation.lifetimeLimitation -
+        LocalStorage().imaginatingLifetimeCounter;
+    return result < 0 ? 0 : result;
   }
 
   int todayLeft(ImaginatingCounter? counter) {
@@ -70,7 +80,7 @@ class ImaginatingCountingManager {
       return;
     }
     // On Life time limitation
-    if (_limitation.enableLifetimLimitation) {
+    if (_limitation.enableLifetimeLimitation) {
       log("checkLifetimeShouldProceed", name: "ImaginatingCountingManager");
       onShouldProceed(_checkLifetimeShouldProceed(), null);
       return;
@@ -92,7 +102,7 @@ class ImaginatingCountingManager {
         shouldProceed = true;
       }
     }
-    log("checkShouldProceed: $shouldProceed - $counter",
+    log("checkShouldProceed: $shouldProceed",
         name: "ImaginatingCountingManager");
     onShouldProceed(shouldProceed, counter);
     AIKits()

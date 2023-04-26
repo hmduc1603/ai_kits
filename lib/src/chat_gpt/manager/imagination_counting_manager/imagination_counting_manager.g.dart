@@ -12,6 +12,8 @@ ImaginatingLimitation _$ImaginatingLimitationFromJson(
       dailyImaginatingLimitation:
           json['dailyImaginatingLimitation'] as int? ?? 1,
       lifetimeLimitation: json['lifetimeLimitation'] as int? ?? 1,
+      enableLifetimeLimitation:
+          json['enableLifetimeLimitation'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$ImaginatingLimitationToJson(
@@ -19,4 +21,5 @@ Map<String, dynamic> _$ImaginatingLimitationToJson(
     <String, dynamic>{
       'dailyImaginatingLimitation': instance.dailyImaginatingLimitation,
       'lifetimeLimitation': instance.lifetimeLimitation,
+      'enableLifetimeLimitation': instance.enableLifetimeLimitation,
     };

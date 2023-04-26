@@ -64,7 +64,14 @@ class LocalStorage {
   Stream<ImaginatingCounter>? listenToImaginatingCounter() {
     return box
         ?.watch(key: _kImaginatingCounter)
-        .map<ImaginatingCounter>((e) => e.value ?? false)
+        .map<ImaginatingCounter>((e) => e.value)
+        .asBroadcastStream();
+  }
+
+  Stream<int>? listenToImaginatingLifetimeCounter() {
+    return box
+        ?.watch(key: _kImaginatingLiftimeCounter)
+        .map<int>((e) => e.value)
         .asBroadcastStream();
   }
 }
