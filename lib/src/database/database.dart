@@ -23,6 +23,10 @@ abstract class _AIKitsDatabase {
   Stream<List<ChatSession>>? listenChatSessionById(int id);
 
   void removeAllChatSessions();
+
+  void removeAllPrompts();
+
+  void removeAllImages();
 }
 
 class AIKitsDatabase extends _AIKitsDatabase {
@@ -43,8 +47,8 @@ class AIKitsDatabase extends _AIKitsDatabase {
     } catch (e) {
       log(e.toString());
       store?.box<PromptingEntity>().removeAll();
-      store?.box<ImageResult>().removeAll();
       store?.box<ChatSession>().removeAll();
+      store?.box<StabilityResult>().removeAll();
     }
   }
 
@@ -128,5 +132,15 @@ class AIKitsDatabase extends _AIKitsDatabase {
   @override
   void removeAllChatSessions() {
     store?.box<ChatSession>().removeAll();
+  }
+
+  @override
+  void removeAllPrompts() {
+    store?.box<PromptingEntity>().removeAll();
+  }
+
+  @override
+  void removeAllImages() {
+    store?.box<StabilityResult>().removeAll();
   }
 }

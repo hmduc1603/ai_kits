@@ -17,45 +17,10 @@ import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 import 'src/chat_gpt/entity/chat_session.dart';
 import 'src/chat_gpt/entity/prompting_entity.dart';
 import 'src/stability_ai/entity/stability_result.dart';
-import 'src/stable_diffusion/entity/image_entity.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
 final _entities = <ModelEntity>[
-  ModelEntity(
-      id: const IdUid(1, 933623351675514438),
-      name: 'ImageResult',
-      lastPropertyId: const IdUid(5, 7495192306881828374),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 5273499039132726855),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 5897523025735225399),
-            name: 'input',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(3, 1481903636559386332),
-            name: 'result',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 6356996361923861959),
-            name: 'createdDate',
-            type: 10,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 7495192306881828374),
-            name: 'isSavedToGallery',
-            type: 1,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
   ModelEntity(
       id: const IdUid(2, 6198307822093762743),
       name: 'PromptingEntity',
@@ -209,55 +174,25 @@ ModelDefinition getObjectBoxModel() {
       lastIndexId: const IdUid(0, 0),
       lastRelationId: const IdUid(0, 0),
       lastSequenceId: const IdUid(0, 0),
-      retiredEntityUids: const [],
+      retiredEntityUids: const [933623351675514438],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [4579458851321007951, 5351663449388968604],
+      retiredPropertyUids: const [
+        4579458851321007951,
+        5351663449388968604,
+        5273499039132726855,
+        5897523025735225399,
+        1481903636559386332,
+        6356996361923861959,
+        7495192306881828374
+      ],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
       version: 1);
 
   final bindings = <Type, EntityDefinition>{
-    ImageResult: EntityDefinition<ImageResult>(
-        model: _entities[0],
-        toOneRelations: (ImageResult object) => [],
-        toManyRelations: (ImageResult object) => {},
-        getId: (ImageResult object) => object.id,
-        setId: (ImageResult object, int id) {
-          object.id = id;
-        },
-        objectToFB: (ImageResult object, fb.Builder fbb) {
-          final inputOffset = fbb.writeString(object.input);
-          final resultOffset = fbb.writeString(object.result);
-          fbb.startTable(6);
-          fbb.addInt64(0, object.id ?? 0);
-          fbb.addOffset(1, inputOffset);
-          fbb.addOffset(2, resultOffset);
-          fbb.addInt64(3, object.createdDate.millisecondsSinceEpoch);
-          fbb.addBool(4, object.isSavedToGallery);
-          fbb.finish(fbb.endTable());
-          return object.id ?? 0;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-
-          final object = ImageResult(
-              input: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 6, ''),
-              result: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, ''),
-              createdDate: DateTime.fromMillisecondsSinceEpoch(
-                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0)))
-            ..id =
-                const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 4)
-            ..isSavedToGallery =
-                const fb.BoolReader().vTableGet(buffer, rootOffset, 12, false);
-
-          return object;
-        }),
     PromptingEntity: EntityDefinition<PromptingEntity>(
-        model: _entities[1],
+        model: _entities[0],
         toOneRelations: (PromptingEntity object) => [],
         toManyRelations: (PromptingEntity object) => {},
         getId: (PromptingEntity object) => object.id,
@@ -312,7 +247,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     ChatSession: EntityDefinition<ChatSession>(
-        model: _entities[2],
+        model: _entities[1],
         toOneRelations: (ChatSession object) => [],
         toManyRelations: (ChatSession object) => {},
         getId: (ChatSession object) => object.id,
@@ -354,7 +289,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     StabilityResult: EntityDefinition<StabilityResult>(
-        model: _entities[3],
+        model: _entities[2],
         toOneRelations: (StabilityResult object) => [],
         toManyRelations: (StabilityResult object) => {},
         getId: (StabilityResult object) => object.id,
@@ -404,114 +339,91 @@ ModelDefinition getObjectBoxModel() {
   return ModelDefinition(model, bindings);
 }
 
-/// [ImageResult] entity fields to define ObjectBox queries.
-class ImageResult_ {
-  /// see [ImageResult.id]
-  static final id =
-      QueryIntegerProperty<ImageResult>(_entities[0].properties[0]);
-
-  /// see [ImageResult.input]
-  static final input =
-      QueryStringProperty<ImageResult>(_entities[0].properties[1]);
-
-  /// see [ImageResult.result]
-  static final result =
-      QueryStringProperty<ImageResult>(_entities[0].properties[2]);
-
-  /// see [ImageResult.createdDate]
-  static final createdDate =
-      QueryIntegerProperty<ImageResult>(_entities[0].properties[3]);
-
-  /// see [ImageResult.isSavedToGallery]
-  static final isSavedToGallery =
-      QueryBooleanProperty<ImageResult>(_entities[0].properties[4]);
-}
-
 /// [PromptingEntity] entity fields to define ObjectBox queries.
 class PromptingEntity_ {
   /// see [PromptingEntity.id]
   static final id =
-      QueryIntegerProperty<PromptingEntity>(_entities[1].properties[0]);
+      QueryIntegerProperty<PromptingEntity>(_entities[0].properties[0]);
 
   /// see [PromptingEntity.rawType]
   static final rawType =
-      QueryStringProperty<PromptingEntity>(_entities[1].properties[1]);
+      QueryStringProperty<PromptingEntity>(_entities[0].properties[1]);
 
   /// see [PromptingEntity.prompt]
   static final prompt =
-      QueryStringProperty<PromptingEntity>(_entities[1].properties[2]);
+      QueryStringProperty<PromptingEntity>(_entities[0].properties[2]);
 
   /// see [PromptingEntity.input]
   static final input =
-      QueryStringProperty<PromptingEntity>(_entities[1].properties[3]);
+      QueryStringProperty<PromptingEntity>(_entities[0].properties[3]);
 
   /// see [PromptingEntity.hashtags]
   static final hashtags =
-      QueryStringVectorProperty<PromptingEntity>(_entities[1].properties[4]);
+      QueryStringVectorProperty<PromptingEntity>(_entities[0].properties[4]);
 
   /// see [PromptingEntity.mood]
   static final mood =
-      QueryStringProperty<PromptingEntity>(_entities[1].properties[5]);
+      QueryStringProperty<PromptingEntity>(_entities[0].properties[5]);
 
   /// see [PromptingEntity.result]
   static final result =
-      QueryStringProperty<PromptingEntity>(_entities[1].properties[6]);
+      QueryStringProperty<PromptingEntity>(_entities[0].properties[6]);
 
   /// see [PromptingEntity.createdDate]
   static final createdDate =
-      QueryIntegerProperty<PromptingEntity>(_entities[1].properties[7]);
+      QueryIntegerProperty<PromptingEntity>(_entities[0].properties[7]);
 
   /// see [PromptingEntity.hasError]
   static final hasError =
-      QueryBooleanProperty<PromptingEntity>(_entities[1].properties[8]);
+      QueryBooleanProperty<PromptingEntity>(_entities[0].properties[8]);
 }
 
 /// [ChatSession] entity fields to define ObjectBox queries.
 class ChatSession_ {
   /// see [ChatSession.id]
   static final id =
-      QueryIntegerProperty<ChatSession>(_entities[2].properties[0]);
+      QueryIntegerProperty<ChatSession>(_entities[1].properties[0]);
 
   /// see [ChatSession.createdDate]
   static final createdDate =
-      QueryIntegerProperty<ChatSession>(_entities[2].properties[1]);
+      QueryIntegerProperty<ChatSession>(_entities[1].properties[1]);
 
   /// see [ChatSession.resultsAsJson]
   static final resultsAsJson =
-      QueryStringVectorProperty<ChatSession>(_entities[2].properties[2]);
+      QueryStringVectorProperty<ChatSession>(_entities[1].properties[2]);
 
   /// see [ChatSession.relations]
   static final relations =
-      QueryStringVectorProperty<ChatSession>(_entities[2].properties[3]);
+      QueryStringVectorProperty<ChatSession>(_entities[1].properties[3]);
 }
 
 /// [StabilityResult] entity fields to define ObjectBox queries.
 class StabilityResult_ {
   /// see [StabilityResult.id]
   static final id =
-      QueryIntegerProperty<StabilityResult>(_entities[3].properties[0]);
+      QueryIntegerProperty<StabilityResult>(_entities[2].properties[0]);
 
   /// see [StabilityResult.input]
   static final input =
-      QueryStringProperty<StabilityResult>(_entities[3].properties[1]);
+      QueryStringProperty<StabilityResult>(_entities[2].properties[1]);
 
   /// see [StabilityResult.result]
   static final result =
-      QueryByteVectorProperty<StabilityResult>(_entities[3].properties[2]);
+      QueryByteVectorProperty<StabilityResult>(_entities[2].properties[2]);
 
   /// see [StabilityResult.createdDate]
   static final createdDate =
-      QueryIntegerProperty<StabilityResult>(_entities[3].properties[3]);
+      QueryIntegerProperty<StabilityResult>(_entities[2].properties[3]);
 
   /// see [StabilityResult.isSavedToGallery]
   static final isSavedToGallery =
-      QueryBooleanProperty<StabilityResult>(_entities[3].properties[4]);
+      QueryBooleanProperty<StabilityResult>(_entities[2].properties[4]);
 
   /// see [StabilityResult.hasError]
   static final hasError =
-      QueryBooleanProperty<StabilityResult>(_entities[3].properties[5]);
+      QueryBooleanProperty<StabilityResult>(_entities[2].properties[5]);
 
   /// see [StabilityResult.cacheImageId]
   static final cacheImageId =
-      QueryStringProperty<StabilityResult>(_entities[3].properties[6]);
+      QueryStringProperty<StabilityResult>(_entities[2].properties[6]);
 }

@@ -1,19 +1,22 @@
 import 'dart:developer';
 import 'dart:ui';
 
+import 'package:ai_kits/ai_kits.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../../local_storage/local_storage.dart';
-import 'imaginating_counter.dart';
-
 part 'imagination_counting_manager.g.dart';
 
 @JsonSerializable()
 class ImaginatingLimitation {
   final int dailyImaginatingLimitation;
+  final int lifetimeLimitation;
+  final bool enableLifetimLimitation;
 
   const ImaginatingLimitation({
     this.dailyImaginatingLimitation = 1,
+    this.lifetimeLimitation = 1,
+    this.enableLifetimLimitation = false,
   });
 
   factory ImaginatingLimitation.fromJson(Map<String, dynamic> json) =>
@@ -66,6 +69,14 @@ class ImaginatingCountingManager {
       onPremiumCallBack();
       return;
     }
+    // On Life time limitation
+    if (_limitation.enableLifetimLimitation) {
+      log("checkLifetimeShouldProceed", name: "ImaginatingCountingManager");
+      onShouldProceed(_checkLifetimeShouldProceed(), null);
+      return;
+    }
+    // Normal case
+    AIKits().analysisMixin.sendEvent("check_imagination_limitation");
     bool shouldProceed = false;
     ImaginatingCounter? counter = LocalStorage().imaginatingCounter;
     if (counter == null) {
@@ -84,6 +95,9 @@ class ImaginatingCountingManager {
     log("checkShouldProceed: $shouldProceed - $counter",
         name: "ImaginatingCountingManager");
     onShouldProceed(shouldProceed, counter);
+    AIKits()
+        .analysisMixin
+        .sendEvent("reach_imagination_limitation_${!shouldProceed}");
   }
 
   increaseCounter({ImaginatingCounter? counter}) {
@@ -97,6 +111,17 @@ class ImaginatingCountingManager {
       counter.updatedDate = DateTime.now();
       LocalStorage().setImaginatingCounter(counter);
     }
+  }
+
+  bool _checkLifetimeShouldProceed() {
+    AIKits().analysisMixin.sendEvent("check_lifetime_imagination_limitation");
+    bool shouldProceed = false;
+    int counter = LocalStorage().imaginatingLifetimeCounter;
+    if (counter < _limitation.lifetimeLimitation) {
+      shouldProceed = true;
+      LocalStorage().setImaginationLifetimeCounter(counter + 1);
+    }
+    return shouldProceed;
   }
 }
 

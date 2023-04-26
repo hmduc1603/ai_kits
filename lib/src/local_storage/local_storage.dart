@@ -13,6 +13,7 @@ class LocalStorage {
   static const _kPromptingCounter = 'kPromptingCounter';
   static const _kImaginatingCounter = 'kImaginatingCounter';
   static const _kChatCounter = '_kChatCounter';
+  static const _kImaginatingLiftimeCounter = 'kImaginatingLifetimeCounter';
 
   Box? box;
 
@@ -39,6 +40,13 @@ class LocalStorage {
 
   Future<void> setPromptingCounter(PromptingCounter counter) async {
     return box?.put(_kPromptingCounter, counter);
+  }
+
+  int get imaginatingLifetimeCounter =>
+      box?.get(_kImaginatingLiftimeCounter) ?? 0;
+
+  Future<void> setImaginationLifetimeCounter(int value) async {
+    return box?.put(_kImaginatingLiftimeCounter, value);
   }
 
   PromptingCounter? get chatCounter => box?.get(_kChatCounter);

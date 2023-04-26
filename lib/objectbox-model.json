@@ -4,40 +4,6 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:933623351675514438",
-      "lastPropertyId": "5:7495192306881828374",
-      "name": "ImageResult",
-      "properties": [
-        {
-          "id": "1:5273499039132726855",
-          "name": "id",
-          "type": 6,
-          "flags": 1
-        },
-        {
-          "id": "2:5897523025735225399",
-          "name": "input",
-          "type": 9
-        },
-        {
-          "id": "3:1481903636559386332",
-          "name": "result",
-          "type": 9
-        },
-        {
-          "id": "4:6356996361923861959",
-          "name": "createdDate",
-          "type": 10
-        },
-        {
-          "id": "5:7495192306881828374",
-          "name": "isSavedToGallery",
-          "type": 1
-        }
-      ],
-      "relations": []
-    },
-    {
       "id": "2:6198307822093762743",
       "lastPropertyId": "9:6676325693206209312",
       "name": "PromptingEntity",
@@ -171,11 +137,18 @@
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
-  "retiredEntityUids": [],
+  "retiredEntityUids": [
+    933623351675514438
+  ],
   "retiredIndexUids": [],
   "retiredPropertyUids": [
     4579458851321007951,
-    5351663449388968604
+    5351663449388968604,
+    5273499039132726855,
+    5897523025735225399,
+    1481903636559386332,
+    6356996361923861959,
+    7495192306881828374
   ],
   "retiredRelationUids": [],
   "version": 1

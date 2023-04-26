@@ -13,6 +13,7 @@ StabilityConfig _$StabilityConfigFromJson(Map<String, dynamic> json) =>
       imageWidth: json['imageWidth'] as int?,
       stabilityEngine: json['stabilityEngine'] as String?,
       steps: json['steps'] as int?,
+      stylePreset: json['stylePreset'] as String?,
       imaginatingLimitation: ImaginatingLimitation.fromJson(
           json['imaginatingLimitation'] as Map<String, dynamic>),
     );
@@ -24,5 +25,6 @@ Map<String, dynamic> _$StabilityConfigToJson(StabilityConfig instance) =>
       'imageWidth': instance.imageWidth,
       'steps': instance.steps,
       'stabilityEngine': instance.stabilityEngine,
+      'stylePreset': instance.stylePreset,
       'imaginatingLimitation': instance.imaginatingLimitation,
     };
