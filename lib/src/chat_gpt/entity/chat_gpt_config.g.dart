@@ -9,7 +9,9 @@ part of 'chat_gpt_config.dart';
 ChatGPTConfig _$ChatGPTConfigFromJson(Map<String, dynamic> json) =>
     ChatGPTConfig(
       enableTurbo: json['enableTurbo'] as bool,
-      chatGPTKey: json['chatGPTKey'] as String,
+      chatGPTKeys: (json['chatGPTKeys'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
       model: json['model'] as String,
       shouldUseDirectApi: json['shouldUseDirectApi'] as bool,
       customHost: json['customHost'] == null
@@ -18,14 +20,16 @@ ChatGPTConfig _$ChatGPTConfigFromJson(Map<String, dynamic> json) =>
               json['customHost'] as Map<String, dynamic>),
       shouldUseDirectApiOnChat:
           json['shouldUseDirectApiOnChat'] as bool? ?? true,
-      promptingLimitation: PromptingLimitation.fromJson(
-          json['promptingLimitation'] as Map<String, dynamic>),
+      promptingLimitation: json['promptingLimitation'] == null
+          ? const PromptingLimitation()
+          : PromptingLimitation.fromJson(
+              json['promptingLimitation'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ChatGPTConfigToJson(ChatGPTConfig instance) =>
     <String, dynamic>{
       'enableTurbo': instance.enableTurbo,
-      'chatGPTKey': instance.chatGPTKey,
+      'chatGPTKeys': instance.chatGPTKeys,
       'model': instance.model,
       'shouldUseDirectApi': instance.shouldUseDirectApi,
       'shouldUseDirectApiOnChat': instance.shouldUseDirectApiOnChat,

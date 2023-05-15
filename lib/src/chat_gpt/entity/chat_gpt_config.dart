@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:ai_kits/ai_kits.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -8,23 +9,26 @@ part 'chat_gpt_config.g.dart';
 @JsonSerializable()
 class ChatGPTConfig {
   final bool enableTurbo;
-  final String chatGPTKey;
+  final List<String> chatGPTKeys;
   final String model;
   final bool shouldUseDirectApi;
   final bool shouldUseDirectApiOnChat;
   final PromptingLimitation promptingLimitation;
   final ChatGPTCustomHost customHost;
 
-  String get key => chatGPTKey.substring(0, chatGPTKey.length - 1);
+  String get key {
+    var element = chatGPTKeys[Random().nextInt(chatGPTKeys.length)];
+    return element.substring(0, element.length - 1);
+  }
 
   ChatGPTConfig({
     required this.enableTurbo,
-    required this.chatGPTKey,
+    required this.chatGPTKeys,
     required this.model,
     required this.shouldUseDirectApi,
     this.customHost = const ChatGPTCustomHost(),
     this.shouldUseDirectApiOnChat = true,
-    required this.promptingLimitation,
+    this.promptingLimitation = const PromptingLimitation(),
   });
 
   factory ChatGPTConfig.fromJson(Map<String, dynamic> json) =>
