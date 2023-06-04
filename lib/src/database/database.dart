@@ -10,6 +10,8 @@ abstract class _AIKitsDatabase {
 
   Stream<List<PromptingEntity>>? listenPromptHistories({String? type});
 
+  Stream<List<PromptingEntity>>? listenPromptHistoriesByInput({String? input});
+
   Future<void> saveImage(StabilityResult imageResult);
 
   Stream<List<StabilityResult>>? listenImageHistories();
@@ -142,5 +144,18 @@ class AIKitsDatabase extends _AIKitsDatabase {
   @override
   void removeAllImages() {
     store?.box<StabilityResult>().removeAll();
+  }
+
+  @override
+  Stream<List<PromptingEntity>>? listenPromptHistoriesByInput({String? input}) {
+    return store
+        ?.box<PromptingEntity>()
+        .query(input != null
+            ? PromptingEntity_.input.equals(input)
+            : PromptingEntity_.input.isNull())
+        .watch(triggerImmediately: true)
+        .map(
+          (query) => query.find(),
+        );
   }
 }

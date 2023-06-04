@@ -1,4 +1,5 @@
 import 'package:copy_with_extension/copy_with_extension.dart';
+import 'package:dart_openai/openai.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:objectbox/objectbox.dart';
 
@@ -18,6 +19,18 @@ class PromptingEntity {
   @Property(type: PropertyType.date)
   final DateTime createdDate;
   bool hasError;
+
+  List<OpenAIChatCompletionChoiceMessageModel> get messagesByRole {
+    var list = [
+      OpenAIChatCompletionChoiceMessageModel(
+          content: prompt, role: OpenAIChatMessageRole.user),
+    ];
+    if (result != null) {
+      list.add(OpenAIChatCompletionChoiceMessageModel(
+          content: result!, role: OpenAIChatMessageRole.assistant));
+    }
+    return list;
+  }
 
   PromptingEntity({
     this.mood,

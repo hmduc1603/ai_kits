@@ -19,7 +19,7 @@ class StabilityAIService {
   }
 
   Future<Uint8List?> requestImage(String prompt) async {
-    log('requestImage', name: 'StabilityAIService');
+    log('requestImage: $prompt', name: 'StabilityAIService');
     if (await IsOpenProxy.isOpenProxy) {
       throw Exception('Please turn off your VPN or Proxy to continue');
     }
@@ -35,7 +35,7 @@ class StabilityAIService {
         "style_preset": _config.stylePreset,
       },
       options: Options(
-        receiveTimeout: 15000,
+        receiveTimeout: 30000,
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer ${_config.key}",

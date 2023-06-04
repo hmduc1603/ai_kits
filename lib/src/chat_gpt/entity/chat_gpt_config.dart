@@ -1,5 +1,5 @@
-import 'dart:convert';
-import 'dart:math';
+import 'dart:developer';
+import 'dart:math' as m;
 
 import 'package:ai_kits/ai_kits.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -14,11 +14,16 @@ class ChatGPTConfig {
   final bool shouldUseDirectApi;
   final bool shouldUseDirectApiOnChat;
   final PromptingLimitation promptingLimitation;
-  final ChatGPTCustomHost customHost;
+  final String rapidApiKey;
 
   String get key {
-    var element = chatGPTKeys[Random().nextInt(chatGPTKeys.length)];
+    log("Got ChatGPT keys: ${chatGPTKeys.toString()}");
+    var element = chatGPTKeys[m.Random().nextInt(chatGPTKeys.length)];
     return element.substring(0, element.length - 1);
+  }
+
+  String get rapidKey {
+    return rapidApiKey.substring(0, rapidApiKey.length - 1);
   }
 
   ChatGPTConfig({
@@ -26,7 +31,7 @@ class ChatGPTConfig {
     required this.chatGPTKeys,
     required this.model,
     required this.shouldUseDirectApi,
-    this.customHost = const ChatGPTCustomHost(),
+    required this.rapidApiKey,
     this.shouldUseDirectApiOnChat = true,
     this.promptingLimitation = const PromptingLimitation(),
   });
@@ -35,29 +40,4 @@ class ChatGPTConfig {
       _$ChatGPTConfigFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChatGPTConfigToJson(this);
-}
-
-@JsonSerializable()
-class ChatGPTCustomHost {
-  final String url;
-  final String dataJsonAsString;
-  final Map<String, dynamic>? headers;
-
-  Map<String, dynamic> getData(String prompt) {
-    final data = dataJsonAsString.replaceAll("~~prompt~~", prompt).toString();
-    return jsonDecode(data);
-  }
-
-  const ChatGPTCustomHost({
-    this.url = "https://ai.dataplazma.com/api/v1/completions",
-    this.dataJsonAsString = '{"prompt":"~~prompt~~"}',
-    this.headers = const {
-      "Authorization": "Bearer j1n1k98n349v839nv839nvs86bvs4aasd0"
-    },
-  });
-
-  factory ChatGPTCustomHost.fromJson(Map<String, dynamic> json) =>
-      _$ChatGPTCustomHostFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ChatGPTCustomHostToJson(this);
 }

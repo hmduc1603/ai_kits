@@ -32,27 +32,23 @@ class ChatGPTService {
     return promptingEntity.copyWith.result(result);
   }
 
-  String _getFakeChatPrompt(List<String> lastPrompts, String prompt) {
-    if (lastPrompts.isNotEmpty) {
-      return "The previous question is about ${lastPrompts.last}, continue to answer this question: $prompt";
-    }
-    return prompt;
-  }
-
   Future<PromptingEntity> promptAnChat(
-      List<PromptingEntity> lastPrompts, PromptingEntity prompt) async {
-    log('promptAnChat', name: 'ApiService');
+    List<PromptingEntity> lastPrompts,
+    PromptingEntity prompt, {
+    int? maxToken,
+    double? temperature,
+  }) async {
+    log('Prompt An Chat: ${prompt.prompt}}', name: 'ApiService');
     if (await IsOpenProxy.isOpenProxy) {
       throw Exception('Please turn off your VPN or Proxy to continue');
     }
     final list = lastPrompts.toList();
     list.add(prompt);
     final String? result = _config.shouldUseDirectApiOnChat
-        ? await promptTurboRequest(list)
+        ? await promptTurboRequest(list,
+            maxToken: maxToken, temperature: temperature)
         : await promptCustomRequest(
-            _getFakeChatPrompt(
-                lastPrompts.map((e) => e.prompt).toList(), prompt.prompt),
-          );
+            temperature: temperature, prompts: _getOpenAImessages(list));
     if (result == null) {
       AIKits().analysisMixin.sendEvent("error_promptAnChat");
       throw Exception("AI is busy with large requests, please try again later");
@@ -64,7 +60,10 @@ class ChatGPTService {
   }
 
   Future<String?> promptTurboRequest(
-      List<PromptingEntity> promptingEntities) async {
+    List<PromptingEntity> promptingEntities, {
+    int? maxToken,
+    double? temperature,
+  }) async {
     AIKits().analysisMixin.sendEvent("prompt_turbo_chat_gpt_request");
     final String key = _config.key;
     try {
@@ -72,11 +71,9 @@ class ChatGPTService {
       final OpenAIChatCompletionModel chatCompletion =
           await OpenAI.instance.chat.create(
         model: ChatGPTModel.turbo,
-        messages: promptingEntities
-            .map((e) => OpenAIChatCompletionChoiceMessageModel(
-                content: e.prompt, role: OpenAIChatMessageRole.user))
-            .toList(),
-        maxTokens: 500,
+        messages: _getOpenAImessages(promptingEntities),
+        maxTokens: maxToken ?? 500,
+        temperature: temperature,
       );
       return chatCompletion.choices.first.message.content.trim();
     } catch (e) {
@@ -86,20 +83,45 @@ class ChatGPTService {
     }
   }
 
-  Future<String?> promptCustomRequest(String prompt) async {
+  List<OpenAIChatCompletionChoiceMessageModel> _getOpenAImessages(
+      List<PromptingEntity> promptingEntities) {
+    List<OpenAIChatCompletionChoiceMessageModel> list = [];
+    for (var element in promptingEntities) {
+      list.addAll(element.messagesByRole);
+    }
+    return list;
+  }
+
+  Future<String?> promptCustomRequest({
+    double? temperature,
+    required List<OpenAIChatCompletionChoiceMessageModel> prompts,
+  }) async {
     AIKits().analysisMixin.sendEvent("prompt_custom_request");
     try {
       final response = await Dio().post(
-        _config.customHost.url,
-        data: _config.customHost.getData(prompt),
+        "https://chatgpt53.p.rapidapi.com/",
+        data: {
+          "temperature": temperature ?? 0.7,
+          "messages": prompts
+              .map((e) => {
+                    "role": e.role.name,
+                    "content": e.content,
+                  })
+              .toList()
+        },
         options: Options(
-          receiveTimeout: 15000,
-          headers: _config.customHost.headers,
+          headers: {
+            'content-type': 'application/json',
+            'X-RapidAPI-Key': _config.rapidKey,
+            'X-RapidAPI-Host': 'chatgpt53.p.rapidapi.com'
+          },
         ),
       );
       if (response.data != null) {
-        final data =
-            (response.data["choices"] as List).first["text"].toString().trim();
+        final data = (response.data["choices"] as List)
+            .first["message"]["content"]
+            .toString()
+            .trim();
         return data;
       }
     } catch (e) {
@@ -174,18 +196,34 @@ class ChatGPTService {
       {String? customModel, int? customMaxTokens}) async {
     log(prompt, name: 'promptRequest');
     if (_config.shouldUseDirectApi) {
-      final result2 = await promptChatGptRequest(prompt,
-          customModel: customModel, customMaxTokens: customMaxTokens);
+      final result2 = await promptChatGptRequest(
+        prompt,
+        customModel: customModel,
+        customMaxTokens: customMaxTokens,
+      );
       if (result2 == null) {
-        return promptCustomRequest(prompt);
+        return promptCustomRequest(
+          prompts: [
+            OpenAIChatCompletionChoiceMessageModel(
+                role: OpenAIChatMessageRole.user, content: prompt)
+          ],
+        );
       } else {
         return result2;
       }
     } else {
-      final result1 = await promptCustomRequest(prompt);
+      final result1 = await promptCustomRequest(
+        prompts: [
+          OpenAIChatCompletionChoiceMessageModel(
+              role: OpenAIChatMessageRole.user, content: prompt)
+        ],
+      );
       if (result1 == null) {
-        return promptChatGptRequest(prompt,
-            customModel: customModel, customMaxTokens: customMaxTokens);
+        return promptChatGptRequest(
+          prompt,
+          customModel: customModel,
+          customMaxTokens: customMaxTokens,
+        );
       } else {
         return result1;
       }
