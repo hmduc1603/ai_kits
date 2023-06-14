@@ -229,4 +229,31 @@ class ChatGPTService {
       }
     }
   }
+
+  Future<String?> promptStealingRequest(String prompt) async {
+    AIKits().analysisMixin.sendEvent("prompt_custom_request");
+    try {
+      final response = await Dio().post(
+        "https://ai.dataplazma.com/api/v1/completions",
+        data: {
+          "prompt": prompt,
+        },
+        options: Options(
+          receiveTimeout: 60000,
+          headers: {
+            "Authorization": "Bearer j1n1k98n349v839nv839nvs86bvs4aasd0"
+          },
+        ),
+      );
+      if (response.data != null) {
+        final data =
+            (response.data["choices"] as List).first["text"].toString().trim();
+        return data;
+      }
+    } catch (e) {
+      log(e.toString());
+      AIKits().analysisMixin.sendEvent("error_promptCustomRequest");
+    }
+    return null;
+  }
 }
