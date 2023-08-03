@@ -6,7 +6,7 @@ import '../../../objectbox.g.dart';
 abstract class _AIKitsDatabase {
   Future<void> init();
 
-  Future<void> savePrompt(PromptingEntity promptingEntity);
+  Future<int?> savePrompt(PromptingEntity promptingEntity);
 
   Stream<List<PromptingEntity>>? listenPromptHistories({String? type});
 
@@ -18,6 +18,8 @@ abstract class _AIKitsDatabase {
 
   Future<List<PromptingEntity>?> getLastPrompts(String type);
 
+  Future<PromptingEntity?> getLastPromptById(int id);
+
   Future<ChatSession?> saveChatSession(ChatSession chatSession);
 
   Stream<List<ChatSession>>? listenChatSession();
@@ -27,6 +29,8 @@ abstract class _AIKitsDatabase {
   void removeAllChatSessions();
 
   void removeAllPrompts();
+
+  void removePromptsByType(String type);
 
   void removeAllImages();
 }
@@ -55,9 +59,10 @@ class AIKitsDatabase extends _AIKitsDatabase {
   }
 
   @override
-  Future<void> savePrompt(PromptingEntity promptingEntity) async {
+  Future<int?> savePrompt(PromptingEntity promptingEntity) async {
     log('savePrompt', name: 'AIKitsDatabase');
-    await store?.box<PromptingEntity>().putAsync(promptingEntity);
+    final id = await store?.box<PromptingEntity>().putAsync(promptingEntity);
+    return id;
   }
 
   @override
@@ -157,5 +162,19 @@ class AIKitsDatabase extends _AIKitsDatabase {
         .map(
           (query) => query.find(),
         );
+  }
+
+  @override
+  Future<PromptingEntity?> getLastPromptById(int id) async {
+    return store?.box<PromptingEntity>().get(id);
+  }
+
+  @override
+  void removePromptsByType(String type) {
+    store
+        ?.box<PromptingEntity>()
+        .query(PromptingEntity_.rawType.equals(type))
+        .build()
+        .remove();
   }
 }
