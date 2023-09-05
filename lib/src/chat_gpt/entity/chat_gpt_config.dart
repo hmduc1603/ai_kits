@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:math' as m;
 
 import 'package:ai_kits/ai_kits.dart';
+import 'package:ai_kits/src/chat_gpt/entity/rapid_api_config.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'chat_gpt_config.g.dart';
@@ -14,7 +15,7 @@ class ChatGPTConfig {
   final bool shouldUseDirectApi;
   final bool shouldUseDirectApiOnChat;
   final PromptingLimitation promptingLimitation;
-  final String rapidApiKey;
+  final RapidApiConfig rapidApiConfig;
 
   String get key {
     log("Got ChatGPT keys: ${chatGPTKeys.toString()}");
@@ -22,16 +23,12 @@ class ChatGPTConfig {
     return element.substring(0, element.length - 1);
   }
 
-  String get rapidKey {
-    return rapidApiKey.substring(0, rapidApiKey.length - 1);
-  }
-
   ChatGPTConfig({
     required this.enableTurbo,
     required this.chatGPTKeys,
     required this.model,
     required this.shouldUseDirectApi,
-    required this.rapidApiKey,
+    required this.rapidApiConfig,
     this.shouldUseDirectApiOnChat = true,
     this.promptingLimitation = const PromptingLimitation(),
   });

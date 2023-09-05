@@ -14,7 +14,8 @@ ChatGPTConfig _$ChatGPTConfigFromJson(Map<String, dynamic> json) =>
           .toList(),
       model: json['model'] as String,
       shouldUseDirectApi: json['shouldUseDirectApi'] as bool,
-      rapidApiKey: json['rapidApiKey'] as String,
+      rapidApiConfig: RapidApiConfig.fromJson(
+          json['rapidApiConfig'] as Map<String, dynamic>),
       shouldUseDirectApiOnChat:
           json['shouldUseDirectApiOnChat'] as bool? ?? true,
       promptingLimitation: json['promptingLimitation'] == null
@@ -31,5 +32,5 @@ Map<String, dynamic> _$ChatGPTConfigToJson(ChatGPTConfig instance) =>
       'shouldUseDirectApi': instance.shouldUseDirectApi,
       'shouldUseDirectApiOnChat': instance.shouldUseDirectApiOnChat,
       'promptingLimitation': instance.promptingLimitation,
-      'rapidApiKey': instance.rapidApiKey,
+      'rapidApiConfig': instance.rapidApiConfig,
     };

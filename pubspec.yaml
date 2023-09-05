@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   dart_openai: ^1.9.1
-  dio: ^4.0.6
+  dio: ^5.0.1
   is_open_proxy: ^0.0.3
   objectbox: ^1.6.0
   objectbox_flutter_libs: any

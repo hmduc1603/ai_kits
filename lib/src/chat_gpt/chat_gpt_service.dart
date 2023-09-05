@@ -10,9 +10,14 @@ class ChatGPTService {
   factory ChatGPTService() => _instance;
 
   late ChatGPTConfig _config;
+  late String _rapidApiRegrex;
 
-  void init(ChatGPTConfig config) {
+  void init({
+    required ChatGPTConfig config,
+    required String rapidApiRegrex,
+  }) {
     _config = config;
+    _rapidApiRegrex = rapidApiRegrex;
     PromptingCountingManager().setUpLimitation(config.promptingLimitation);
   }
 
@@ -99,30 +104,26 @@ class ChatGPTService {
     AIKits().analysisMixin.sendEvent("prompt_custom_request");
     try {
       final response = await Dio().post(
-        "https://chatgpt53.p.rapidapi.com/",
-        data: {
-          "temperature": temperature ?? 0.7,
-          "messages": prompts
-              .map((e) => {
-                    "role": e.role.name,
-                    "content": e.content,
-                  })
-              .toList()
-        },
+        _config.rapidApiConfig.hostUrl,
+        data: _config.rapidApiConfig.params
+          ..addAll({
+            "temperature": temperature ?? 0.7,
+            "messages": prompts
+                .map((e) => {
+                      "role": e.role.name,
+                      "content": e.content,
+                    })
+                .toList()
+          }),
         options: Options(
-          headers: {
-            'content-type': 'application/json',
-            'X-RapidAPI-Key': _config.rapidKey,
-            'X-RapidAPI-Host': 'chatgpt53.p.rapidapi.com'
-          },
+          headers: _config.rapidApiConfig.headers,
         ),
       );
       if (response.data != null) {
-        final data = (response.data["choices"] as List)
-            .first["message"]["content"]
-            .toString()
-            .trim();
-        return data;
+        final regrex = RegExp(_rapidApiRegrex);
+        final match = regrex.firstMatch(response.data.toString());
+        final result = match?.group(0);
+        return result;
       }
     } catch (e) {
       log(e.toString());
@@ -228,32 +229,5 @@ class ChatGPTService {
         return result1;
       }
     }
-  }
-
-  Future<String?> promptStealingRequest(String prompt) async {
-    AIKits().analysisMixin.sendEvent("prompt_custom_request");
-    try {
-      final response = await Dio().post(
-        "https://ai.dataplazma.com/api/v1/completions",
-        data: {
-          "prompt": prompt,
-        },
-        options: Options(
-          receiveTimeout: 60000,
-          headers: {
-            "Authorization": "Bearer j1n1k98n349v839nv839nvs86bvs4aasd0"
-          },
-        ),
-      );
-      if (response.data != null) {
-        final data =
-            (response.data["choices"] as List).first["text"].toString().trim();
-        return data;
-      }
-    } catch (e) {
-      log(e.toString());
-      AIKits().analysisMixin.sendEvent("error_promptCustomRequest");
-    }
-    return null;
   }
 }

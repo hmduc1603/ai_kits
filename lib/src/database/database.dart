@@ -6,7 +6,9 @@ import '../../../objectbox.g.dart';
 abstract class _AIKitsDatabase {
   Future<void> init();
 
-  Future<void> savePrompt(PromptingEntity promptingEntity);
+  Future<int?> savePrompt(PromptingEntity promptingEntity);
+
+  Future<PromptingEntity?> getLastPromptById(int id);
 
   Stream<List<PromptingEntity>>? listenPromptHistories({String? type});
 
@@ -27,6 +29,8 @@ abstract class _AIKitsDatabase {
   void removeAllChatSessions();
 
   void removeAllPrompts();
+
+  void removeAllPromptsByType(String type);
 
   void removeAllImages();
 }
@@ -55,9 +59,9 @@ class AIKitsDatabase extends _AIKitsDatabase {
   }
 
   @override
-  Future<void> savePrompt(PromptingEntity promptingEntity) async {
+  Future<int?> savePrompt(PromptingEntity promptingEntity) async {
     log('savePrompt', name: 'AIKitsDatabase');
-    await store?.box<PromptingEntity>().putAsync(promptingEntity);
+    return store?.box<PromptingEntity>().putAsync(promptingEntity);
   }
 
   @override
@@ -157,5 +161,19 @@ class AIKitsDatabase extends _AIKitsDatabase {
         .map(
           (query) => query.find(),
         );
+  }
+
+  @override
+  void removeAllPromptsByType(String type) {
+    store
+        ?.box<PromptingEntity>()
+        .query(PromptingEntity_.rawType.equals(type))
+        .build()
+        .remove();
+  }
+
+  @override
+  Future<PromptingEntity?> getLastPromptById(int id) async {
+    return store?.box<PromptingEntity>().get(id);
   }
 }

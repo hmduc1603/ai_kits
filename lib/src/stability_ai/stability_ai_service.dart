@@ -35,7 +35,7 @@ class StabilityAIService {
         "style_preset": _config.stylePreset,
       },
       options: Options(
-        receiveTimeout: 30000,
+        receiveTimeout: const Duration(seconds: 30),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer ${_config.key}",
