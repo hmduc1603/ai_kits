@@ -9,10 +9,12 @@ class RapidApiConfig {
   final String hostUrl;
   final Map<String, dynamic> headers;
   final Map<String, dynamic> params;
+  final String? resultJsonKey;
   RapidApiConfig({
     required this.hostUrl,
     required this.headers,
     required this.params,
+    this.resultJsonKey,
   });
 
   factory RapidApiConfig.fromJson(Map<String, dynamic> json) =>

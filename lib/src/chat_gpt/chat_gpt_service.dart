@@ -10,32 +10,30 @@ class ChatGPTService {
   factory ChatGPTService() => _instance;
 
   late ChatGPTConfig _config;
-  late String _rapidApiRegrex;
 
   void init({
     required ChatGPTConfig config,
-    required String rapidApiRegrex,
   }) {
     _config = config;
-    _rapidApiRegrex = rapidApiRegrex;
     PromptingCountingManager().setUpLimitation(config.promptingLimitation);
   }
 
-  Future<PromptingEntity> promptAnInput(PromptingEntity promptingEntity) async {
-    log('promptAnInput', name: 'ApiService');
-    if (await IsOpenProxy.isOpenProxy) {
-      throw Exception('Please turn off your VPN or Proxy to continue');
-    }
-    final String? result = await promptRequest(promptingEntity.prompt);
-    if (result == null) {
-      AIKits().analysisMixin.sendEvent("error_promptAnInput");
-      throw Exception("AI is busy with large requests, please try again later");
-    }
+  // Deprecated
+  // Future<PromptingEntity> promptAnInput(PromptingEntity promptingEntity) async {
+  //   log('promptAnInput', name: 'ApiService');
+  //   if (await IsOpenProxy.isOpenProxy) {
+  //     throw Exception('Please turn off your VPN or Proxy to continue');
+  //   }
+  //   final String? result = await promptRequest(promptingEntity.prompt);
+  //   if (result == null) {
+  //     AIKits().analysisMixin.sendEvent("error_promptAnInput");
+  //     throw Exception("AI is busy with large requests, please try again later");
+  //   }
 
-    log("Prompting result: $result", name: "ApiService");
+  //   log("Prompting result: $result", name: "ApiService");
 
-    return promptingEntity.copyWith.result(result);
-  }
+  //   return promptingEntity.copyWith.result(result);
+  // }
 
   Future<PromptingEntity> promptAnChat(
     List<PromptingEntity> lastPrompts,
@@ -103,27 +101,36 @@ class ChatGPTService {
   }) async {
     AIKits().analysisMixin.sendEvent("prompt_custom_request");
     try {
+      final params = _config.rapidApiConfig.params
+        ..addAll({
+          "messages": prompts
+              .map((e) => {
+                    "role": e.role.name,
+                    "content": e.content,
+                  })
+              .toList()
+        });
+      if (params.containsKey("temperature")) {
+        params["temperature"] = temperature ?? 0.7;
+      }
       final response = await Dio().post(
         _config.rapidApiConfig.hostUrl,
-        data: _config.rapidApiConfig.params
-          ..addAll({
-            "temperature": temperature ?? 0.7,
-            "messages": prompts
-                .map((e) => {
-                      "role": e.role.name,
-                      "content": e.content,
-                    })
-                .toList()
-          }),
+        data: params,
         options: Options(
           headers: _config.rapidApiConfig.headers,
         ),
       );
       if (response.data != null) {
-        final regrex = RegExp(_rapidApiRegrex);
-        final match = regrex.firstMatch(response.data.toString());
-        final result = match?.group(0);
-        return result;
+        final json = response.data as Map;
+        if (json.containsKey(_config.rapidApiConfig.resultJsonKey)) {
+          return json[_config.rapidApiConfig.resultJsonKey];
+        } else {
+          final data = (response.data["choices"] as List)
+              .first["message"]["content"]
+              .toString()
+              .trim();
+          return data;
+        }
       }
     } catch (e) {
       log(e.toString());
