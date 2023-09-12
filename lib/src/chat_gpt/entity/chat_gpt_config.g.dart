@@ -8,16 +8,12 @@ part of 'chat_gpt_config.dart';
 
 ChatGPTConfig _$ChatGPTConfigFromJson(Map<String, dynamic> json) =>
     ChatGPTConfig(
-      enableTurbo: json['enableTurbo'] as bool,
-      chatGPTKeys: (json['chatGPTKeys'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
-      model: json['model'] as String,
-      shouldUseDirectApi: json['shouldUseDirectApi'] as bool,
+      renderApiKey: json['renderApiKey'] as String,
+      renderApiConfig: RenderApiConfig.fromJson(
+          json['renderApiConfig'] as Map<String, dynamic>),
       rapidApiConfig: RapidApiConfig.fromJson(
           json['rapidApiConfig'] as Map<String, dynamic>),
-      shouldUseDirectApiOnChat:
-          json['shouldUseDirectApiOnChat'] as bool? ?? true,
+      shouldUseRenderApi: json['shouldUseRenderApi'] as bool? ?? false,
       promptingLimitation: json['promptingLimitation'] == null
           ? const PromptingLimitation()
           : PromptingLimitation.fromJson(
@@ -26,11 +22,9 @@ ChatGPTConfig _$ChatGPTConfigFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$ChatGPTConfigToJson(ChatGPTConfig instance) =>
     <String, dynamic>{
-      'enableTurbo': instance.enableTurbo,
-      'chatGPTKeys': instance.chatGPTKeys,
-      'model': instance.model,
-      'shouldUseDirectApi': instance.shouldUseDirectApi,
-      'shouldUseDirectApiOnChat': instance.shouldUseDirectApiOnChat,
       'promptingLimitation': instance.promptingLimitation,
+      'renderApiConfig': instance.renderApiConfig,
+      'renderApiKey': instance.renderApiKey,
       'rapidApiConfig': instance.rapidApiConfig,
+      'shouldUseRenderApi': instance.shouldUseRenderApi,
     };
