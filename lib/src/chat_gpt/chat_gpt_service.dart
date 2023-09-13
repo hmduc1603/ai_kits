@@ -108,7 +108,7 @@ class ChatGPTService {
         _config.renderApiConfig.hostUrl,
         data: {
           "temperature": temperature,
-          "messages": prompts.map((e) => e.toMap())
+          "messages": prompts.map((e) => e.toMap()).toList()
         },
         options: Options(
           headers: _config.renderApiConfig.headers,

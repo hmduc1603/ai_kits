@@ -17,7 +17,7 @@ class ChatGPTConfig {
     required this.renderApiKey,
     required this.renderApiConfig,
     required this.rapidApiConfig,
-    this.shouldUseRenderApi = false,
+    this.shouldUseRenderApi = true,
     this.promptingLimitation = const PromptingLimitation(),
   });
 
