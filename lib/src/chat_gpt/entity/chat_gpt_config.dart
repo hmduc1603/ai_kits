@@ -9,12 +9,10 @@ part 'chat_gpt_config.g.dart';
 class ChatGPTConfig {
   final PromptingLimitation promptingLimitation;
   final RenderApiConfig renderApiConfig;
-  final String renderApiKey;
   final RapidApiConfig rapidApiConfig;
   final bool shouldUseRenderApi;
 
   ChatGPTConfig({
-    required this.renderApiKey,
     required this.renderApiConfig,
     required this.rapidApiConfig,
     this.shouldUseRenderApi = true,

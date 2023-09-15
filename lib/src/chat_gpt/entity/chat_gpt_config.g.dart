@@ -8,12 +8,11 @@ part of 'chat_gpt_config.dart';
 
 ChatGPTConfig _$ChatGPTConfigFromJson(Map<String, dynamic> json) =>
     ChatGPTConfig(
-      renderApiKey: json['renderApiKey'] as String,
       renderApiConfig: RenderApiConfig.fromJson(
           json['renderApiConfig'] as Map<String, dynamic>),
       rapidApiConfig: RapidApiConfig.fromJson(
           json['rapidApiConfig'] as Map<String, dynamic>),
-      shouldUseRenderApi: json['shouldUseRenderApi'] as bool? ?? false,
+      shouldUseRenderApi: json['shouldUseRenderApi'] as bool? ?? true,
       promptingLimitation: json['promptingLimitation'] == null
           ? const PromptingLimitation()
           : PromptingLimitation.fromJson(
@@ -24,7 +23,6 @@ Map<String, dynamic> _$ChatGPTConfigToJson(ChatGPTConfig instance) =>
     <String, dynamic>{
       'promptingLimitation': instance.promptingLimitation,
       'renderApiConfig': instance.renderApiConfig,
-      'renderApiKey': instance.renderApiKey,
       'rapidApiConfig': instance.rapidApiConfig,
       'shouldUseRenderApi': instance.shouldUseRenderApi,
     };
