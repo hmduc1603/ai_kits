@@ -1,20 +1,20 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'rapid_api_config.dart';
+part of 'external_api_config.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-RapidApiConfig _$RapidApiConfigFromJson(Map<String, dynamic> json) =>
-    RapidApiConfig(
+ExternalApiConfig _$ExternalApiConfigFromJson(Map<String, dynamic> json) =>
+    ExternalApiConfig(
       hostUrl: json['hostUrl'] as String,
       headers: json['headers'] as Map<String, dynamic>,
       params: json['params'] as Map<String, dynamic>,
       resultJsonKey: json['resultJsonKey'] as String?,
     );
 
-Map<String, dynamic> _$RapidApiConfigToJson(RapidApiConfig instance) =>
+Map<String, dynamic> _$ExternalApiConfigToJson(ExternalApiConfig instance) =>
     <String, dynamic>{
       'hostUrl': instance.hostUrl,
       'headers': instance.headers,

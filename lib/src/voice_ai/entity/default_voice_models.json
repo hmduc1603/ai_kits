@@ -1,0 +1,695 @@
+{
+    "models": [
+        {
+            "_id": "64384320d4caa78ba2e4b5b5",
+            "artistname": "Drake",
+            "uses": 45662,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/e5c1aac2-5966-4572-8031-14a0eb0dc9a9.png",
+                "blurhash": "172, 188, 209"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "drake",
+            "badges": [
+                "hip hop",
+                "singing",
+                "dancehall"
+            ],
+            "createdAt": "2023-04-13T18:00:00.930Z",
+            "accessIds": [],
+            "info": {
+                "trainedBy": "Snoop Dogg\n#8709",
+                "uploadedBy": "DarthTrain"
+            },
+            "isCommunity": false,
+            "likes": 1167,
+            "trending": {
+                "isTrending": false,
+                "position": null
+            }
+        },
+        {
+            "_id": "643a18089d08c77d6a39420c",
+            "artistname": "Ariana Grande",
+            "uses": 45440,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/1e87fb74-7fd0-4eec-a16e-d5209b603759.png",
+                "blurhash": "154, 117, 181"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "arianagrande",
+            "badges": [
+                "pop",
+                "singing",
+                "r&b"
+            ],
+            "createdAt": "2023-04-15T03:20:40.734Z",
+            "accessIds": [],
+            "info": {
+                "trainedBy": "christy#0059",
+                "uploadedBy": "Tonemari"
+            },
+            "isCommunity": false,
+            "likes": 1349,
+            "trending": {
+                "isTrending": true,
+                "position": 1
+            }
+        },
+        {
+            "_id": "643373130f2d54138db07524",
+            "artistname": "Juice WRLD",
+            "uses": 39562,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/f222437c-9c2c-4cad-8c58-5472b10469d3.png",
+                "blurhash": "152, 185, 208"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "juicewrld",
+            "createdAt": "2023-04-10T02:23:15.981Z",
+            "badges": [
+                "rap",
+                "melodic",
+                "hiphop"
+            ],
+            "accessIds": [],
+            "info": {
+                "trainedBy": "ryyyy#5003",
+                "uploadedBy": "summerser999"
+            },
+            "isCommunity": false,
+            "likes": 1631,
+            "trending": {
+                "isTrending": false,
+                "position": null
+            }
+        },
+        {
+            "_id": "6446b514805f8c6b03de43e6",
+            "artistname": "Michael Jackson",
+            "uses": 27441,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/24a43912-a83f-4cb6-8f79-f551e0541040.png",
+                "blurhash": "201, 229, 231"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "michaeljackson",
+            "badges": [
+                "pop",
+                "dance",
+                "soul"
+            ],
+            "createdAt": "2023-04-24T16:57:56.476Z",
+            "accessIds": [],
+            "info": {
+                "trainedBy": "premydaremy#2498",
+                "uploadedBy": "MisterWalkrrr3"
+            },
+            "isCommunity": false,
+            "likes": 834,
+            "trending": {
+                "isTrending": true,
+                "position": 4
+            }
+        },
+        {
+            "_id": "6446b777805f8c6b03de4431",
+            "artistname": "Taylor Swift",
+            "uses": 23966,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/737b6c0e-2b53-43af-8f16-a474469b6d7a.png",
+                "blurhash": "204, 188, 165"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "taylorswift",
+            "badges": [
+                "pop",
+                "singing",
+                "country"
+            ],
+            "createdAt": "2023-04-24T17:08:07.006Z",
+            "accessIds": [],
+            "info": {
+                "trainedBy": "JohnnyJones#8867",
+                "uploadedBy": "Balletdancer1999"
+            },
+            "isCommunity": false,
+            "likes": 907,
+            "trending": {
+                "isTrending": true,
+                "position": 3
+            }
+        },
+        {
+            "_id": "6433792274dc3cc49f582654",
+            "artistname": "Kanye West",
+            "uses": 20286,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/ad15ccae-427c-4473-bfbb-07fe20e4375b.png",
+                "blurhash": "197, 153, 153"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "kanyewest",
+            "createdAt": "2023-04-10T02:49:06.116Z",
+            "badges": [
+                "rap",
+                "hip hop",
+                "singing"
+            ],
+            "accessIds": [],
+            "info": {
+                "trainedBy": "Wil#7050",
+                "uploadedBy": "DarthTrain"
+            },
+            "isCommunity": false,
+            "likes": 404,
+            "trending": {
+                "isTrending": false,
+                "position": null
+            }
+        },
+        {
+            "_id": "645a881ec1a393c979198dc6",
+            "artistname": "Justin Bieber",
+            "uses": 19757,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/575ee061-f435-44f0-8e76-fdf231384879.png",
+                "blurhash": "180, 177, 203"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "justinbieber",
+            "badges": [
+                "pop",
+                "singing",
+                "hip hop"
+            ],
+            "accessIds": [],
+            "createdAt": "2023-05-09T17:51:26.735Z",
+            "info": {
+                "trainedBy": "AguacateDev#4071",
+                "uploadedBy": "4meggie"
+            },
+            "isCommunity": false,
+            "likes": 346,
+            "trending": {
+                "isTrending": false,
+                "position": null
+            }
+        },
+        {
+            "_id": "643a16ed9d08c77d6a3941d8",
+            "artistname": "The Weeknd",
+            "uses": 19121,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/977a214b-a054-4766-9d38-d6085d433852.png",
+                "blurhash": "199, 190, 185"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "theweeknd",
+            "badges": [
+                "r&b",
+                "singing",
+                "hip hop"
+            ],
+            "createdAt": "2023-04-15T03:15:57.237Z",
+            "accessIds": [],
+            "info": {
+                "trainedBy": "Maki Ligon#6713",
+                "uploadedBy": "LegendOfZelda"
+            },
+            "isCommunity": false,
+            "likes": 437,
+            "trending": {
+                "isTrending": true,
+                "position": 5
+            }
+        },
+        {
+            "_id": "645930543550957f864e16d0",
+            "artistname": "Lana Del Rey",
+            "uses": 14815,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/843e6767-726d-4b2d-93a3-24e5cdaa9b34.png",
+                "blurhash": "204, 154, 139"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "lanadelrey",
+            "badges": [
+                "pop",
+                "dance",
+                "electronic"
+            ],
+            "accessIds": [],
+            "createdAt": "2023-05-08T17:24:36.630Z",
+            "info": {
+                "trainedBy": "K7#4523",
+                "uploadedBy": "AgentNum1992"
+            },
+            "isCommunity": false,
+            "likes": 455,
+            "trending": {
+                "isTrending": false,
+                "position": null
+            }
+        },
+        {
+            "_id": "644ab2a71a9b934e6110f1b9",
+            "artistname": "Bruno Mars",
+            "uses": 13840,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/ca645360-dbb1-4839-b7bb-5066afd66634.png",
+                "blurhash": "168, 164, 164"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "brunomars",
+            "badges": [
+                "pop",
+                "singing",
+                "r&b"
+            ],
+            "createdAt": "2023-04-27T17:36:39.262Z",
+            "accessIds": [],
+            "info": {
+                "trainedBy": "Thompson#2472",
+                "uploadedBy": "2freeXx"
+            },
+            "isCommunity": false,
+            "likes": 323,
+            "trending": {
+                "isTrending": false,
+                "position": null
+            }
+        },
+        {
+            "_id": "6458360bc195f4b82e6565c2",
+            "artistname": "Billie Eilish",
+            "uses": 13825,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/c9bfa01f-8ac7-4e87-8dd1-334f1918eb3f.png",
+                "blurhash": "199, 199, 187"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "billieeilish",
+            "badges": [
+                "pop",
+                "singing",
+                "experimental"
+            ],
+            "createdAt": "2023-05-07T23:36:43.848Z",
+            "accessIds": [],
+            "info": {
+                "trainedBy": "senzo#1502",
+                "uploadedBy": "DreamyRae"
+            },
+            "isCommunity": false,
+            "likes": 534,
+            "trending": {
+                "isTrending": false,
+                "position": null
+            }
+        },
+        {
+            "_id": "643a176d9d08c77d6a3941e9",
+            "artistname": "XXXTentacion",
+            "uses": 13633,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/c52df468-fb07-418c-b0a3-5fb9dd588690.png",
+                "blurhash": "110.8177570093458, 67.92056074766354, 42.1822429906542"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "xxxtentacion",
+            "badges": [
+                "rap",
+                "hip hop",
+                "emo"
+            ],
+            "createdAt": "2023-04-15T03:18:05.034Z",
+            "accessIds": [],
+            "info": {
+                "trainedBy": "Angell#4859",
+                "uploadedBy": "WithPainX"
+            },
+            "isCommunity": false,
+            "likes": 658,
+            "trending": {
+                "isTrending": false,
+                "position": null
+            }
+        },
+        {
+            "_id": "646a8e57660f2829cdb6f100",
+            "artistname": "Elvis Presley",
+            "uses": 12918,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/d60f5ed2-54b1-4221-b779-ce84bfa97702.png",
+                "blurhash": "208, 186, 163"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "elvispresley",
+            "badges": [
+                "rock",
+                "pop",
+                "old"
+            ],
+            "accessIds": [],
+            "createdAt": "2023-05-21T21:34:15.511Z",
+            "info": {
+                "trainedBy": "N/A",
+                "uploadedBy": "SuburbanKid"
+            },
+            "isCommunity": false,
+            "likes": 267,
+            "trending": {
+                "isTrending": false,
+                "position": null
+            }
+        },
+        {
+            "_id": "643a15701ead674293659a0d",
+            "artistname": "Eminem",
+            "uses": 12603,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/77c0624f-3cfe-413a-9c92-f5acb578a79e.png",
+                "blurhash": "148, 188, 204"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "eminem",
+            "badges": [
+                "rap",
+                "freestyle",
+                "hip hop"
+            ],
+            "createdAt": "2023-04-15T03:09:36.758Z",
+            "accessIds": [],
+            "info": {
+                "trainedBy": "SpaceCypher#6133",
+                "uploadedBy": "DarthTrain"
+            },
+            "isCommunity": false,
+            "likes": 406,
+            "trending": {
+                "isTrending": false,
+                "position": null
+            }
+        },
+        {
+            "_id": "645b9aa835f673041d7f7ca4",
+            "artistname": "Freddie Mercury",
+            "uses": 11022,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/bdba1426-afac-4eaf-96a5-4345af049f67.png",
+                "blurhash": "217, 201, 199"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "freddiemercury",
+            "badges": [
+                "rock",
+                "funk",
+                "disco"
+            ],
+            "accessIds": [],
+            "createdAt": "2023-05-10T13:22:48.328Z",
+            "info": {
+                "trainedBy": "bowlql",
+                "uploadedBy": "OldSklLover"
+            },
+            "isCommunity": false,
+            "likes": 361,
+            "trending": {
+                "isTrending": false,
+                "position": null
+            }
+        },
+        {
+            "_id": "645a81dfc1a393c979198d3d",
+            "artistname": "Beyoncé",
+            "uses": 10858,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/0a83f479-7a50-4cbc-953e-da17b3b39943.png",
+                "blurhash": "103, 185, 182"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "beyonce",
+            "badges": [
+                "pop",
+                "r&b",
+                "singing"
+            ],
+            "accessIds": [],
+            "createdAt": "2023-05-09T17:24:47.081Z",
+            "info": {
+                "trainedBy": "AIVERSE#5393",
+                "uploadedBy": "RoseParker"
+            },
+            "isCommunity": false,
+            "likes": 103,
+            "trending": {
+                "isTrending": false
+            }
+        },
+        {
+            "_id": "64710eadfdd04a6384c3ca7c",
+            "artistname": "Whitney Houston",
+            "uses": 10845,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/197f0c0d-a814-459c-8020-6590aabbe03a.png",
+                "blurhash": "173, 152, 116"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "whitneyhouston",
+            "badges": [
+                "pop",
+                "r&b",
+                "gospel"
+            ],
+            "accessIds": [],
+            "createdAt": "2023-05-26T19:55:25.047Z",
+            "info": {
+                "trainedBy": "comehu",
+                "uploadedBy": "DontMesWithme"
+            },
+            "isCommunity": false,
+            "likes": 80,
+            "trending": {
+                "isTrending": false,
+                "position": null
+            }
+        },
+        {
+            "_id": "64837c3efe5a39808c31f94a",
+            "artistname": "Frank Sinatra",
+            "uses": 10573,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/7fcd30bd-c1f6-4776-91ee-b224f2980f20.png",
+                "blurhash": "171, 202, 212"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "franksinatra",
+            "badges": [
+                "pop",
+                "jazz",
+                "old school"
+            ],
+            "accessIds": [],
+            "createdAt": "2023-06-09T19:23:42.734Z",
+            "info": {
+                "trainedBy": "𝘿𝙞𝙖𝙗𝙡𝙤#8244",
+                "uploadedBy": "OldSklLover"
+            },
+            "isCommunity": false,
+            "likes": 292,
+            "trending": {
+                "isTrending": false,
+                "position": null
+            }
+        },
+        {
+            "_id": "645a8680c1a393c979198da8",
+            "artistname": "IU",
+            "uses": 8969,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/38d12e33-ff4e-4a63-b6ce-96a6061b20f9.png",
+                "blurhash": "152, 175, 200"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "IU",
+            "badges": [
+                "kpop",
+                "r&b",
+                "folk"
+            ],
+            "accessIds": [],
+            "createdAt": "2023-05-09T17:44:32.059Z",
+            "info": {
+                "trainedBy": "checkmate#2840",
+                "uploadedBy": "CarlyRae"
+            },
+            "isCommunity": false,
+            "likes": 174,
+            "trending": {
+                "isTrending": false
+            }
+        },
+        {
+            "_id": "643a179b9d08c77d6a3941f5",
+            "artistname": "Travis Scott",
+            "uses": 8734,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/3f58197e-9d83-4d4e-bd19-23ff8b4cc952.png",
+                "blurhash": "193, 171, 159"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "travisscott",
+            "badges": [
+                "rap",
+                "autotune",
+                "hip hop"
+            ],
+            "createdAt": "2023-04-15T03:18:51.669Z",
+            "accessIds": [],
+            "info": {
+                "trainedBy": "Snoop Dogg#8709",
+                "uploadedBy": "SlayerTown"
+            },
+            "isCommunity": false,
+            "likes": 253,
+            "trending": {
+                "isTrending": false,
+                "position": null
+            }
+        },
+        {
+            "_id": "6446b8a6805f8c6b03de4459",
+            "artistname": "Paul McCartney",
+            "uses": 8263,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/9d0d0dd3-a2a7-452f-9a7d-1761832bf23f.png",
+                "blurhash": "193, 171, 144"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "paulmccartney",
+            "badges": [
+                "rock",
+                "pop",
+                "singing"
+            ],
+            "createdAt": "2023-04-24T17:13:10.674Z",
+            "accessIds": [],
+            "info": {
+                "trainedBy": "Albinator#8386",
+                "uploadedBy": "ZerpChoose"
+            },
+            "isCommunity": false,
+            "likes": 106,
+            "trending": {
+                "isTrending": false
+            }
+        },
+        {
+            "_id": "643842b8d4caa78ba2e4b59f",
+            "artistname": "Lil Uzi Vert",
+            "uses": 7792,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/4ed6fa44-48b6-40b3-b15d-a87d00c5bb3b.png",
+                "blurhash": "185, 201, 217"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "liluzivert",
+            "badges": [
+                "hip hop",
+                "modern",
+                "emo"
+            ],
+            "createdAt": "2023-04-13T17:58:16.469Z",
+            "accessIds": [],
+            "info": {
+                "trainedBy": "sgsavu#0733",
+                "uploadedBy": "MidnightFizz"
+            },
+            "isCommunity": false,
+            "likes": 94,
+            "trending": {
+                "isTrending": false
+            }
+        },
+        {
+            "_id": "6446b2db805f8c6b03de438d",
+            "artistname": "Harry Styles",
+            "uses": 7404,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/b8d2a390-f1dc-4e45-9bd2-29d71987f1c7.png",
+                "blurhash": "210, 160, 164"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "harrystyles",
+            "badges": [
+                "pop",
+                "folk",
+                "singing"
+            ],
+            "createdAt": "2023-04-24T16:48:27.421Z",
+            "accessIds": [],
+            "info": {
+                "trainedBy": "Melatone#1344",
+                "uploadedBy": "IsabelVasquez"
+            },
+            "isCommunity": false,
+            "likes": 280,
+            "trending": {
+                "isTrending": false
+            }
+        },
+        {
+            "_id": "64590264c195f4b82e6566bf",
+            "artistname": "Ed Sheeran",
+            "uses": 7223,
+            "image": {
+                "url": "https://imagecdn.voicify.ai/models/40358cde-5541-45a5-9eee-fb4ec8e43ad6.png",
+                "blurhash": "225, 235, 232"
+            },
+            "isLive": true,
+            "isPublic": true,
+            "urlParam": "edsheeran",
+            "badges": [
+                "pop",
+                "singing",
+                "folk"
+            ],
+            "createdAt": "2023-05-08T14:08:36.914Z",
+            "accessIds": [],
+            "info": {
+                "trainedBy": "AIVERSE#5393",
+                "uploadedBy": "Blazeus"
+            },
+            "isCommunity": false,
+            "likes": 109,
+            "trending": {
+                "isTrending": false
+            }
+        }
+    ],
+    "length": 757
+}

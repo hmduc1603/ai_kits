@@ -7,11 +7,11 @@ part of 'chat_session.dart';
 // **************************************************************************
 
 abstract class _$ChatSessionCWProxy {
+  ChatSession resultsAsJson(List<String> resultsAsJson);
+
   ChatSession createdDate(DateTime createdDate);
 
   ChatSession relations(List<String> relations);
-
-  ChatSession resultsAsJson(List<String> resultsAsJson);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ChatSession(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -20,17 +20,21 @@ abstract class _$ChatSessionCWProxy {
   /// ChatSession(...).copyWith(id: 12, name: "My name")
   /// ````
   ChatSession call({
+    List<String>? resultsAsJson,
     DateTime? createdDate,
     List<String>? relations,
-    List<String>? resultsAsJson,
   });
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfChatSession.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfChatSession.copyWith.fieldName(...)`
 class _$ChatSessionCWProxyImpl implements _$ChatSessionCWProxy {
+  const _$ChatSessionCWProxyImpl(this._value);
+
   final ChatSession _value;
 
-  const _$ChatSessionCWProxyImpl(this._value);
+  @override
+  ChatSession resultsAsJson(List<String> resultsAsJson) =>
+      this(resultsAsJson: resultsAsJson);
 
   @override
   ChatSession createdDate(DateTime createdDate) =>
@@ -40,10 +44,6 @@ class _$ChatSessionCWProxyImpl implements _$ChatSessionCWProxy {
   ChatSession relations(List<String> relations) => this(relations: relations);
 
   @override
-  ChatSession resultsAsJson(List<String> resultsAsJson) =>
-      this(resultsAsJson: resultsAsJson);
-
-  @override
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ChatSession(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -52,11 +52,16 @@ class _$ChatSessionCWProxyImpl implements _$ChatSessionCWProxy {
   /// ChatSession(...).copyWith(id: 12, name: "My name")
   /// ````
   ChatSession call({
+    Object? resultsAsJson = const $CopyWithPlaceholder(),
     Object? createdDate = const $CopyWithPlaceholder(),
     Object? relations = const $CopyWithPlaceholder(),
-    Object? resultsAsJson = const $CopyWithPlaceholder(),
   }) {
     return ChatSession(
+      resultsAsJson:
+          resultsAsJson == const $CopyWithPlaceholder() || resultsAsJson == null
+              ? _value.resultsAsJson
+              // ignore: cast_nullable_to_non_nullable
+              : resultsAsJson as List<String>,
       createdDate:
           createdDate == const $CopyWithPlaceholder() || createdDate == null
               ? _value.createdDate
@@ -66,11 +71,6 @@ class _$ChatSessionCWProxyImpl implements _$ChatSessionCWProxy {
           ? _value.relations
           // ignore: cast_nullable_to_non_nullable
           : relations as List<String>,
-      resultsAsJson:
-          resultsAsJson == const $CopyWithPlaceholder() || resultsAsJson == null
-              ? _value.resultsAsJson
-              // ignore: cast_nullable_to_non_nullable
-              : resultsAsJson as List<String>,
     );
   }
 }

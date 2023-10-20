@@ -2,23 +2,23 @@
 
 import 'package:json_annotation/json_annotation.dart';
 
-part 'rapid_api_config.g.dart';
+part 'external_api_config.g.dart';
 
 @JsonSerializable()
-class RapidApiConfig {
+class ExternalApiConfig {
   final String hostUrl;
   final Map<String, dynamic> headers;
   final Map<String, dynamic> params;
   final String? resultJsonKey;
-  RapidApiConfig({
+  ExternalApiConfig({
     required this.hostUrl,
     required this.headers,
     required this.params,
     this.resultJsonKey,
   });
 
-  factory RapidApiConfig.fromJson(Map<String, dynamic> json) =>
-      _$RapidApiConfigFromJson(json);
+  factory ExternalApiConfig.fromJson(Map<String, dynamic> json) =>
+      _$ExternalApiConfigFromJson(json);
 
-  Map<String, dynamic> toJson() => _$RapidApiConfigToJson(this);
+  Map<String, dynamic> toJson() => _$ExternalApiConfigToJson(this);
 }

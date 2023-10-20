@@ -1,3 +1,4 @@
+import 'package:ai_kits/src/chat_gpt/manager/daily_counting_manager/daily_counter.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -14,6 +15,7 @@ class LocalStorage {
   static const _kImaginatingCounter = 'kImaginatingCounter';
   static const _kChatCounter = '_kChatCounter';
   static const _kImaginatingLiftimeCounter = 'kImaginatingLifetimeCounter';
+  static const _kDailyLimitationCounter = 'kDailyLimitationCounter';
 
   Box? box;
 
@@ -27,6 +29,7 @@ class LocalStorage {
     try {
       Hive.registerAdapter(PromptingCounterAdapter());
       Hive.registerAdapter(ImaginatingCounterAdapter());
+      Hive.registerAdapter(DailyCounterAdapter());
       box = await Hive.openBox(_kPrefBoxName);
     } catch (_) {
       if (await Hive.boxExists(_kPrefBoxName, path: dir.path)) {
@@ -55,7 +58,13 @@ class LocalStorage {
     return box?.put(_kChatCounter, counter);
   }
 
+  Future<void> setDailyCounter(DailyCounter counter) async {
+    return box?.put(_kDailyLimitationCounter, counter);
+  }
+
   ImaginatingCounter? get imaginatingCounter => box?.get(_kImaginatingCounter);
+
+  DailyCounter? get dailyCounter => box?.get(_kDailyLimitationCounter);
 
   Future<void> setImaginatingCounter(ImaginatingCounter counter) async {
     return box?.put(_kImaginatingCounter, counter);

@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:ai_kits/ai_kits.dart';
+import 'package:ai_kits/objectbox.g.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../../objectbox.g.dart';
 
 abstract class _AIKitsDatabase {
   Future<void> init();
@@ -14,9 +14,9 @@ abstract class _AIKitsDatabase {
 
   Stream<List<PromptingEntity>>? listenPromptHistoriesByInput({String? input});
 
-  Future<void> saveImage(StabilityResult imageResult);
+  Future<void> saveImage(ImageResult imageResult);
 
-  Stream<List<StabilityResult>>? listenImageHistories();
+  Stream<List<ImageResult>>? listenImageHistories();
 
   Future<List<PromptingEntity>?> getLastPrompts(String type);
 
@@ -33,6 +33,12 @@ abstract class _AIKitsDatabase {
   void removeAllPromptsByType(String type);
 
   void removeAllImages();
+
+  Future<VoiceResult?> saveVoiceResult(VoiceResult voiceResult);
+
+  Stream<List<VoiceResult>>? listenToVoiceResults();
+
+  void removeVoiceResult(int id);
 }
 
 class AIKitsDatabase extends _AIKitsDatabase {
@@ -49,12 +55,20 @@ class AIKitsDatabase extends _AIKitsDatabase {
       if (store?.isClosed() == false) {
         store?.close();
       }
-      store = await openStore(directory: '${dir.path}/AIKitsDatabase');
+      final path = '${dir.path}/AIKitsDatabase';
+      // Check if the store is already open
+      if (Store.isOpen(path)) {
+        // Attach to the already opened store
+        store = Store.attach(getObjectBoxModel(), path);
+      } else {
+        store = await openStore(directory: path);
+      }
     } catch (e) {
-      log(e.toString());
+      log(name: "AIKitsDatabase", e.toString());
       store?.box<PromptingEntity>().removeAll();
       store?.box<ChatSession>().removeAll();
-      store?.box<StabilityResult>().removeAll();
+      store?.box<ImageResult>().removeAll();
+      store?.box<VoiceResult>().removeAll();
     }
   }
 
@@ -78,9 +92,9 @@ class AIKitsDatabase extends _AIKitsDatabase {
   }
 
   @override
-  Stream<List<StabilityResult>>? listenImageHistories() {
+  Stream<List<ImageResult>>? listenImageHistories() {
     return store
-        ?.box<StabilityResult>()
+        ?.box<ImageResult>()
         .query()
         .watch(triggerImmediately: true)
         .map(
@@ -89,9 +103,9 @@ class AIKitsDatabase extends _AIKitsDatabase {
   }
 
   @override
-  Future<void> saveImage(StabilityResult imageResult) async {
+  Future<void> saveImage(ImageResult imageResult) async {
     log('saveImage', name: 'AIKitsDatabase');
-    await store?.box<StabilityResult>().putAsync(imageResult);
+    await store?.box<ImageResult>().putAsync(imageResult);
   }
 
   @override
@@ -147,7 +161,7 @@ class AIKitsDatabase extends _AIKitsDatabase {
 
   @override
   void removeAllImages() {
-    store?.box<StabilityResult>().removeAll();
+    store?.box<ImageResult>().removeAll();
   }
 
   @override
@@ -175,5 +189,26 @@ class AIKitsDatabase extends _AIKitsDatabase {
   @override
   Future<PromptingEntity?> getLastPromptById(int id) async {
     return store?.box<PromptingEntity>().get(id);
+  }
+
+  @override
+  Stream<List<VoiceResult>>? listenToVoiceResults() {
+    return store
+        ?.box<VoiceResult>()
+        .query()
+        .watch(triggerImmediately: true)
+        .map(
+          (query) => query.find(),
+        );
+  }
+
+  @override
+  Future<VoiceResult?> saveVoiceResult(VoiceResult voiceResult) async {
+    return store?.box<VoiceResult>().putAndGetAsync(voiceResult);
+  }
+
+  @override
+  void removeVoiceResult(int id) {
+    store?.box<VoiceResult>().remove(id);
   }
 }

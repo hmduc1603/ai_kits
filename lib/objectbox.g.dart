@@ -4,7 +4,7 @@
 // With a Dart package, run `dart run build_runner build`.
 // See also https://docs.objectbox.io/getting-started#generate-objectbox-code
 
-// ignore_for_file: camel_case_types
+// ignore_for_file: camel_case_types, depend_on_referenced_packages
 // coverage:ignore-file
 
 import 'dart:typed_data';
@@ -16,7 +16,8 @@ import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'src/chat_gpt/entity/chat_session.dart';
 import 'src/chat_gpt/entity/prompting_entity.dart';
-import 'src/stability_ai/entity/stability_result.dart';
+import 'src/image_ai/entity/image_result.dart';
+import 'src/voice_ai/entity/voice_result.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
@@ -105,44 +106,118 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(4, 1784758573933483716),
-      name: 'StabilityResult',
-      lastPropertyId: const IdUid(8, 900876486917535676),
+      id: const IdUid(5, 8893529538294064961),
+      name: 'ImageResult',
+      lastPropertyId: const IdUid(8, 6890285393927743975),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 8289817659741099521),
+            id: const IdUid(1, 5757817784767369431),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 7604204431075426537),
+            id: const IdUid(2, 5285157762706249975),
+            name: 'cacheImageId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 2826109391748397003),
             name: 'input',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(3, 1033911825300374610),
+            id: const IdUid(4, 505573929562990771),
             name: 'result',
             type: 23,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 5140377939018604842),
+            id: const IdUid(5, 518823340941233186),
             name: 'createdDate',
             type: 10,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 1616267524686543063),
+            id: const IdUid(6, 1014484665977868686),
             name: 'isSavedToGallery',
             type: 1,
             flags: 0),
         ModelProperty(
-            id: const IdUid(6, 18055832766382061),
+            id: const IdUid(7, 8005483288510637070),
             name: 'hasError',
             type: 1,
             flags: 0),
         ModelProperty(
-            id: const IdUid(8, 900876486917535676),
-            name: 'cacheImageId',
+            id: const IdUid(8, 6890285393927743975),
+            name: 'resultUrl',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(6, 919677987552565480),
+      name: 'VoiceResult',
+      lastPropertyId: const IdUid(15, 1401002212072585100),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 5154783075929263612),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(3, 1851258460521028219),
+            name: 'resultUrl',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 605278448385902720),
+            name: 'youtubeTitle',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 4135614913738812723),
+            name: 'youtubeAuthor',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(7, 8176519772820077871),
+            name: 'modelAvatar',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(8, 8947927013561789406),
+            name: 'modelArtist',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(10, 113087145595172412),
+            name: 'updatedDate',
+            type: 10,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(11, 2577276636765143378),
+            name: 'requestId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(12, 7285048758038436306),
+            name: 'isConverted',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(13, 9165337426810911778),
+            name: 'hasError',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(14, 4029125067015889299),
+            name: 'isCompleted',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(15, 1401002212072585100),
+            name: 'shortid',
             type: 9,
             flags: 0)
       ],
@@ -150,7 +225,13 @@ final _entities = <ModelEntity>[
       backlinks: <ModelBacklink>[])
 ];
 
-/// Open an ObjectBox store with the model declared in this file.
+/// Shortcut for [Store.new] that passes [getObjectBoxModel] and for Flutter
+/// apps by default a [directory] using `defaultStoreDirectory()` from the
+/// ObjectBox Flutter library.
+///
+/// Note: for desktop apps it is recommended to specify a unique [directory].
+///
+/// See [Store.new] for an explanation of all parameters.
 Future<Store> openStore(
         {String? directory,
         int? maxDBSizeInKB,
@@ -166,15 +247,16 @@ Future<Store> openStore(
         queriesCaseSensitiveDefault: queriesCaseSensitiveDefault,
         macosApplicationGroup: macosApplicationGroup);
 
-/// ObjectBox model definition, pass it to [Store] - Store(getObjectBoxModel())
+/// Returns the ObjectBox model definition for this project for use with
+/// [Store.new].
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(4, 1784758573933483716),
+      lastEntityId: const IdUid(6, 919677987552565480),
       lastIndexId: const IdUid(0, 0),
       lastRelationId: const IdUid(0, 0),
       lastSequenceId: const IdUid(0, 0),
-      retiredEntityUids: const [933623351675514438],
+      retiredEntityUids: const [933623351675514438, 1784758573933483716],
       retiredIndexUids: const [],
       retiredPropertyUids: const [
         4579458851321007951,
@@ -183,7 +265,18 @@ ModelDefinition getObjectBoxModel() {
         5897523025735225399,
         1481903636559386332,
         6356996361923861959,
-        7495192306881828374
+        7495192306881828374,
+        8289817659741099521,
+        7604204431075426537,
+        1033911825300374610,
+        5140377939018604842,
+        1616267524686543063,
+        18055832766382061,
+        900876486917535676,
+        1019455996231310069,
+        992280056907516298,
+        8629723533145629907,
+        340495488067769156
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -225,24 +318,36 @@ ModelDefinition getObjectBoxModel() {
         objectFromFB: (Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
-
+          final moodParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 14);
+          final promptParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 8, '');
+          final idParam =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 4);
+          final inputParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 10, '');
+          final rawTypeParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 6, '');
+          final resultParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 16);
+          final createdDateParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0));
+          final hasErrorParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 20, false);
+          final hashtagsParam = const fb.ListReader<String>(
+                  fb.StringReader(asciiOptimization: true),
+                  lazy: false)
+              .vTableGet(buffer, rootOffset, 12, []);
           final object = PromptingEntity(
-              mood: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 14),
-              prompt: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, ''),
-              id: const fb.Int64Reader()
-                  .vTableGetNullable(buffer, rootOffset, 4),
-              input: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 10, ''),
-              rawType: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 6, ''),
-              result: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 16),
-              createdDate: DateTime.fromMillisecondsSinceEpoch(
-                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0)),
-              hasError: const fb.BoolReader().vTableGet(buffer, rootOffset, 20, false),
-              hashtags: const fb.ListReader<String>(fb.StringReader(asciiOptimization: true), lazy: false).vTableGet(buffer, rootOffset, 12, []));
+              mood: moodParam,
+              prompt: promptParam,
+              id: idParam,
+              input: inputParam,
+              rawType: rawTypeParam,
+              result: resultParam,
+              createdDate: createdDateParam,
+              hasError: hasErrorParam,
+              hashtags: hashtagsParam);
 
           return object;
         }),
@@ -271,66 +376,175 @@ ModelDefinition getObjectBoxModel() {
         objectFromFB: (Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
-
+          final resultsAsJsonParam = const fb.ListReader<String>(
+                  fb.StringReader(asciiOptimization: true),
+                  lazy: false)
+              .vTableGet(buffer, rootOffset, 10, []);
+          final createdDateParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0));
+          final relationsParam = const fb.ListReader<String>(
+                  fb.StringReader(asciiOptimization: true),
+                  lazy: false)
+              .vTableGet(buffer, rootOffset, 12, []);
           final object = ChatSession(
-              resultsAsJson: const fb.ListReader<String>(
-                      fb.StringReader(asciiOptimization: true),
-                      lazy: false)
-                  .vTableGet(buffer, rootOffset, 10, []),
-              createdDate: DateTime.fromMillisecondsSinceEpoch(
-                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0)),
-              relations: const fb.ListReader<String>(
-                      fb.StringReader(asciiOptimization: true),
-                      lazy: false)
-                  .vTableGet(buffer, rootOffset, 12, []))
+              resultsAsJson: resultsAsJsonParam,
+              createdDate: createdDateParam,
+              relations: relationsParam)
             ..id =
                 const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 4);
 
           return object;
         }),
-    StabilityResult: EntityDefinition<StabilityResult>(
+    ImageResult: EntityDefinition<ImageResult>(
         model: _entities[2],
-        toOneRelations: (StabilityResult object) => [],
-        toManyRelations: (StabilityResult object) => {},
-        getId: (StabilityResult object) => object.id,
-        setId: (StabilityResult object, int id) {
+        toOneRelations: (ImageResult object) => [],
+        toManyRelations: (ImageResult object) => {},
+        getId: (ImageResult object) => object.id,
+        setId: (ImageResult object, int id) {
           object.id = id;
         },
-        objectToFB: (StabilityResult object, fb.Builder fbb) {
+        objectToFB: (ImageResult object, fb.Builder fbb) {
+          final cacheImageIdOffset = fbb.writeString(object.cacheImageId);
           final inputOffset = fbb.writeString(object.input);
           final resultOffset =
               object.result == null ? null : fbb.writeListInt8(object.result!);
-          final cacheImageIdOffset = fbb.writeString(object.cacheImageId);
+          final resultUrlOffset = object.resultUrl == null
+              ? null
+              : fbb.writeString(object.resultUrl!);
           fbb.startTable(9);
           fbb.addInt64(0, object.id ?? 0);
-          fbb.addOffset(1, inputOffset);
-          fbb.addOffset(2, resultOffset);
-          fbb.addInt64(3, object.createdDate.millisecondsSinceEpoch);
-          fbb.addBool(4, object.isSavedToGallery);
-          fbb.addBool(5, object.hasError);
-          fbb.addOffset(7, cacheImageIdOffset);
+          fbb.addOffset(1, cacheImageIdOffset);
+          fbb.addOffset(2, inputOffset);
+          fbb.addOffset(3, resultOffset);
+          fbb.addInt64(4, object.createdDate.millisecondsSinceEpoch);
+          fbb.addBool(5, object.isSavedToGallery);
+          fbb.addBool(6, object.hasError);
+          fbb.addOffset(7, resultUrlOffset);
           fbb.finish(fbb.endTable());
           return object.id ?? 0;
         },
         objectFromFB: (Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
+          final idParam =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 4);
+          final cacheImageIdParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 6, '');
+          final inputParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 8, '');
+          final resultParam = const fb.Uint8ListReader(lazy: false)
+              .vTableGetNullable(buffer, rootOffset, 10) as Uint8List?;
+          final resultUrlParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 18);
+          final createdDateParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0));
+          final isSavedToGalleryParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 14, false);
+          final hasErrorParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 16, false);
+          final object = ImageResult(
+              id: idParam,
+              cacheImageId: cacheImageIdParam,
+              input: inputParam,
+              result: resultParam,
+              resultUrl: resultUrlParam,
+              createdDate: createdDateParam,
+              isSavedToGallery: isSavedToGalleryParam,
+              hasError: hasErrorParam);
 
-          final object = StabilityResult(
-              id: const fb.Int64Reader()
-                  .vTableGetNullable(buffer, rootOffset, 4),
-              cacheImageId: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 18, ''),
-              input: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 6, ''),
-              result: const fb.Uint8ListReader(lazy: false)
-                  .vTableGetNullable(buffer, rootOffset, 8) as Uint8List?,
-              createdDate: DateTime.fromMillisecondsSinceEpoch(
-                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0)),
-              isSavedToGallery: const fb.BoolReader()
-                  .vTableGet(buffer, rootOffset, 12, false),
-              hasError: const fb.BoolReader()
-                  .vTableGet(buffer, rootOffset, 14, false));
+          return object;
+        }),
+    VoiceResult: EntityDefinition<VoiceResult>(
+        model: _entities[3],
+        toOneRelations: (VoiceResult object) => [],
+        toManyRelations: (VoiceResult object) => {},
+        getId: (VoiceResult object) => object.id,
+        setId: (VoiceResult object, int id) {
+          object.id = id;
+        },
+        objectToFB: (VoiceResult object, fb.Builder fbb) {
+          final resultUrlOffset = object.resultUrl == null
+              ? null
+              : fbb.writeString(object.resultUrl!);
+          final youtubeTitleOffset = object.youtubeTitle == null
+              ? null
+              : fbb.writeString(object.youtubeTitle!);
+          final youtubeAuthorOffset = object.youtubeAuthor == null
+              ? null
+              : fbb.writeString(object.youtubeAuthor!);
+          final modelAvatarOffset = object.modelAvatar == null
+              ? null
+              : fbb.writeString(object.modelAvatar!);
+          final modelArtistOffset = object.modelArtist == null
+              ? null
+              : fbb.writeString(object.modelArtist!);
+          final requestIdOffset = fbb.writeString(object.requestId);
+          final shortidOffset =
+              object.shortid == null ? null : fbb.writeString(object.shortid!);
+          fbb.startTable(16);
+          fbb.addInt64(0, object.id ?? 0);
+          fbb.addOffset(2, resultUrlOffset);
+          fbb.addOffset(4, youtubeTitleOffset);
+          fbb.addOffset(5, youtubeAuthorOffset);
+          fbb.addOffset(6, modelAvatarOffset);
+          fbb.addOffset(7, modelArtistOffset);
+          fbb.addInt64(9, object.updatedDate?.millisecondsSinceEpoch);
+          fbb.addOffset(10, requestIdOffset);
+          fbb.addBool(11, object.isConverted);
+          fbb.addBool(12, object.hasError);
+          fbb.addBool(13, object.isCompleted);
+          fbb.addOffset(14, shortidOffset);
+          fbb.finish(fbb.endTable());
+          return object.id ?? 0;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final updatedDateValue =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 22);
+          final idParam =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 4);
+          final resultUrlParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 8);
+          final requestIdParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 24, '');
+          final modelAvatarParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 16);
+          final youtubeAuthorParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 14);
+          final youtubeTitleParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 12);
+          final modelArtistParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 18);
+          final updatedDateParam = updatedDateValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(updatedDateValue);
+          final hasErrorParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 28, false);
+          final isConvertedParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 26, false);
+          final isCompletedParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 30, false);
+          final shortidParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 32);
+          final object = VoiceResult(
+              id: idParam,
+              resultUrl: resultUrlParam,
+              requestId: requestIdParam,
+              modelAvatar: modelAvatarParam,
+              youtubeAuthor: youtubeAuthorParam,
+              youtubeTitle: youtubeTitleParam,
+              modelArtist: modelArtistParam,
+              updatedDate: updatedDateParam,
+              hasError: hasErrorParam,
+              isConverted: isConvertedParam,
+              isCompleted: isCompletedParam,
+              shortid: shortidParam);
 
           return object;
         })
@@ -397,33 +611,88 @@ class ChatSession_ {
       QueryStringVectorProperty<ChatSession>(_entities[1].properties[3]);
 }
 
-/// [StabilityResult] entity fields to define ObjectBox queries.
-class StabilityResult_ {
-  /// see [StabilityResult.id]
+/// [ImageResult] entity fields to define ObjectBox queries.
+class ImageResult_ {
+  /// see [ImageResult.id]
   static final id =
-      QueryIntegerProperty<StabilityResult>(_entities[2].properties[0]);
+      QueryIntegerProperty<ImageResult>(_entities[2].properties[0]);
 
-  /// see [StabilityResult.input]
-  static final input =
-      QueryStringProperty<StabilityResult>(_entities[2].properties[1]);
-
-  /// see [StabilityResult.result]
-  static final result =
-      QueryByteVectorProperty<StabilityResult>(_entities[2].properties[2]);
-
-  /// see [StabilityResult.createdDate]
-  static final createdDate =
-      QueryIntegerProperty<StabilityResult>(_entities[2].properties[3]);
-
-  /// see [StabilityResult.isSavedToGallery]
-  static final isSavedToGallery =
-      QueryBooleanProperty<StabilityResult>(_entities[2].properties[4]);
-
-  /// see [StabilityResult.hasError]
-  static final hasError =
-      QueryBooleanProperty<StabilityResult>(_entities[2].properties[5]);
-
-  /// see [StabilityResult.cacheImageId]
+  /// see [ImageResult.cacheImageId]
   static final cacheImageId =
-      QueryStringProperty<StabilityResult>(_entities[2].properties[6]);
+      QueryStringProperty<ImageResult>(_entities[2].properties[1]);
+
+  /// see [ImageResult.input]
+  static final input =
+      QueryStringProperty<ImageResult>(_entities[2].properties[2]);
+
+  /// see [ImageResult.result]
+  static final result =
+      QueryByteVectorProperty<ImageResult>(_entities[2].properties[3]);
+
+  /// see [ImageResult.createdDate]
+  static final createdDate =
+      QueryIntegerProperty<ImageResult>(_entities[2].properties[4]);
+
+  /// see [ImageResult.isSavedToGallery]
+  static final isSavedToGallery =
+      QueryBooleanProperty<ImageResult>(_entities[2].properties[5]);
+
+  /// see [ImageResult.hasError]
+  static final hasError =
+      QueryBooleanProperty<ImageResult>(_entities[2].properties[6]);
+
+  /// see [ImageResult.resultUrl]
+  static final resultUrl =
+      QueryStringProperty<ImageResult>(_entities[2].properties[7]);
+}
+
+/// [VoiceResult] entity fields to define ObjectBox queries.
+class VoiceResult_ {
+  /// see [VoiceResult.id]
+  static final id =
+      QueryIntegerProperty<VoiceResult>(_entities[3].properties[0]);
+
+  /// see [VoiceResult.resultUrl]
+  static final resultUrl =
+      QueryStringProperty<VoiceResult>(_entities[3].properties[1]);
+
+  /// see [VoiceResult.youtubeTitle]
+  static final youtubeTitle =
+      QueryStringProperty<VoiceResult>(_entities[3].properties[2]);
+
+  /// see [VoiceResult.youtubeAuthor]
+  static final youtubeAuthor =
+      QueryStringProperty<VoiceResult>(_entities[3].properties[3]);
+
+  /// see [VoiceResult.modelAvatar]
+  static final modelAvatar =
+      QueryStringProperty<VoiceResult>(_entities[3].properties[4]);
+
+  /// see [VoiceResult.modelArtist]
+  static final modelArtist =
+      QueryStringProperty<VoiceResult>(_entities[3].properties[5]);
+
+  /// see [VoiceResult.updatedDate]
+  static final updatedDate =
+      QueryIntegerProperty<VoiceResult>(_entities[3].properties[6]);
+
+  /// see [VoiceResult.requestId]
+  static final requestId =
+      QueryStringProperty<VoiceResult>(_entities[3].properties[7]);
+
+  /// see [VoiceResult.isConverted]
+  static final isConverted =
+      QueryBooleanProperty<VoiceResult>(_entities[3].properties[8]);
+
+  /// see [VoiceResult.hasError]
+  static final hasError =
+      QueryBooleanProperty<VoiceResult>(_entities[3].properties[9]);
+
+  /// see [VoiceResult.isCompleted]
+  static final isCompleted =
+      QueryBooleanProperty<VoiceResult>(_entities[3].properties[10]);
+
+  /// see [VoiceResult.shortid]
+  static final shortid =
+      QueryStringProperty<VoiceResult>(_entities[3].properties[11]);
 }

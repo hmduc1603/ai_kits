@@ -8,9 +8,11 @@ part 'render_api_config.g.dart';
 class RenderApiConfig {
   final String hostUrl;
   final Map<String, dynamic> headers;
+  final Map<String, dynamic> body;
   RenderApiConfig({
     required this.hostUrl,
     required this.headers,
+    this.body = const {},
   });
 
   factory RenderApiConfig.fromJson(Map<String, dynamic> json) =>
