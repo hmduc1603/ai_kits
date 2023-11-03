@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ai_kits/src/chat_gpt/manager/daily_counting_manager/daily_counter.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
@@ -59,6 +61,7 @@ class LocalStorage {
   }
 
   Future<void> setDailyCounter(DailyCounter counter) async {
+    log("setDailyCounter");
     return box?.put(_kDailyLimitationCounter, counter);
   }
 

@@ -36,6 +36,8 @@ abstract class _AIKitsDatabase {
 
   Future<VoiceResult?> saveVoiceResult(VoiceResult voiceResult);
 
+  Future<VoiceResult?> getVoiceResultByRequestId(String requestId);
+
   Stream<List<VoiceResult>>? listenToVoiceResults();
 
   void removeVoiceResult(int id);
@@ -210,5 +212,15 @@ class AIKitsDatabase extends _AIKitsDatabase {
   @override
   void removeVoiceResult(int id) {
     store?.box<VoiceResult>().remove(id);
+  }
+
+  @override
+  Future<VoiceResult?> getVoiceResultByRequestId(String requestId) async {
+    return store
+        ?.box<VoiceResult>()
+        .query(VoiceResult_.requestId.equals(requestId))
+        .build()
+        .find()
+        .firstOrNull;
   }
 }

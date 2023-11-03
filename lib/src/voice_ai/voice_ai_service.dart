@@ -54,10 +54,14 @@ class VoiceAIService {
     }
   }
 
-  Future<VoiceResult> convertMusic(
-      {required String model,
-      required String url,
-      String? firebaseMessagingToken}) async {
+  Future<VoiceResult> convertMusic({
+    required String model,
+    required String url,
+    required bool isPremium,
+    required String modelId,
+    String? firebaseMessagingToken,
+    required String idToken,
+  }) async {
     try {
       dev.log('convertMusic: $model - $url');
       if (await IsOpenProxy.isOpenProxy) {
@@ -68,6 +72,8 @@ class VoiceAIService {
         "${_config.renderApiConfig.hostUrl}/create",
         data: {
           "firebase_messaging_token": firebaseMessagingToken,
+          "is_premium": isPremium,
+          "model_id": modelId,
           "request_id": requestId,
           "key": "audio/${_generateRandomUUID()}.wav",
           "model": model,
@@ -75,7 +81,8 @@ class VoiceAIService {
         },
         options: Options(
           receiveTimeout: const Duration(seconds: 60),
-          headers: _config.renderApiConfig.headers,
+          headers: _config.renderApiConfig.headers
+            ..addAll({"id_token": idToken}),
         ),
       );
       if (response.statusCode == 200) {
@@ -108,14 +115,15 @@ class VoiceAIService {
         ),
       );
       final result = VoiceResult.fromJson(response.data);
-      dev.log(result.toString());
+      dev.log(result.toJson().toString());
       AIKits().analysisMixin.sendEvent("success_getMusic");
-      return initialData.copyWith(
+      final updatedResult = initialData.copyWith(
         resultUrl: result.resultUrl,
         hasError: result.hasError,
         isCompleted: result.isCompleted,
         isConverted: result.isConverted,
       );
+      return updatedResult;
     } catch (e) {
       dev.log(e.toString());
       AIKits().analysisMixin.sendEvent("error_getMusic");

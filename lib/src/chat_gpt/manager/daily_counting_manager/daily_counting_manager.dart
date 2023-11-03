@@ -60,6 +60,10 @@ class DailyCountingManager {
       onPremiumCallBack();
       return;
     }
+    if (_limitation.dailyLimitation == 0) {
+      onShouldProceed(false, null);
+      return;
+    }
     // Normal case
     AIKits().analysisMixin.sendEvent("check_daily_limitation");
     bool shouldProceed = false;
@@ -93,6 +97,14 @@ class DailyCountingManager {
       ));
     } else {
       counter.counting += 1;
+      counter.updatedDate = DateTime.now();
+      LocalStorage().setDailyCounter(counter);
+    }
+  }
+
+  decreaseCounter({DailyCounter? counter, required String type}) {
+    if (counter != null && counter.counting > 0) {
+      counter.counting -= 1;
       counter.updatedDate = DateTime.now();
       LocalStorage().setDailyCounter(counter);
     }
