@@ -137,7 +137,7 @@
     },
     {
       "id": "6:919677987552565480",
-      "lastPropertyId": "15:1401002212072585100",
+      "lastPropertyId": "18:6456092678790830041",
       "name": "VoiceResult",
       "properties": [
         {
@@ -199,6 +199,21 @@
         {
           "id": "15:1401002212072585100",
           "name": "shortid",
+          "type": 9
+        },
+        {
+          "id": "16:3687673939502450426",
+          "name": "youtubeUrl",
+          "type": 9
+        },
+        {
+          "id": "17:6231613200796616288",
+          "name": "instrumentalUrl",
+          "type": 9
+        },
+        {
+          "id": "18:6456092678790830041",
+          "name": "convertedUrl",
           "type": 9
         }
       ],

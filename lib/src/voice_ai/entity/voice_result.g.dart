@@ -31,6 +31,12 @@ abstract class _$VoiceResultCWProxy {
 
   VoiceResult shortid(String? shortid);
 
+  VoiceResult youtubeUrl(String? youtubeUrl);
+
+  VoiceResult instrumentalUrl(String? instrumentalUrl);
+
+  VoiceResult convertedUrl(String? convertedUrl);
+
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `VoiceResult(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -50,6 +56,9 @@ abstract class _$VoiceResultCWProxy {
     bool? isConverted,
     bool? isCompleted,
     String? shortid,
+    String? youtubeUrl,
+    String? instrumentalUrl,
+    String? convertedUrl,
   });
 }
 
@@ -101,6 +110,17 @@ class _$VoiceResultCWProxyImpl implements _$VoiceResultCWProxy {
   VoiceResult shortid(String? shortid) => this(shortid: shortid);
 
   @override
+  VoiceResult youtubeUrl(String? youtubeUrl) => this(youtubeUrl: youtubeUrl);
+
+  @override
+  VoiceResult instrumentalUrl(String? instrumentalUrl) =>
+      this(instrumentalUrl: instrumentalUrl);
+
+  @override
+  VoiceResult convertedUrl(String? convertedUrl) =>
+      this(convertedUrl: convertedUrl);
+
+  @override
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `VoiceResult(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -121,6 +141,9 @@ class _$VoiceResultCWProxyImpl implements _$VoiceResultCWProxy {
     Object? isConverted = const $CopyWithPlaceholder(),
     Object? isCompleted = const $CopyWithPlaceholder(),
     Object? shortid = const $CopyWithPlaceholder(),
+    Object? youtubeUrl = const $CopyWithPlaceholder(),
+    Object? instrumentalUrl = const $CopyWithPlaceholder(),
+    Object? convertedUrl = const $CopyWithPlaceholder(),
   }) {
     return VoiceResult(
       id: id == const $CopyWithPlaceholder()
@@ -173,6 +196,18 @@ class _$VoiceResultCWProxyImpl implements _$VoiceResultCWProxy {
           ? _value.shortid
           // ignore: cast_nullable_to_non_nullable
           : shortid as String?,
+      youtubeUrl: youtubeUrl == const $CopyWithPlaceholder()
+          ? _value.youtubeUrl
+          // ignore: cast_nullable_to_non_nullable
+          : youtubeUrl as String?,
+      instrumentalUrl: instrumentalUrl == const $CopyWithPlaceholder()
+          ? _value.instrumentalUrl
+          // ignore: cast_nullable_to_non_nullable
+          : instrumentalUrl as String?,
+      convertedUrl: convertedUrl == const $CopyWithPlaceholder()
+          ? _value.convertedUrl
+          // ignore: cast_nullable_to_non_nullable
+          : convertedUrl as String?,
     );
   }
 }
@@ -188,13 +223,12 @@ extension $VoiceResultCopyWith on VoiceResult {
 // **************************************************************************
 
 VoiceResult _$VoiceResultFromJson(Map<String, dynamic> json) => VoiceResult(
-      id: json['id'] as int?,
       resultUrl: json['result_url'] as String?,
       requestId: json['request_id'] as String,
-      modelAvatar: json['modelAvatar'] as String?,
-      youtubeAuthor: json['youtubeAuthor'] as String?,
-      youtubeTitle: json['youtubeTitle'] as String?,
-      modelArtist: json['modelArtist'] as String?,
+      modelAvatar: json['model_avatar'] as String?,
+      youtubeAuthor: json['youtube_author'] as String?,
+      youtubeTitle: json['youtube_title'] as String?,
+      modelArtist: json['model'] as String?,
       updatedDate: json['updatedDate'] == null
           ? null
           : DateTime.parse(json['updatedDate'] as String),
@@ -202,20 +236,25 @@ VoiceResult _$VoiceResultFromJson(Map<String, dynamic> json) => VoiceResult(
       isConverted: json['isConverted'] as bool? ?? false,
       isCompleted: json['isCompleted'] as bool? ?? false,
       shortid: json['shortid'] as String?,
+      youtubeUrl: json['youtubeUrl'] as String?,
+      instrumentalUrl: json['instrumentalUrl'] as String?,
+      convertedUrl: json['convertedUrl'] as String?,
     );
 
 Map<String, dynamic> _$VoiceResultToJson(VoiceResult instance) =>
     <String, dynamic>{
-      'id': instance.id,
       'result_url': instance.resultUrl,
-      'modelAvatar': instance.modelAvatar,
-      'modelArtist': instance.modelArtist,
-      'youtubeTitle': instance.youtubeTitle,
-      'youtubeAuthor': instance.youtubeAuthor,
+      'model_avatar': instance.modelAvatar,
+      'model': instance.modelArtist,
+      'youtube_title': instance.youtubeTitle,
+      'youtube_author': instance.youtubeAuthor,
       'updatedDate': instance.updatedDate?.toIso8601String(),
       'request_id': instance.requestId,
       'isConverted': instance.isConverted,
       'hasError': instance.hasError,
       'isCompleted': instance.isCompleted,
       'shortid': instance.shortid,
+      'youtubeUrl': instance.youtubeUrl,
+      'instrumentalUrl': instance.instrumentalUrl,
+      'convertedUrl': instance.convertedUrl,
     };

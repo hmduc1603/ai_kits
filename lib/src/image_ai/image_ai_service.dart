@@ -9,27 +9,27 @@ class ImageAIService {
   ImageAIService._internal();
   factory ImageAIService() => _instance;
 
-  late ImageConfig _config;
-
   void init(ImageConfig config) {
-    _config = config;
-    ImaginatingCountingManager().setUpLimitation(_config.imaginatingLimitation);
+    ImaginatingCountingManager().setUpLimitation(config.imaginatingLimitation);
   }
 
-  Future<dynamic> requestImage(String prompt) async {
+  Future<dynamic> requestImage({
+    required String prompt,
+    required ImageConfig config,
+  }) async {
     try {
       log('requestImage: $prompt', name: 'ImageAIService');
       if (await IsOpenProxy.isOpenProxy) {
         throw Exception('Please turn off your VPN or Proxy to continue');
       }
-      final data = _config.body;
+      final data = config.body;
       data["prompt"] = prompt;
       final response = await Dio().post(
-        _config.hostUrl,
+        config.hostUrl,
         data: data,
         options: Options(
           receiveTimeout: const Duration(seconds: 60),
-          headers: _config.headers,
+          headers: config.headers,
         ),
       );
       final result = response.data["output"];

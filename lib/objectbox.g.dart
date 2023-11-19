@@ -157,7 +157,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(6, 919677987552565480),
       name: 'VoiceResult',
-      lastPropertyId: const IdUid(15, 1401002212072585100),
+      lastPropertyId: const IdUid(18, 6456092678790830041),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -218,6 +218,21 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(15, 1401002212072585100),
             name: 'shortid',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(16, 3687673939502450426),
+            name: 'youtubeUrl',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(17, 6231613200796616288),
+            name: 'instrumentalUrl',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(18, 6456092678790830041),
+            name: 'convertedUrl',
             type: 9,
             flags: 0)
       ],
@@ -482,7 +497,16 @@ ModelDefinition getObjectBoxModel() {
           final requestIdOffset = fbb.writeString(object.requestId);
           final shortidOffset =
               object.shortid == null ? null : fbb.writeString(object.shortid!);
-          fbb.startTable(16);
+          final youtubeUrlOffset = object.youtubeUrl == null
+              ? null
+              : fbb.writeString(object.youtubeUrl!);
+          final instrumentalUrlOffset = object.instrumentalUrl == null
+              ? null
+              : fbb.writeString(object.instrumentalUrl!);
+          final convertedUrlOffset = object.convertedUrl == null
+              ? null
+              : fbb.writeString(object.convertedUrl!);
+          fbb.startTable(19);
           fbb.addInt64(0, object.id ?? 0);
           fbb.addOffset(2, resultUrlOffset);
           fbb.addOffset(4, youtubeTitleOffset);
@@ -495,6 +519,9 @@ ModelDefinition getObjectBoxModel() {
           fbb.addBool(12, object.hasError);
           fbb.addBool(13, object.isCompleted);
           fbb.addOffset(14, shortidOffset);
+          fbb.addOffset(15, youtubeUrlOffset);
+          fbb.addOffset(16, instrumentalUrlOffset);
+          fbb.addOffset(17, convertedUrlOffset);
           fbb.finish(fbb.endTable());
           return object.id ?? 0;
         },
@@ -532,6 +559,14 @@ ModelDefinition getObjectBoxModel() {
               const fb.BoolReader().vTableGet(buffer, rootOffset, 30, false);
           final shortidParam = const fb.StringReader(asciiOptimization: true)
               .vTableGetNullable(buffer, rootOffset, 32);
+          final youtubeUrlParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 34);
+          final instrumentalUrlParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 36);
+          final convertedUrlParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 38);
           final object = VoiceResult(
               id: idParam,
               resultUrl: resultUrlParam,
@@ -544,7 +579,10 @@ ModelDefinition getObjectBoxModel() {
               hasError: hasErrorParam,
               isConverted: isConvertedParam,
               isCompleted: isCompletedParam,
-              shortid: shortidParam);
+              shortid: shortidParam,
+              youtubeUrl: youtubeUrlParam,
+              instrumentalUrl: instrumentalUrlParam,
+              convertedUrl: convertedUrlParam);
 
           return object;
         })
@@ -695,4 +733,16 @@ class VoiceResult_ {
   /// see [VoiceResult.shortid]
   static final shortid =
       QueryStringProperty<VoiceResult>(_entities[3].properties[11]);
+
+  /// see [VoiceResult.youtubeUrl]
+  static final youtubeUrl =
+      QueryStringProperty<VoiceResult>(_entities[3].properties[12]);
+
+  /// see [VoiceResult.instrumentalUrl]
+  static final instrumentalUrl =
+      QueryStringProperty<VoiceResult>(_entities[3].properties[13]);
+
+  /// see [VoiceResult.convertedUrl]
+  static final convertedUrl =
+      QueryStringProperty<VoiceResult>(_entities[3].properties[14]);
 }

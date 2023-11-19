@@ -8,13 +8,18 @@ part 'voice_result.g.dart';
 @Entity()
 @CopyWith()
 class VoiceResult {
+  @JsonKey(includeFromJson: false)
   @Id()
   int? id;
   @JsonKey(name: "result_url")
   final String? resultUrl;
+  @JsonKey(name: "model_avatar")
   String? modelAvatar;
+  @JsonKey(name: "model")
   String? modelArtist;
+  @JsonKey(name: "youtube_title")
   String? youtubeTitle;
+  @JsonKey(name: "youtube_author")
   String? youtubeAuthor;
   @Property(type: PropertyType.date)
   DateTime? updatedDate;
@@ -24,6 +29,9 @@ class VoiceResult {
   final bool hasError;
   final bool isCompleted;
   final String? shortid;
+  final String? youtubeUrl;
+  final String? instrumentalUrl;
+  final String? convertedUrl;
 
   VoiceResult({
     this.id,
@@ -38,13 +46,16 @@ class VoiceResult {
     this.isConverted = false,
     this.isCompleted = false,
     this.shortid,
+    this.youtubeUrl,
+    this.instrumentalUrl,
+    this.convertedUrl,
   });
 
-  VoiceResultStatus? get resultStatus {
-    if (hasError) {
-      return VoiceResultStatus.failed;
-    } else if (isCompleted) {
+  VoiceResultStatus get resultStatus {
+    if (resultUrl?.isNotEmpty == true) {
       return VoiceResultStatus.success;
+    } else if (hasError) {
+      return VoiceResultStatus.failed;
     }
     return VoiceResultStatus.pending;
   }
@@ -59,4 +70,17 @@ enum VoiceResultStatus {
   pending,
   failed,
   success,
+}
+
+extension VoiceResultStatusExt on VoiceResultStatus {
+  String get msg {
+    switch (this) {
+      case VoiceResultStatus.pending:
+        return "The song is being converting, please wait!";
+      case VoiceResultStatus.failed:
+        return "There is an error when converting this song, please try another song instead";
+      case VoiceResultStatus.success:
+        return "The song has been successfully converted";
+    }
+  }
 }

@@ -9,12 +9,9 @@ class ChatGPTService {
   ChatGPTService._internal();
   factory ChatGPTService() => _instance;
 
-  late ChatGPTConfig _config;
-
   void init({
     required ChatGPTConfig config,
   }) {
-    _config = config;
     PromptingCountingManager().setUpLimitation(config.promptingLimitation);
   }
 
@@ -23,6 +20,7 @@ class ChatGPTService {
     PromptingEntity prompt, {
     int? maxToken,
     double? temperature,
+    required ChatGPTConfig config,
   }) async {
     log('Prompt An Chat: ${prompt.prompt}}', name: 'ApiService');
     if (await IsOpenProxy.isOpenProxy) {
@@ -31,11 +29,15 @@ class ChatGPTService {
     final list = lastPrompts.toList();
     list.add(prompt);
     final String? result =
-        !_config.shouldUseRenderApi && _config.externalApiConfig != null
+        !config.shouldUseRenderApi && config.externalApiConfig != null
             ? await promptExternalApiRequest(
-                temperature: temperature, prompts: _getOpenAImessages(list))
+                config: config,
+                temperature: temperature,
+                prompts: _getOpenAImessages(list))
             : await promptRenderApiRequest(
-                temperature: temperature, prompts: _getOpenAImessages(list));
+                config: config,
+                temperature: temperature,
+                prompts: _getOpenAImessages(list));
     if (result == null) {
       AIKits().analysisMixin.sendEvent("error_promptAnChat");
       throw Exception("AI is busy with large requests, please try again later");
@@ -58,10 +60,11 @@ class ChatGPTService {
   Future<String?> promptExternalApiRequest({
     double? temperature,
     required List<OpenAIChatCompletionChoiceMessageModel> prompts,
+    required ChatGPTConfig config,
   }) async {
     AIKits().analysisMixin.sendEvent("prompt_rapid_request");
     try {
-      final params = _config.externalApiConfig!.params
+      final params = config.externalApiConfig!.params
         ..addAll({
           "messages": prompts
               .map((e) => {
@@ -74,16 +77,16 @@ class ChatGPTService {
         params["temperature"] = temperature ?? 0.7;
       }
       final response = await Dio().post(
-        _config.externalApiConfig!.hostUrl,
+        config.externalApiConfig!.hostUrl,
         data: params,
         options: Options(
-          headers: _config.externalApiConfig!.headers,
+          headers: config.externalApiConfig!.headers,
         ),
       );
       if (response.data != null) {
         final json = response.data as Map;
-        if (json.containsKey(_config.externalApiConfig!.resultJsonKey)) {
-          return json[_config.externalApiConfig!.resultJsonKey];
+        if (json.containsKey(config.externalApiConfig!.resultJsonKey)) {
+          return json[config.externalApiConfig!.resultJsonKey];
         } else {
           final data = (response.data["choices"] as List)
               .first["message"]["content"]
@@ -102,19 +105,20 @@ class ChatGPTService {
   Future<String?> promptRenderApiRequest({
     double? temperature,
     required List<OpenAIChatCompletionChoiceMessageModel> prompts,
+    required ChatGPTConfig config,
   }) async {
     AIKits().analysisMixin.sendEvent("prompt_render_request");
     try {
-      var params = Map.from(_config.renderApiConfig.body);
+      var params = Map.from(config.renderApiConfig.body);
       params.addAll({
         "temperature": temperature ?? 0.7,
         "messages": prompts.map((e) => e.toMap()).toList()
       });
       final response = await Dio().post(
-        _config.renderApiConfig.hostUrl,
+        config.renderApiConfig.hostUrl,
         data: params,
         options: Options(
-          headers: _config.renderApiConfig.headers
+          headers: config.renderApiConfig.headers
             ..addAll({"service_name": "chatGPT"}),
         ),
       );

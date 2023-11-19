@@ -16,6 +16,8 @@ VoiceConfig _$VoiceConfigFromJson(Map<String, dynamic> json) => VoiceConfig(
               .toList() ??
           const [],
       maximumLoadMorePage: json['maximumLoadMorePage'] as int? ?? 3,
+      requestRateLimitTick: json['requestRateLimitTick'] as int? ?? 3,
+      requestRateLimitDuration: json['requestRateLimitDuration'] as int? ?? 5,
     );
 
 Map<String, dynamic> _$VoiceConfigToJson(VoiceConfig instance) =>
@@ -24,4 +26,6 @@ Map<String, dynamic> _$VoiceConfigToJson(VoiceConfig instance) =>
       'dailyLimitation': instance.dailyLimitation,
       'artistBlackList': instance.artistBlackList,
       'maximumLoadMorePage': instance.maximumLoadMorePage,
+      'requestRateLimitTick': instance.requestRateLimitTick,
+      'requestRateLimitDuration': instance.requestRateLimitDuration,
     };

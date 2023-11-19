@@ -11,12 +11,16 @@ class VoiceConfig {
   final DailyLimitation dailyLimitation;
   final List<String> artistBlackList;
   final int maximumLoadMorePage;
+  final int requestRateLimitTick;
+  final int requestRateLimitDuration;
 
   VoiceConfig({
     required this.renderApiConfig,
     required this.dailyLimitation,
     this.artistBlackList = const [],
     this.maximumLoadMorePage = 3,
+    this.requestRateLimitTick = 3,
+    this.requestRateLimitDuration = 5,
   });
 
   factory VoiceConfig.fromJson(Map<String, dynamic> json) =>

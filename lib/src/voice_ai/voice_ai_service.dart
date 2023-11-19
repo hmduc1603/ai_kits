@@ -21,15 +21,25 @@ class VoiceAIService {
 
   Future<VoiceModelList> getModels({
     required int page,
+    String? search,
     String? filer,
     bool community = true,
   }) async {
     try {
       dev.log('getModels: $filer - $community');
-      var host =
-          "https://www.voicify.ai/api/model/getAllModels?page=$page&search=&limit=24&community=$community";
-      if (filer != null) {
-        host = "$host&filter=$filer";
+      String host;
+      if (_config.renderApiConfig.headers.containsKey("getAllModels_url")) {
+        host = _config.renderApiConfig.headers["getAllModels_url"];
+      } else {
+        host =
+            "https://www.voicify.ai/api/model/getAllModels?page=$page&search=&limit=24&community=$community";
+        if (filer != null) {
+          host = "$host&filter=$filer";
+        }
+        if (search != null) {
+          host = host.replaceAll(
+              "search=", "search=${search.replaceAll(" ", "+")}");
+        }
       }
       final response = await Dio().get(
         host,
@@ -56,14 +66,16 @@ class VoiceAIService {
 
   Future<VoiceResult> convertMusic({
     required String model,
-    required String url,
+    required String youtubeAuthor,
+    required String youtubeTitle,
+    required String youtubeUrl,
     required bool isPremium,
     required String modelId,
     String? firebaseMessagingToken,
     required String idToken,
   }) async {
     try {
-      dev.log('convertMusic: $model - $url');
+      dev.log('convertMusic: $model - $youtubeUrl');
       if (await IsOpenProxy.isOpenProxy) {
         throw Exception('Please turn off your VPN or Proxy to continue');
       }
@@ -77,7 +89,9 @@ class VoiceAIService {
           "request_id": requestId,
           "key": "audio/${_generateRandomUUID()}.wav",
           "model": model,
-          "url": url,
+          "url": youtubeUrl,
+          "youtube_title": youtubeTitle,
+          "youtube_author": youtubeAuthor,
         },
         options: Options(
           receiveTimeout: const Duration(seconds: 60),
@@ -98,7 +112,63 @@ class VoiceAIService {
     }
   }
 
-  Future<VoiceResult?> getMusic(VoiceResult initialData) async {
+  Future<String?> getInstrumentalUrl({
+    required shortid,
+  }) async {
+    try {
+      dev.log('getInstrumentalUrl: $shortid');
+      if (await IsOpenProxy.isOpenProxy) {
+        throw Exception('Please turn off your VPN or Proxy to continue');
+      }
+      final response = await Dio().post(
+        "${_config.renderApiConfig.hostUrl}/instrumentalUrl",
+        data: {"shortid": shortid},
+        options: Options(
+          receiveTimeout: const Duration(seconds: 60),
+          headers: _config.renderApiConfig.headers,
+        ),
+      );
+      final result = response.data["instrumentalUrl"];
+      dev.log(result.toString());
+      AIKits().analysisMixin.sendEvent("success_getInstrumentalUrl");
+      return result;
+    } catch (e) {
+      dev.log(e.toString());
+      AIKits().analysisMixin.sendEvent("error_getInstrumentalUrl");
+      return null;
+    }
+  }
+
+  Future<String?> getConvertedUrl({
+    required shortid,
+  }) async {
+    try {
+      dev.log('getConvertedUrl: $shortid');
+      if (await IsOpenProxy.isOpenProxy) {
+        throw Exception('Please turn off your VPN or Proxy to continue');
+      }
+      final response = await Dio().post(
+        "${_config.renderApiConfig.hostUrl}/convertedUrl",
+        data: {"shortid": shortid},
+        options: Options(
+          receiveTimeout: const Duration(seconds: 60),
+          headers: _config.renderApiConfig.headers,
+        ),
+      );
+      final result = response.data["convertedUrl"];
+      dev.log(result.toString());
+      AIKits().analysisMixin.sendEvent("success_getConvertedUrl");
+      return result;
+    } catch (e) {
+      dev.log(e.toString());
+      AIKits().analysisMixin.sendEvent("error_getConvertedUrl");
+      return null;
+    }
+  }
+
+  Future<VoiceResult?> getMusic({
+    required VoiceResult initialData,
+  }) async {
     try {
       dev.log('getMusic: ${initialData.requestId}');
       if (await IsOpenProxy.isOpenProxy) {
@@ -122,12 +192,36 @@ class VoiceAIService {
         hasError: result.hasError,
         isCompleted: result.isCompleted,
         isConverted: result.isConverted,
+        shortid: result.shortid,
       );
       return updatedResult;
     } catch (e) {
       dev.log(e.toString());
       AIKits().analysisMixin.sendEvent("error_getMusic");
       return null;
+    }
+  }
+
+  Future<List<VoiceResult>> getNewMusicList() async {
+    try {
+      dev.log('getNewMusicList');
+      if (await IsOpenProxy.isOpenProxy) {
+        throw Exception('Please turn off your VPN or Proxy to continue');
+      }
+      final response = await Dio().get(
+        "${_config.renderApiConfig.hostUrl}/new",
+        options: Options(
+          receiveTimeout: const Duration(seconds: 60),
+          headers: _config.renderApiConfig.headers,
+        ),
+      );
+      final result =
+          (response.data as List).map((e) => VoiceResult.fromJson(e)).toList();
+      AIKits().analysisMixin.sendEvent("success_getNewMusicList");
+      return result;
+    } catch (e) {
+      dev.log(e.toString());
+      return [];
     }
   }
 
