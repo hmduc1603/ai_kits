@@ -9,6 +9,8 @@ part of 'prompting_entity.dart';
 abstract class _$PromptingEntityCWProxy {
   PromptingEntity mood(String? mood);
 
+  PromptingEntity chatId(int? chatId);
+
   PromptingEntity prompt(String prompt);
 
   PromptingEntity id(int? id);
@@ -33,6 +35,7 @@ abstract class _$PromptingEntityCWProxy {
   /// ````
   PromptingEntity call({
     String? mood,
+    int? chatId,
     String? prompt,
     int? id,
     String? input,
@@ -52,6 +55,9 @@ class _$PromptingEntityCWProxyImpl implements _$PromptingEntityCWProxy {
 
   @override
   PromptingEntity mood(String? mood) => this(mood: mood);
+
+  @override
+  PromptingEntity chatId(int? chatId) => this(chatId: chatId);
 
   @override
   PromptingEntity prompt(String prompt) => this(prompt: prompt);
@@ -88,6 +94,7 @@ class _$PromptingEntityCWProxyImpl implements _$PromptingEntityCWProxy {
   /// ````
   PromptingEntity call({
     Object? mood = const $CopyWithPlaceholder(),
+    Object? chatId = const $CopyWithPlaceholder(),
     Object? prompt = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
     Object? input = const $CopyWithPlaceholder(),
@@ -102,6 +109,10 @@ class _$PromptingEntityCWProxyImpl implements _$PromptingEntityCWProxy {
           ? _value.mood
           // ignore: cast_nullable_to_non_nullable
           : mood as String?,
+      chatId: chatId == const $CopyWithPlaceholder()
+          ? _value.chatId
+          // ignore: cast_nullable_to_non_nullable
+          : chatId as int?,
       prompt: prompt == const $CopyWithPlaceholder() || prompt == null
           ? _value.prompt
           // ignore: cast_nullable_to_non_nullable
@@ -152,6 +163,7 @@ extension $PromptingEntityCopyWith on PromptingEntity {
 PromptingEntity _$PromptingEntityFromJson(Map<String, dynamic> json) =>
     PromptingEntity(
       mood: json['mood'] as String?,
+      chatId: json['chatId'] as int?,
       prompt: json['prompt'] as String,
       id: json['id'] as int?,
       input: json['input'] as String,
@@ -168,6 +180,7 @@ PromptingEntity _$PromptingEntityFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$PromptingEntityToJson(PromptingEntity instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'chatId': instance.chatId,
       'rawType': instance.rawType,
       'prompt': instance.prompt,
       'input': instance.input,

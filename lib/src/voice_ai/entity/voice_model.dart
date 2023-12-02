@@ -30,6 +30,7 @@ class VoiceModel {
   final String? urlParam;
   final DateTime? createdAt;
   final int? likes;
+  final String? customDisplayName;
 
   VoiceModel({
     required this.id,
@@ -41,6 +42,7 @@ class VoiceModel {
     required this.urlParam,
     required this.createdAt,
     required this.likes,
+    this.customDisplayName,
   });
 
   factory VoiceModel.fromJson(Map<String, dynamic> json) =>

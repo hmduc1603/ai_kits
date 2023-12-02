@@ -1,13 +1,17 @@
+import 'dart:convert';
+
+import 'package:ai_kits/src/voice_ai/entity/subtitle.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:objectbox/objectbox.dart';
 
 part 'voice_result.g.dart';
 
-@JsonSerializable()
 @Entity()
 @CopyWith()
+@JsonSerializable()
 class VoiceResult {
+  // For Voice
   @JsonKey(includeFromJson: false)
   @Id()
   int? id;
@@ -30,8 +34,15 @@ class VoiceResult {
   final bool isCompleted;
   final String? shortid;
   final String? youtubeUrl;
+  @JsonKey(name: "youtube_thumbnail")
+  final String? youtubeThumbnail;
   final String? instrumentalUrl;
   final String? convertedUrl;
+  final int likeCount;
+  // For Acapella
+  final String? subtitle;
+  final String? lyric;
+  final bool hasErrorGeneratingSubtitle;
 
   VoiceResult({
     this.id,
@@ -49,6 +60,11 @@ class VoiceResult {
     this.youtubeUrl,
     this.instrumentalUrl,
     this.convertedUrl,
+    this.subtitle,
+    this.lyric,
+    this.youtubeThumbnail,
+    this.likeCount = 0,
+    this.hasErrorGeneratingSubtitle = false,
   });
 
   VoiceResultStatus get resultStatus {
@@ -64,6 +80,13 @@ class VoiceResult {
       _$VoiceResultFromJson(json);
 
   Map<String, dynamic> toJson() => _$VoiceResultToJson(this);
+
+  Subtitle? get subtitleModel {
+    if (subtitle != null) {
+      Subtitle.fromJson(jsonDecode(subtitle!));
+    }
+    return null;
+  }
 }
 
 enum VoiceResultStatus {

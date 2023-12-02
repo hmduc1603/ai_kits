@@ -25,7 +25,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(2, 6198307822093762743),
       name: 'PromptingEntity',
-      lastPropertyId: const IdUid(9, 6676325693206209312),
+      lastPropertyId: const IdUid(10, 4577984135512786112),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -72,6 +72,11 @@ final _entities = <ModelEntity>[
             id: const IdUid(9, 6676325693206209312),
             name: 'hasError',
             type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(10, 4577984135512786112),
+            name: 'chatId',
+            type: 6,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -157,7 +162,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(6, 919677987552565480),
       name: 'VoiceResult',
-      lastPropertyId: const IdUid(18, 6456092678790830041),
+      lastPropertyId: const IdUid(25, 332280596514116580),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -234,6 +239,31 @@ final _entities = <ModelEntity>[
             id: const IdUid(18, 6456092678790830041),
             name: 'convertedUrl',
             type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(19, 2370686637508878719),
+            name: 'youtubeThumbnail',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(20, 550013652603367686),
+            name: 'likeCount',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(22, 7016470613129947655),
+            name: 'lyric',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(23, 928313111868933382),
+            name: 'hasErrorGeneratingSubtitle',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(25, 332280596514116580),
+            name: 'subtitle',
+            type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -291,7 +321,9 @@ ModelDefinition getObjectBoxModel() {
         1019455996231310069,
         992280056907516298,
         8629723533145629907,
-        340495488067769156
+        340495488067769156,
+        369155004786313665,
+        4394540679378731461
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -317,7 +349,7 @@ ModelDefinition getObjectBoxModel() {
               object.mood == null ? null : fbb.writeString(object.mood!);
           final resultOffset =
               object.result == null ? null : fbb.writeString(object.result!);
-          fbb.startTable(10);
+          fbb.startTable(11);
           fbb.addInt64(0, object.id ?? 0);
           fbb.addOffset(1, rawTypeOffset);
           fbb.addOffset(2, promptOffset);
@@ -327,6 +359,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(6, resultOffset);
           fbb.addInt64(7, object.createdDate.millisecondsSinceEpoch);
           fbb.addBool(8, object.hasError);
+          fbb.addInt64(9, object.chatId);
           fbb.finish(fbb.endTable());
           return object.id ?? 0;
         },
@@ -335,6 +368,8 @@ ModelDefinition getObjectBoxModel() {
           final rootOffset = buffer.derefObject(0);
           final moodParam = const fb.StringReader(asciiOptimization: true)
               .vTableGetNullable(buffer, rootOffset, 14);
+          final chatIdParam =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 22);
           final promptParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 8, '');
           final idParam =
@@ -355,6 +390,7 @@ ModelDefinition getObjectBoxModel() {
               .vTableGet(buffer, rootOffset, 12, []);
           final object = PromptingEntity(
               mood: moodParam,
+              chatId: chatIdParam,
               prompt: promptParam,
               id: idParam,
               input: inputParam,
@@ -506,7 +542,15 @@ ModelDefinition getObjectBoxModel() {
           final convertedUrlOffset = object.convertedUrl == null
               ? null
               : fbb.writeString(object.convertedUrl!);
-          fbb.startTable(19);
+          final youtubeThumbnailOffset = object.youtubeThumbnail == null
+              ? null
+              : fbb.writeString(object.youtubeThumbnail!);
+          final lyricOffset =
+              object.lyric == null ? null : fbb.writeString(object.lyric!);
+          final subtitleOffset = object.subtitle == null
+              ? null
+              : fbb.writeString(object.subtitle!);
+          fbb.startTable(26);
           fbb.addInt64(0, object.id ?? 0);
           fbb.addOffset(2, resultUrlOffset);
           fbb.addOffset(4, youtubeTitleOffset);
@@ -522,6 +566,11 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(15, youtubeUrlOffset);
           fbb.addOffset(16, instrumentalUrlOffset);
           fbb.addOffset(17, convertedUrlOffset);
+          fbb.addOffset(18, youtubeThumbnailOffset);
+          fbb.addInt64(19, object.likeCount);
+          fbb.addOffset(21, lyricOffset);
+          fbb.addBool(22, object.hasErrorGeneratingSubtitle);
+          fbb.addOffset(24, subtitleOffset);
           fbb.finish(fbb.endTable());
           return object.id ?? 0;
         },
@@ -567,6 +616,17 @@ ModelDefinition getObjectBoxModel() {
           final convertedUrlParam =
               const fb.StringReader(asciiOptimization: true)
                   .vTableGetNullable(buffer, rootOffset, 38);
+          final subtitleParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 52);
+          final lyricParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 46);
+          final youtubeThumbnailParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 40);
+          final likeCountParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 42, 0);
+          final hasErrorGeneratingSubtitleParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 48, false);
           final object = VoiceResult(
               id: idParam,
               resultUrl: resultUrlParam,
@@ -582,7 +642,12 @@ ModelDefinition getObjectBoxModel() {
               shortid: shortidParam,
               youtubeUrl: youtubeUrlParam,
               instrumentalUrl: instrumentalUrlParam,
-              convertedUrl: convertedUrlParam);
+              convertedUrl: convertedUrlParam,
+              subtitle: subtitleParam,
+              lyric: lyricParam,
+              youtubeThumbnail: youtubeThumbnailParam,
+              likeCount: likeCountParam,
+              hasErrorGeneratingSubtitle: hasErrorGeneratingSubtitleParam);
 
           return object;
         })
@@ -628,6 +693,10 @@ class PromptingEntity_ {
   /// see [PromptingEntity.hasError]
   static final hasError =
       QueryBooleanProperty<PromptingEntity>(_entities[0].properties[8]);
+
+  /// see [PromptingEntity.chatId]
+  static final chatId =
+      QueryIntegerProperty<PromptingEntity>(_entities[0].properties[9]);
 }
 
 /// [ChatSession] entity fields to define ObjectBox queries.
@@ -745,4 +814,24 @@ class VoiceResult_ {
   /// see [VoiceResult.convertedUrl]
   static final convertedUrl =
       QueryStringProperty<VoiceResult>(_entities[3].properties[14]);
+
+  /// see [VoiceResult.youtubeThumbnail]
+  static final youtubeThumbnail =
+      QueryStringProperty<VoiceResult>(_entities[3].properties[15]);
+
+  /// see [VoiceResult.likeCount]
+  static final likeCount =
+      QueryIntegerProperty<VoiceResult>(_entities[3].properties[16]);
+
+  /// see [VoiceResult.lyric]
+  static final lyric =
+      QueryStringProperty<VoiceResult>(_entities[3].properties[17]);
+
+  /// see [VoiceResult.hasErrorGeneratingSubtitle]
+  static final hasErrorGeneratingSubtitle =
+      QueryBooleanProperty<VoiceResult>(_entities[3].properties[18]);
+
+  /// see [VoiceResult.subtitle]
+  static final subtitle =
+      QueryStringProperty<VoiceResult>(_entities[3].properties[19]);
 }

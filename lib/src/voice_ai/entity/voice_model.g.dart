@@ -30,6 +30,7 @@ VoiceModel _$VoiceModelFromJson(Map<String, dynamic> json) => VoiceModel(
           ? null
           : DateTime.parse(json['createdAt'] as String),
       likes: json['likes'] as int?,
+      customDisplayName: json['customDisplayName'] as String?,
     );
 
 Map<String, dynamic> _$VoiceModelToJson(VoiceModel instance) =>
@@ -43,6 +44,7 @@ Map<String, dynamic> _$VoiceModelToJson(VoiceModel instance) =>
       'urlParam': instance.urlParam,
       'createdAt': instance.createdAt?.toIso8601String(),
       'likes': instance.likes,
+      'customDisplayName': instance.customDisplayName,
     };
 
 ArtistImage _$ArtistImageFromJson(Map<String, dynamic> json) => ArtistImage(

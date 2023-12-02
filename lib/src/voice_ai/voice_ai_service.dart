@@ -102,8 +102,11 @@ class VoiceAIService {
       if (response.statusCode == 200) {
         AIKits().analysisMixin.sendEvent("success_convertMusic");
         return VoiceResult(requestId: requestId);
+      } else if (response.statusCode == 429) {
+        throw (Exception(
+            "You are creating to fast, please try again after a few minutes"));
       } else {
-        throw Exception("Cannot convert music, please try again!");
+        throw Exception(response.statusMessage);
       }
     } catch (e) {
       dev.log(e.toString());
@@ -128,10 +131,14 @@ class VoiceAIService {
           headers: _config.renderApiConfig.headers,
         ),
       );
-      final result = response.data["instrumentalUrl"];
-      dev.log(result.toString());
-      AIKits().analysisMixin.sendEvent("success_getInstrumentalUrl");
-      return result;
+      if (response.statusCode == 200) {
+        final result = response.data["instrumentalUrl"];
+        dev.log(result.toString());
+        AIKits().analysisMixin.sendEvent("success_getInstrumentalUrl");
+        return result;
+      } else {
+        throw Exception(response.statusMessage.toString());
+      }
     } catch (e) {
       dev.log(e.toString());
       AIKits().analysisMixin.sendEvent("error_getInstrumentalUrl");
@@ -155,10 +162,14 @@ class VoiceAIService {
           headers: _config.renderApiConfig.headers,
         ),
       );
-      final result = response.data["convertedUrl"];
-      dev.log(result.toString());
-      AIKits().analysisMixin.sendEvent("success_getConvertedUrl");
-      return result;
+      if (response.statusCode == 200) {
+        final result = response.data["convertedUrl"];
+        dev.log(result.toString());
+        AIKits().analysisMixin.sendEvent("success_getConvertedUrl");
+        return result;
+      } else {
+        throw Exception(response.statusMessage.toString());
+      }
     } catch (e) {
       dev.log(e.toString());
       AIKits().analysisMixin.sendEvent("error_getConvertedUrl");
@@ -184,17 +195,21 @@ class VoiceAIService {
           headers: _config.renderApiConfig.headers,
         ),
       );
-      final result = VoiceResult.fromJson(response.data);
-      dev.log(result.toJson().toString());
-      AIKits().analysisMixin.sendEvent("success_getMusic");
-      final updatedResult = initialData.copyWith(
-        resultUrl: result.resultUrl,
-        hasError: result.hasError,
-        isCompleted: result.isCompleted,
-        isConverted: result.isConverted,
-        shortid: result.shortid,
-      );
-      return updatedResult;
+      if (response.statusCode == 200) {
+        final result = VoiceResult.fromJson(response.data);
+        dev.log(result.toJson().toString());
+        AIKits().analysisMixin.sendEvent("success_getMusic");
+        final updatedResult = initialData.copyWith(
+          resultUrl: result.resultUrl,
+          hasError: result.hasError,
+          isCompleted: result.isCompleted,
+          isConverted: result.isConverted,
+          shortid: result.shortid,
+        );
+        return updatedResult;
+      } else {
+        throw Exception(response.statusMessage.toString());
+      }
     } catch (e) {
       dev.log(e.toString());
       AIKits().analysisMixin.sendEvent("error_getMusic");
@@ -202,26 +217,213 @@ class VoiceAIService {
     }
   }
 
-  Future<List<VoiceResult>> getNewMusicList() async {
+  Future<List<VoiceResult>> getNewMusicList({
+    int offset = 0,
+    int limit = 10,
+  }) async {
     try {
       dev.log('getNewMusicList');
       if (await IsOpenProxy.isOpenProxy) {
         throw Exception('Please turn off your VPN or Proxy to continue');
       }
       final response = await Dio().get(
-        "${_config.renderApiConfig.hostUrl}/new",
+        "${_config.renderApiConfig.hostUrl}/new?offset=$offset&limit=$limit",
         options: Options(
           receiveTimeout: const Duration(seconds: 60),
           headers: _config.renderApiConfig.headers,
         ),
       );
-      final result =
-          (response.data as List).map((e) => VoiceResult.fromJson(e)).toList();
-      AIKits().analysisMixin.sendEvent("success_getNewMusicList");
-      return result;
+      if (response.statusCode == 200) {
+        final result = (response.data as List)
+            .map((e) => VoiceResult.fromJson(e))
+            .toList();
+        AIKits().analysisMixin.sendEvent("success_getNewMusicList");
+        return result;
+      } else {
+        throw Exception(response.statusMessage.toString());
+      }
     } catch (e) {
       dev.log(e.toString());
       return [];
+    }
+  }
+
+  Future<int?> getAcapellaQueue() async {
+    try {
+      dev.log('getNewMusicList');
+      if (await IsOpenProxy.isOpenProxy) {
+        throw Exception('Please turn off your VPN or Proxy to continue');
+      }
+      final response = await Dio().get(
+        "${_config.renderApiConfig.hostUrl}/getAcapellaQueue",
+        options: Options(
+          receiveTimeout: const Duration(seconds: 60),
+          headers: _config.renderApiConfig.headers,
+        ),
+      );
+      if (response.statusCode == 200) {
+        final result = response.data["count"] as int;
+        AIKits().analysisMixin.sendEvent("success_getAcapellaQueue");
+        return result;
+      }
+      return null;
+    } catch (e) {
+      dev.log(e.toString());
+      return null;
+    }
+  }
+
+  Future<List<VoiceResult>> getAcapellaFeed({
+    int offset = 0,
+    int limit = 10,
+  }) async {
+    try {
+      dev.log('getAcapellaFeed');
+      if (await IsOpenProxy.isOpenProxy) {
+        throw Exception('Please turn off your VPN or Proxy to continue');
+      }
+      final response = await Dio().get(
+        "${_config.renderApiConfig.hostUrl}/feedAcapella?offset=$offset&limit=$limit",
+        options: Options(
+          receiveTimeout: const Duration(seconds: 60),
+          headers: _config.renderApiConfig.headers,
+        ),
+      );
+      if (response.statusCode == 200) {
+        final result = (response.data as List)
+            .map((e) => VoiceResult.fromJson(e))
+            .toList();
+        AIKits().analysisMixin.sendEvent("success_getAcapellaFeed");
+        return result;
+      } else {
+        throw Exception(response.statusMessage.toString());
+      }
+    } catch (e) {
+      dev.log(e.toString());
+      return [];
+    }
+  }
+
+  Future<List<VoiceResult>> searchAcapella({
+    int offset = 0,
+    int limit = 10,
+    required String search,
+  }) async {
+    try {
+      dev.log('searchAcapella');
+      if (await IsOpenProxy.isOpenProxy) {
+        throw Exception('Please turn off your VPN or Proxy to continue');
+      }
+      final response = await Dio().get(
+        "${_config.renderApiConfig.hostUrl}/searchAcapella?offset=$offset&limit=$limit&search=$search",
+        options: Options(
+          receiveTimeout: const Duration(seconds: 60),
+          headers: _config.renderApiConfig.headers,
+        ),
+      );
+      if (response.statusCode == 200) {
+        final result = (response.data as List)
+            .map((e) => VoiceResult.fromJson(e))
+            .toList();
+        AIKits().analysisMixin.sendEvent("success_searchAcapella");
+        return result;
+      } else {
+        throw Exception(response.statusMessage.toString());
+      }
+    } catch (e) {
+      dev.log(e.toString());
+      return [];
+    }
+  }
+
+  Future<VoiceResult> createAcapellaRequest({
+    required String youtubeAuthor,
+    required String youtubeTitle,
+    required String youtubeUrl,
+    required String? youtubeThumbnail,
+    required bool isPremium,
+    String? firebaseMessagingToken,
+    required String idToken,
+  }) async {
+    try {
+      dev.log('createAcapellaRequest: $youtubeUrl');
+      if (await IsOpenProxy.isOpenProxy) {
+        throw Exception('Please turn off your VPN or Proxy to continue');
+      }
+      final requestId = _generateRandomUUID();
+      final response = await Dio().post(
+        "${_config.renderApiConfig.hostUrl}/createAcapella",
+        data: {
+          "firebase_messaging_token": firebaseMessagingToken,
+          "is_premium": isPremium,
+          "request_id": requestId,
+          "key": "audio/${_generateRandomUUID()}.wav",
+          "model": "acapella",
+          "url": youtubeUrl,
+          "youtube_title": youtubeTitle,
+          "youtube_author": youtubeAuthor,
+          "youtube_thumbnail": youtubeThumbnail,
+        },
+        options: Options(
+          receiveTimeout: const Duration(seconds: 60),
+          headers: _config.renderApiConfig.headers
+            ..addAll({"id_token": idToken}),
+        ),
+      );
+      if (response.statusCode == 200) {
+        AIKits().analysisMixin.sendEvent("success_createAcapellaRequest");
+        return VoiceResult(requestId: requestId);
+      } else {
+        throw Exception(response.statusMessage.toString());
+      }
+    } catch (e) {
+      dev.log(e.toString());
+      AIKits().analysisMixin.sendEvent("error_createAcapellaRequest");
+      rethrow;
+    }
+  }
+
+  Future<VoiceResult?> getAcapellaResult({
+    required VoiceResult initialData,
+  }) async {
+    try {
+      dev.log('getAcapellaResult: ${initialData.requestId}');
+      if (await IsOpenProxy.isOpenProxy) {
+        throw Exception('Please turn off your VPN or Proxy to continue');
+      }
+      final response = await Dio().post(
+        "${_config.renderApiConfig.hostUrl}/getAcapella",
+        data: {
+          "request_id": initialData.requestId,
+        },
+        options: Options(
+          receiveTimeout: const Duration(seconds: 60),
+          headers: _config.renderApiConfig.headers,
+        ),
+      );
+      if (response.statusCode == 200) {
+        final result = VoiceResult.fromJson(response.data);
+        dev.log(result.toJson().toString());
+        AIKits().analysisMixin.sendEvent("success_getAcapellaResult");
+        final updatedResult = initialData.copyWith(
+          resultUrl: result.resultUrl,
+          hasError: result.hasError,
+          isCompleted: result.isCompleted,
+          isConverted: result.isConverted,
+          shortid: result.shortid,
+          subtitle: result.subtitle,
+          hasErrorGeneratingSubtitle: result.hasErrorGeneratingSubtitle,
+          lyric: result.lyric,
+          likeCount: result.likeCount,
+        );
+        return updatedResult;
+      } else {
+        throw Exception(response.statusMessage.toString());
+      }
+    } catch (e) {
+      dev.log(e.toString());
+      AIKits().analysisMixin.sendEvent("error_getAcapellaResult");
+      return null;
     }
   }
 

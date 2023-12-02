@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  dart_openai: ^4.0.0
+  dart_openai: 4.0.0
   dio: ^5.0.1
   is_open_proxy: ^0.0.3
   objectbox: ^2.3.0
@@ -20,6 +20,7 @@ dependencies:
   hive: ^2.2.3
   path_provider: ^2.0.11
   random_string: ^2.3.1
+  tuple: ^2.0.2
 
 dev_dependencies:
   flutter_test:

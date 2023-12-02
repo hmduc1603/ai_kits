@@ -10,6 +10,7 @@ part 'prompting_entity.g.dart';
 @CopyWith()
 class PromptingEntity {
   int? id;
+  final int? chatId;
   final String rawType;
   final String prompt;
   final String input;
@@ -34,6 +35,7 @@ class PromptingEntity {
 
   PromptingEntity({
     this.mood,
+    this.chatId,
     required this.prompt,
     this.id,
     required this.input,

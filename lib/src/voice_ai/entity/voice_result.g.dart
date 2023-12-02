@@ -37,6 +37,16 @@ abstract class _$VoiceResultCWProxy {
 
   VoiceResult convertedUrl(String? convertedUrl);
 
+  VoiceResult subtitle(String? subtitle);
+
+  VoiceResult lyric(String? lyric);
+
+  VoiceResult youtubeThumbnail(String? youtubeThumbnail);
+
+  VoiceResult likeCount(int likeCount);
+
+  VoiceResult hasErrorGeneratingSubtitle(bool hasErrorGeneratingSubtitle);
+
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `VoiceResult(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -59,6 +69,11 @@ abstract class _$VoiceResultCWProxy {
     String? youtubeUrl,
     String? instrumentalUrl,
     String? convertedUrl,
+    String? subtitle,
+    String? lyric,
+    String? youtubeThumbnail,
+    int? likeCount,
+    bool? hasErrorGeneratingSubtitle,
   });
 }
 
@@ -121,6 +136,23 @@ class _$VoiceResultCWProxyImpl implements _$VoiceResultCWProxy {
       this(convertedUrl: convertedUrl);
 
   @override
+  VoiceResult subtitle(String? subtitle) => this(subtitle: subtitle);
+
+  @override
+  VoiceResult lyric(String? lyric) => this(lyric: lyric);
+
+  @override
+  VoiceResult youtubeThumbnail(String? youtubeThumbnail) =>
+      this(youtubeThumbnail: youtubeThumbnail);
+
+  @override
+  VoiceResult likeCount(int likeCount) => this(likeCount: likeCount);
+
+  @override
+  VoiceResult hasErrorGeneratingSubtitle(bool hasErrorGeneratingSubtitle) =>
+      this(hasErrorGeneratingSubtitle: hasErrorGeneratingSubtitle);
+
+  @override
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `VoiceResult(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -144,6 +176,11 @@ class _$VoiceResultCWProxyImpl implements _$VoiceResultCWProxy {
     Object? youtubeUrl = const $CopyWithPlaceholder(),
     Object? instrumentalUrl = const $CopyWithPlaceholder(),
     Object? convertedUrl = const $CopyWithPlaceholder(),
+    Object? subtitle = const $CopyWithPlaceholder(),
+    Object? lyric = const $CopyWithPlaceholder(),
+    Object? youtubeThumbnail = const $CopyWithPlaceholder(),
+    Object? likeCount = const $CopyWithPlaceholder(),
+    Object? hasErrorGeneratingSubtitle = const $CopyWithPlaceholder(),
   }) {
     return VoiceResult(
       id: id == const $CopyWithPlaceholder()
@@ -208,6 +245,28 @@ class _$VoiceResultCWProxyImpl implements _$VoiceResultCWProxy {
           ? _value.convertedUrl
           // ignore: cast_nullable_to_non_nullable
           : convertedUrl as String?,
+      subtitle: subtitle == const $CopyWithPlaceholder()
+          ? _value.subtitle
+          // ignore: cast_nullable_to_non_nullable
+          : subtitle as String?,
+      lyric: lyric == const $CopyWithPlaceholder()
+          ? _value.lyric
+          // ignore: cast_nullable_to_non_nullable
+          : lyric as String?,
+      youtubeThumbnail: youtubeThumbnail == const $CopyWithPlaceholder()
+          ? _value.youtubeThumbnail
+          // ignore: cast_nullable_to_non_nullable
+          : youtubeThumbnail as String?,
+      likeCount: likeCount == const $CopyWithPlaceholder() || likeCount == null
+          ? _value.likeCount
+          // ignore: cast_nullable_to_non_nullable
+          : likeCount as int,
+      hasErrorGeneratingSubtitle:
+          hasErrorGeneratingSubtitle == const $CopyWithPlaceholder() ||
+                  hasErrorGeneratingSubtitle == null
+              ? _value.hasErrorGeneratingSubtitle
+              // ignore: cast_nullable_to_non_nullable
+              : hasErrorGeneratingSubtitle as bool,
     );
   }
 }
@@ -239,6 +298,12 @@ VoiceResult _$VoiceResultFromJson(Map<String, dynamic> json) => VoiceResult(
       youtubeUrl: json['youtubeUrl'] as String?,
       instrumentalUrl: json['instrumentalUrl'] as String?,
       convertedUrl: json['convertedUrl'] as String?,
+      subtitle: json['subtitle'] as String?,
+      lyric: json['lyric'] as String?,
+      youtubeThumbnail: json['youtube_thumbnail'] as String?,
+      likeCount: json['likeCount'] as int? ?? 0,
+      hasErrorGeneratingSubtitle:
+          json['hasErrorGeneratingSubtitle'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$VoiceResultToJson(VoiceResult instance) =>
@@ -255,6 +320,11 @@ Map<String, dynamic> _$VoiceResultToJson(VoiceResult instance) =>
       'isCompleted': instance.isCompleted,
       'shortid': instance.shortid,
       'youtubeUrl': instance.youtubeUrl,
+      'youtube_thumbnail': instance.youtubeThumbnail,
       'instrumentalUrl': instance.instrumentalUrl,
       'convertedUrl': instance.convertedUrl,
+      'likeCount': instance.likeCount,
+      'subtitle': instance.subtitle,
+      'lyric': instance.lyric,
+      'hasErrorGeneratingSubtitle': instance.hasErrorGeneratingSubtitle,
     };

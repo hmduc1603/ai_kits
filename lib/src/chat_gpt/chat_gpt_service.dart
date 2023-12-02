@@ -3,6 +3,7 @@ import 'package:ai_kits/ai_kits.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:dio/dio.dart';
 import 'package:is_open_proxy/is_open_proxy.dart';
+import 'package:tuple/tuple.dart';
 
 class ChatGPTService {
   static final ChatGPTService _instance = ChatGPTService._internal();
@@ -28,24 +29,28 @@ class ChatGPTService {
     }
     final list = lastPrompts.toList();
     list.add(prompt);
-    final String? result =
+    final Tuple2<String, int?>? results =
         !config.shouldUseRenderApi && config.externalApiConfig != null
             ? await promptExternalApiRequest(
                 config: config,
                 temperature: temperature,
                 prompts: _getOpenAImessages(list))
             : await promptRenderApiRequest(
+                chatId: prompt.chatId,
                 config: config,
                 temperature: temperature,
                 prompts: _getOpenAImessages(list));
-    if (result == null) {
+    if (results == null) {
       AIKits().analysisMixin.sendEvent("error_promptAnChat");
       throw Exception("AI is busy with large requests, please try again later");
     }
 
-    log("Prompting result: $result", name: "ApiService");
+    log("Prompting result: $results", name: "ApiService");
 
-    return prompt.copyWith.result(result);
+    return prompt.copyWith(
+      result: results.item1,
+      chatId: results.item2,
+    );
   }
 
   List<OpenAIChatCompletionChoiceMessageModel> _getOpenAImessages(
@@ -57,7 +62,7 @@ class ChatGPTService {
     return list;
   }
 
-  Future<String?> promptExternalApiRequest({
+  Future<Tuple2<String, int?>?> promptExternalApiRequest({
     double? temperature,
     required List<OpenAIChatCompletionChoiceMessageModel> prompts,
     required ChatGPTConfig config,
@@ -92,7 +97,7 @@ class ChatGPTService {
               .first["message"]["content"]
               .toString()
               .trim();
-          return data;
+          return Tuple2(data, null);
         }
       }
     } catch (e) {
@@ -102,8 +107,9 @@ class ChatGPTService {
     return null;
   }
 
-  Future<String?> promptRenderApiRequest({
+  Future<Tuple2<String, int?>?> promptRenderApiRequest({
     double? temperature,
+    int? chatId,
     required List<OpenAIChatCompletionChoiceMessageModel> prompts,
     required ChatGPTConfig config,
   }) async {
@@ -114,6 +120,9 @@ class ChatGPTService {
         "temperature": temperature ?? 0.7,
         "messages": prompts.map((e) => e.toMap()).toList()
       });
+      if (chatId != null) {
+        params.addAll({"chatId": chatId});
+      }
       final response = await Dio().post(
         config.renderApiConfig.hostUrl,
         data: params,
@@ -123,8 +132,13 @@ class ChatGPTService {
         ),
       );
       if (response.data != null) {
-        final data = response.data["result"] as String;
-        return data;
+        final data = response.data as Map;
+        final result = data["result"] as String;
+        int? chatId;
+        if (data.containsKey("chatId")) {
+          chatId = data["chatId"];
+        }
+        return Tuple2(result, chatId);
       }
     } catch (e) {
       log(e.toString());
