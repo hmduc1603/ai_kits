@@ -29,6 +29,13 @@ class ChatSession {
     resultsAsJson = newList;
   }
 
+  editLastResult(PromptingEntity entity) {
+    final newList = resultsAsJson.toList();
+    newList.removeLast();
+    newList.add(jsonEncode(entity.toJson()));
+    resultsAsJson = newList;
+  }
+
   updateRelations(List<String> relations) {
     if (relations.isNotEmpty) {
       this.relations = relations;

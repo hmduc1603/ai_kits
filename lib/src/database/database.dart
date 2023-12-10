@@ -28,7 +28,11 @@ abstract class _AIKitsDatabase {
 
   void removeAllChatSessions();
 
+  void removeChatSessionById(int id);
+
   void removeAllPrompts();
+
+  void removePromptById(int id);
 
   void removeAllPromptsByType(String type);
 
@@ -222,5 +226,15 @@ class AIKitsDatabase extends _AIKitsDatabase {
         .build()
         .find()
         .firstOrNull;
+  }
+
+  @override
+  void removeChatSessionById(int id) {
+    store?.box<ChatSession>().remove(id);
+  }
+
+  @override
+  void removePromptById(int id) {
+    store?.box<PromptingEntity>().remove(id);
   }
 }

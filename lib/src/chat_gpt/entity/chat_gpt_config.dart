@@ -1,5 +1,4 @@
 import 'package:ai_kits/ai_kits.dart';
-import 'package:ai_kits/src/chat_gpt/entity/external_api_config.dart';
 import 'package:ai_kits/src/chat_gpt/entity/render_api_config.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -9,13 +8,9 @@ part 'chat_gpt_config.g.dart';
 class ChatGPTConfig {
   final PromptingLimitation promptingLimitation;
   final RenderApiConfig renderApiConfig;
-  final ExternalApiConfig? externalApiConfig;
-  final bool shouldUseRenderApi;
 
   ChatGPTConfig({
     required this.renderApiConfig,
-    required this.externalApiConfig,
-    this.shouldUseRenderApi = true,
     this.promptingLimitation = const PromptingLimitation(),
   });
 

@@ -10,11 +10,6 @@ ChatGPTConfig _$ChatGPTConfigFromJson(Map<String, dynamic> json) =>
     ChatGPTConfig(
       renderApiConfig: RenderApiConfig.fromJson(
           json['renderApiConfig'] as Map<String, dynamic>),
-      externalApiConfig: json['externalApiConfig'] == null
-          ? null
-          : ExternalApiConfig.fromJson(
-              json['externalApiConfig'] as Map<String, dynamic>),
-      shouldUseRenderApi: json['shouldUseRenderApi'] as bool? ?? true,
       promptingLimitation: json['promptingLimitation'] == null
           ? const PromptingLimitation()
           : PromptingLimitation.fromJson(
@@ -25,6 +20,4 @@ Map<String, dynamic> _$ChatGPTConfigToJson(ChatGPTConfig instance) =>
     <String, dynamic>{
       'promptingLimitation': instance.promptingLimitation,
       'renderApiConfig': instance.renderApiConfig,
-      'externalApiConfig': instance.externalApiConfig,
-      'shouldUseRenderApi': instance.shouldUseRenderApi,
     };

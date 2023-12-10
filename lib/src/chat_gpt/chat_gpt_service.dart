@@ -1,4 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:typed_data';
 import 'package:ai_kits/ai_kits.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:dio/dio.dart';
@@ -29,17 +32,11 @@ class ChatGPTService {
     }
     final list = lastPrompts.toList();
     list.add(prompt);
-    final Tuple2<String, int?>? results =
-        !config.shouldUseRenderApi && config.externalApiConfig != null
-            ? await promptExternalApiRequest(
-                config: config,
-                temperature: temperature,
-                prompts: _getOpenAImessages(list))
-            : await promptRenderApiRequest(
-                chatId: prompt.chatId,
-                config: config,
-                temperature: temperature,
-                prompts: _getOpenAImessages(list));
+    final Tuple2<String, int?>? results = await _promptRenderApiRequest(
+        chatId: prompt.chatId,
+        config: config,
+        temperature: temperature,
+        prompts: _getOpenAImessages(list));
     if (results == null) {
       AIKits().analysisMixin.sendEvent("error_promptAnChat");
       throw Exception("AI is busy with large requests, please try again later");
@@ -53,6 +50,19 @@ class ChatGPTService {
     );
   }
 
+  Future<Stream<PromptingEntity>?> promptAnStreamChat(
+    List<PromptingEntity> lastPrompts,
+    PromptingEntity prompt, {
+    int? maxToken,
+    double? temperature,
+    required ChatGPTConfig config,
+  }) async {
+    final list = lastPrompts.toList();
+    list.add(prompt);
+    return _promptStreamRenderApiRequest(
+        prompt: prompt, prompts: _getOpenAImessages(list), config: config);
+  }
+
   List<OpenAIChatCompletionChoiceMessageModel> _getOpenAImessages(
       List<PromptingEntity> promptingEntities) {
     List<OpenAIChatCompletionChoiceMessageModel> list = [];
@@ -62,52 +72,7 @@ class ChatGPTService {
     return list;
   }
 
-  Future<Tuple2<String, int?>?> promptExternalApiRequest({
-    double? temperature,
-    required List<OpenAIChatCompletionChoiceMessageModel> prompts,
-    required ChatGPTConfig config,
-  }) async {
-    AIKits().analysisMixin.sendEvent("prompt_rapid_request");
-    try {
-      final params = config.externalApiConfig!.params
-        ..addAll({
-          "messages": prompts
-              .map((e) => {
-                    "role": e.role.name,
-                    "content": e.content,
-                  })
-              .toList()
-        });
-      if (params.containsKey("temperature")) {
-        params["temperature"] = temperature ?? 0.7;
-      }
-      final response = await Dio().post(
-        config.externalApiConfig!.hostUrl,
-        data: params,
-        options: Options(
-          headers: config.externalApiConfig!.headers,
-        ),
-      );
-      if (response.data != null) {
-        final json = response.data as Map;
-        if (json.containsKey(config.externalApiConfig!.resultJsonKey)) {
-          return json[config.externalApiConfig!.resultJsonKey];
-        } else {
-          final data = (response.data["choices"] as List)
-              .first["message"]["content"]
-              .toString()
-              .trim();
-          return Tuple2(data, null);
-        }
-      }
-    } catch (e) {
-      log(e.toString());
-      AIKits().analysisMixin.sendEvent("error_promptRapidApiRequest");
-    }
-    return null;
-  }
-
-  Future<Tuple2<String, int?>?> promptRenderApiRequest({
+  Future<Tuple2<String, int?>?> _promptRenderApiRequest({
     double? temperature,
     int? chatId,
     required List<OpenAIChatCompletionChoiceMessageModel> prompts,
@@ -145,5 +110,111 @@ class ChatGPTService {
       AIKits().analysisMixin.sendEvent("error_promptRenderApiRequest");
     }
     return null;
+  }
+
+  Future<Stream<PromptingEntity>?> _promptStreamRenderApiRequest({
+    double? temperature,
+    int? chatId,
+    required PromptingEntity prompt,
+    required List<OpenAIChatCompletionChoiceMessageModel> prompts,
+    required ChatGPTConfig config,
+  }) async {
+    AIKits().analysisMixin.sendEvent("prompt_render_request");
+    try {
+      var params = Map.from(config.renderApiConfig.body);
+      params.addAll({
+        "temperature": temperature ?? 0.7,
+        "messages": prompts.map((e) => e.toMap()).toList()
+      });
+      if (chatId != null) {
+        params.addAll({"chatId": chatId});
+      }
+      final response = await Dio().post(
+        "${config.renderApiConfig.hostUrl}/stream",
+        data: params,
+        options: Options(
+          responseType: ResponseType.stream,
+          headers: config.renderApiConfig.headers
+            ..addAll({"service_name": "chatGPT"}),
+        ),
+      );
+      if (response.statusCode == 200) {
+        Stream<dynamic> dataStream = response.data.stream;
+        return dataStream.transform(StreamChatGPTTransformer(prompt));
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log(e.toString());
+      AIKits().analysisMixin.sendEvent("error_promptRenderApiRequest");
+    }
+    return null;
+  }
+}
+
+class StreamChatGPTTransformer
+    extends StreamTransformerBase<Uint8List, PromptingEntity> {
+  final PromptingEntity promptingEntity;
+
+  StreamChatGPTTransformer(this.promptingEntity);
+
+  List<String> chunks = [];
+
+  @override
+  Stream<PromptingEntity> bind(Stream<Uint8List> stream) {
+    return stream.map((data) {
+      // Modify the data before passing it downstream
+      chunks.add(EmojiParser.replaceEmoji(
+              String.fromCharCodes(data).replaceAll("\\n", "\n"))
+          .replaceAll('\\', ""));
+      return promptingEntity.copyWith(result: chunks.join());
+    });
+  }
+}
+
+class EmojiParser {
+  // To detect a single unicode
+  static const regEx1 = '\\\\u([0-9a-fA-F]{4})';
+
+// To detect a 2-bytes unicode
+  static const regEx2 = '$regEx1$regEx1';
+
+  static String _regExEmojiUnicode(String text, String regEx) {
+    final regexCheck = RegExp(regEx, caseSensitive: false);
+    String newText = '';
+    int lastEndText = 0;
+    int lastEndNewText = 0;
+
+    regexCheck.allMatches(text).forEach((match) {
+      final start = match.start;
+      final end = match.end;
+
+      final String replacement = jsonDecode('"${match.group(0)}"');
+
+      String startString;
+      newText == ''
+          ? startString = '${text.substring(0, start)}$replacement'
+          : startString =
+              '${newText.substring(0, lastEndNewText)}${text.substring(lastEndText, start)}$replacement';
+
+      lastEndNewText = startString.length;
+      lastEndText = end;
+
+      newText = '$startString${text.substring(end)}';
+    });
+
+    if (newText == '') newText = text;
+
+    return newText;
+  }
+
+  static String replaceEmoji(String text) {
+    String newText = text;
+
+    // Checking for 2-bytes and single bytes emojis
+    if (newText.contains('\\u')) newText = _regExEmojiUnicode(newText, regEx2);
+    if (newText.contains('\\u')) newText = _regExEmojiUnicode(newText, regEx1);
+
+    return newText;
   }
 }
