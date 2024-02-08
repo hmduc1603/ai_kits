@@ -22,9 +22,13 @@ abstract class _AIKitsDatabase {
 
   Future<ChatSession?> saveChatSession(ChatSession chatSession);
 
+  void fastSaveChatSession(ChatSession chatSession);
+
   Stream<List<ChatSession>>? listenChatSession();
 
-  Stream<List<ChatSession>>? listenChatSessionById(int id);
+  Stream<ChatSession?>? listenChatSessionById(int id);
+
+  Future<ChatSession?> getChatSessionById(int id);
 
   void removeAllChatSessions();
 
@@ -135,13 +139,13 @@ class AIKitsDatabase extends _AIKitsDatabase {
   }
 
   @override
-  Stream<List<ChatSession>>? listenChatSessionById(int id) {
+  Stream<ChatSession?>? listenChatSessionById(int id) {
     return store
         ?.box<ChatSession>()
         .query(ChatSession_.id.equals(id))
         .watch(triggerImmediately: true)
         .map(
-          (query) => query.find(),
+          (query) => query.findFirst(),
         );
   }
 
@@ -149,6 +153,7 @@ class AIKitsDatabase extends _AIKitsDatabase {
   Future<ChatSession?> saveChatSession(ChatSession chatSession) async {
     log('saveChatSession', name: 'AIKitsDatabase');
     final id = await store?.box<ChatSession>().putAsync(chatSession);
+    log('saved: $id', name: 'AIKitsDatabase');
     if (id != null) {
       return store?.box<ChatSession>().get(id);
     }
@@ -236,5 +241,20 @@ class AIKitsDatabase extends _AIKitsDatabase {
   @override
   void removePromptById(int id) {
     store?.box<PromptingEntity>().remove(id);
+  }
+
+  @override
+  Future<ChatSession?> getChatSessionById(int id) async {
+    return store
+        ?.box<ChatSession>()
+        .query(ChatSession_.id.equals(id))
+        .build()
+        .find()
+        .firstOrNull;
+  }
+
+  @override
+  void fastSaveChatSession(ChatSession chatSession) {
+    store?.box<ChatSession>().put(chatSession);
   }
 }

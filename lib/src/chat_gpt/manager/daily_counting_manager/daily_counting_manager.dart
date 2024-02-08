@@ -89,6 +89,7 @@ class DailyCountingManager {
   }
 
   increaseCounter({DailyCounter? counter, required String type}) {
+    log("increaseCounter: $type");
     if (counter == null) {
       LocalStorage().setDailyCounter(DailyCounter(
         updatedDate: DateTime.now(),
@@ -103,6 +104,7 @@ class DailyCountingManager {
   }
 
   decreaseCounter({DailyCounter? counter, required String type}) {
+    log("decreaseCounter: $type");
     if (counter != null && counter.counting > 0) {
       counter.counting -= 1;
       counter.updatedDate = DateTime.now();

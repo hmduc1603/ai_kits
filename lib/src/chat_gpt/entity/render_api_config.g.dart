@@ -11,6 +11,7 @@ RenderApiConfig _$RenderApiConfigFromJson(Map<String, dynamic> json) =>
       hostUrl: json['hostUrl'] as String,
       headers: json['headers'] as Map<String, dynamic>,
       body: json['body'] as Map<String, dynamic>? ?? const {},
+      stream: json['stream'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$RenderApiConfigToJson(RenderApiConfig instance) =>
@@ -18,4 +19,5 @@ Map<String, dynamic> _$RenderApiConfigToJson(RenderApiConfig instance) =>
       'hostUrl': instance.hostUrl,
       'headers': instance.headers,
       'body': instance.body,
+      'stream': instance.stream,
     };

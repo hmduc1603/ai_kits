@@ -16,6 +16,7 @@ class ImageAIService {
   Future<dynamic> requestImage({
     required String prompt,
     required ImageConfig config,
+    required String token,
   }) async {
     try {
       log('requestImage: $prompt', name: 'ImageAIService');
@@ -28,9 +29,8 @@ class ImageAIService {
         config.hostUrl,
         data: data,
         options: Options(
-          receiveTimeout: const Duration(seconds: 60),
-          headers: config.headers,
-        ),
+            receiveTimeout: const Duration(seconds: 60),
+            headers: config.headers..addAll({'id_token': token})),
       );
       final result = response.data["output"];
       AIKits().analysisMixin.sendEvent("success_promptImageApiRequest");

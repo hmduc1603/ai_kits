@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
@@ -6,7 +8,7 @@ import 'package:ai_kits/ai_kits.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:dio/dio.dart';
 import 'package:is_open_proxy/is_open_proxy.dart';
-import 'package:tuple/tuple.dart';
+import 'package:collection/collection.dart';
 
 class ChatGPTService {
   static final ChatGPTService _instance = ChatGPTService._internal();
@@ -19,128 +21,137 @@ class ChatGPTService {
     PromptingCountingManager().setUpLimitation(config.promptingLimitation);
   }
 
-  Future<PromptingEntity> promptAnChat(
+  Future<ChatGPTResult?> promptAnChat(
     List<PromptingEntity> lastPrompts,
     PromptingEntity prompt, {
     int? maxToken,
     double? temperature,
     required ChatGPTConfig config,
+    required String token,
   }) async {
-    log('Prompt An Chat: ${prompt.prompt}}', name: 'ApiService');
+    log('Prompt An Stream Chat: ${prompt.prompt}}', name: 'ApiService');
     if (await IsOpenProxy.isOpenProxy) {
       throw Exception('Please turn off your VPN or Proxy to continue');
     }
     final list = lastPrompts.toList();
     list.add(prompt);
-    final Tuple2<String, int?>? results = await _promptRenderApiRequest(
-        chatId: prompt.chatId,
-        config: config,
-        temperature: temperature,
-        prompts: _getOpenAImessages(list));
-    if (results == null) {
-      AIKits().analysisMixin.sendEvent("error_promptAnChat");
-      throw Exception("AI is busy with large requests, please try again later");
-    }
-
-    log("Prompting result: $results", name: "ApiService");
-
-    return prompt.copyWith(
-      result: results.item1,
-      chatId: results.item2,
-    );
+    return _promptRenderApiRequest(
+        idToken: token,
+        maxToken: maxToken,
+        prompt: prompt,
+        prompts: _getOpenAImessages(list, null),
+        config: config);
   }
 
-  Future<Stream<PromptingEntity>?> promptAnStreamChat(
+  List<OpenAIChatCompletionChoiceMessageModel> _getOpenAImessages(
+      List<PromptingEntity> promptingEntities, String? systemMessage) {
+    List<OpenAIChatCompletionChoiceMessageModel> list = [];
+    for (var element in promptingEntities) {
+      list.addAll(element.messagesByRole);
+    }
+    if (systemMessage != null &&
+        list.firstWhereOrNull((e) => e.role == OpenAIChatMessageRole.system) ==
+            null) {
+      list.insert(
+          0,
+          OpenAIChatCompletionChoiceMessageModel(
+              content: systemMessage, role: OpenAIChatMessageRole.system));
+    }
+    return list;
+  }
+
+  Future<PromptingEntity?> promptAnInput(
     List<PromptingEntity> lastPrompts,
     PromptingEntity prompt, {
     int? maxToken,
     double? temperature,
     required ChatGPTConfig config,
+    String? systemMessage,
+    required String idToken,
   }) async {
-    final list = lastPrompts.toList();
-    list.add(prompt);
-    return _promptStreamRenderApiRequest(
-        prompt: prompt, prompts: _getOpenAImessages(list), config: config);
-  }
-
-  List<OpenAIChatCompletionChoiceMessageModel> _getOpenAImessages(
-      List<PromptingEntity> promptingEntities) {
-    List<OpenAIChatCompletionChoiceMessageModel> list = [];
-    for (var element in promptingEntities) {
-      list.addAll(element.messagesByRole);
-    }
-    return list;
-  }
-
-  Future<Tuple2<String, int?>?> _promptRenderApiRequest({
-    double? temperature,
-    int? chatId,
-    required List<OpenAIChatCompletionChoiceMessageModel> prompts,
-    required ChatGPTConfig config,
-  }) async {
-    AIKits().analysisMixin.sendEvent("prompt_render_request");
     try {
+      log('Prompt An Input: ${prompt.prompt}}', name: 'ApiService');
+      if (await IsOpenProxy.isOpenProxy) {
+        throw Exception('Please turn off your VPN or Proxy to continue');
+      }
+      final list = lastPrompts.toList();
+      list.add(prompt);
+      final prompts = _getOpenAImessages(list, systemMessage);
+      // Call
       var params = Map.from(config.renderApiConfig.body);
       params.addAll({
+        "maxToken": maxToken,
         "temperature": temperature ?? 0.7,
         "messages": prompts.map((e) => e.toMap()).toList()
       });
-      if (chatId != null) {
-        params.addAll({"chatId": chatId});
-      }
       final response = await Dio().post(
         config.renderApiConfig.hostUrl,
         data: params,
         options: Options(
           headers: config.renderApiConfig.headers
-            ..addAll({"service_name": "chatGPT"}),
-        ),
-      );
-      if (response.data != null) {
-        final data = response.data as Map;
-        final result = data["result"] as String;
-        int? chatId;
-        if (data.containsKey("chatId")) {
-          chatId = data["chatId"];
-        }
-        return Tuple2(result, chatId);
-      }
-    } catch (e) {
-      log(e.toString());
-      AIKits().analysisMixin.sendEvent("error_promptRenderApiRequest");
-    }
-    return null;
-  }
-
-  Future<Stream<PromptingEntity>?> _promptStreamRenderApiRequest({
-    double? temperature,
-    int? chatId,
-    required PromptingEntity prompt,
-    required List<OpenAIChatCompletionChoiceMessageModel> prompts,
-    required ChatGPTConfig config,
-  }) async {
-    AIKits().analysisMixin.sendEvent("prompt_render_request");
-    try {
-      var params = Map.from(config.renderApiConfig.body);
-      params.addAll({
-        "temperature": temperature ?? 0.7,
-        "messages": prompts.map((e) => e.toMap()).toList()
-      });
-      if (chatId != null) {
-        params.addAll({"chatId": chatId});
-      }
-      final response = await Dio().post(
-        "${config.renderApiConfig.hostUrl}/stream",
-        data: params,
-        options: Options(
-          responseType: ResponseType.stream,
-          headers: config.renderApiConfig.headers
-            ..addAll({"service_name": "chatGPT"}),
+            ..addAll({
+              "service_name": "chatGPT",
+              "id_token": idToken,
+            }),
         ),
       );
       if (response.statusCode == 200) {
-        Stream<dynamic> dataStream = response.data.stream;
-        return dataStream.transform(StreamChatGPTTransformer(prompt));
+        // Final Prompting
+        final data = response.data as Map;
+        final result = data["result"] as String;
+        return prompt.copyWith(result: result);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
+
+  Future<ChatGPTResult?> _promptRenderApiRequest({
+    double? temperature,
+    required PromptingEntity prompt,
+    required List<OpenAIChatCompletionChoiceMessageModel> prompts,
+    required ChatGPTConfig config,
+    required String idToken,
+    int? maxToken,
+  }) async {
+    try {
+      var params = Map.from(config.renderApiConfig.body);
+      params.addAll({
+        "maxToken": maxToken,
+        "temperature": temperature ?? 0.7,
+        "messages": prompts.map((e) => e.toMap()).toList()
+      });
+      final enableStream = config.renderApiConfig.stream;
+      final url = enableStream
+          ? "${config.renderApiConfig.hostUrl}/stream"
+          : config.renderApiConfig.hostUrl;
+      final response = await Dio().post(
+        url,
+        data: params,
+        options: Options(
+          responseType: enableStream ? ResponseType.stream : null,
+          headers: config.renderApiConfig.headers
+            ..addAll({
+              "service_name": "chatGPT",
+              "id_token": idToken,
+            }),
+        ),
+      );
+      if (response.statusCode == 200) {
+        if (enableStream) {
+          // Stream Prompt
+          Stream<dynamic> dataStream = response.data.stream;
+          return ChatGPTResult(
+              stream: dataStream.transform(StreamChatGPTTransformer(prompt)));
+        } else {
+          // Final Prompting
+          final data = response.data as Map;
+          final result = data["result"] as String;
+          return ChatGPTResult(entity: prompt.copyWith(result: result));
+        }
       } else {
         return null;
       }

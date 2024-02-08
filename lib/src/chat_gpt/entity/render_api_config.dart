@@ -9,10 +9,12 @@ class RenderApiConfig {
   final String hostUrl;
   final Map<String, dynamic> headers;
   final Map<String, dynamic> body;
+  final bool stream;
   RenderApiConfig({
     required this.hostUrl,
     required this.headers,
     this.body = const {},
+    this.stream = true,
   });
 
   factory RenderApiConfig.fromJson(Map<String, dynamic> json) =>

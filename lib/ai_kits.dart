@@ -4,6 +4,7 @@ import 'package:ai_kits/src/chat_gpt/chat_gpt_service.dart';
 import 'package:ai_kits/src/image_ai/image_ai_service.dart';
 import 'package:ai_kits/src/local_storage/local_storage.dart';
 import 'package:ai_kits/src/voice_ai/voice_ai_service.dart';
+import 'package:ai_kits/src/whisper/whisper_service.dart';
 
 import 'ai_kits.dart';
 
@@ -24,6 +25,9 @@ export 'src/image_ai/entity/image_result.dart';
 export 'src/voice_ai/entity/voice_config.dart';
 export 'src/voice_ai/entity/voice_result.dart';
 export 'src/voice_ai/entity/voice_model.dart';
+export 'src/chat_gpt/entity/chat_gpt_result.dart';
+export 'src/whisper/whisper_config.dart';
+export 'src/chat_gpt/manager/daily_counting_manager/daily_counter.dart';
 
 class AIKits {
   static final AIKits _instance = AIKits._internal();
@@ -33,6 +37,7 @@ class AIKits {
   final chatGPT = ChatGPTService();
   final imageAIService = ImageAIService();
   final voiceAIService = VoiceAIService();
+  final whisperService = WhisperService();
 
   late AIKitsAnalysisMixin analysisMixin;
 
