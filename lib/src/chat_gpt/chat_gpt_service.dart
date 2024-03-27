@@ -99,6 +99,7 @@ class ChatGPTService {
         // Final Prompting
         final data = response.data as Map;
         final result = data["result"] as String;
+        log(result, name: "promptAnInput");
         return prompt.copyWith(result: result);
       } else {
         return null;

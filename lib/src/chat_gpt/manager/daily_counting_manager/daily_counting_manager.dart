@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:ai_kits/ai_kits.dart';
-import 'package:ai_kits/src/chat_gpt/manager/daily_counting_manager/daily_counter.dart';
 import 'package:ai_kits/src/local_storage/local_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';

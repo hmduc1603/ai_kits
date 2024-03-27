@@ -12,6 +12,9 @@ ImageConfig _$ImageConfigFromJson(Map<String, dynamic> json) => ImageConfig(
       hostUrl: json['hostUrl'] as String,
       imaginatingLimitation: ImaginatingLimitation.fromJson(
           json['imaginatingLimitation'] as Map<String, dynamic>),
+      imageModels: (json['imageModels'] as List<dynamic>?)
+          ?.map((e) => ImageModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$ImageConfigToJson(ImageConfig instance) =>
@@ -20,4 +23,5 @@ Map<String, dynamic> _$ImageConfigToJson(ImageConfig instance) =>
       'body': instance.body,
       'hostUrl': instance.hostUrl,
       'imaginatingLimitation': instance.imaginatingLimitation,
+      'imageModels': instance.imageModels,
     };

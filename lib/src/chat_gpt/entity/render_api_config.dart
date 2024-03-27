@@ -6,7 +6,7 @@ part 'render_api_config.g.dart';
 
 @JsonSerializable()
 class RenderApiConfig {
-  final String hostUrl;
+  String hostUrl;
   final Map<String, dynamic> headers;
   final Map<String, dynamic> body;
   final bool stream;

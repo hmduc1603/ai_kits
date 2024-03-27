@@ -28,6 +28,8 @@ export 'src/voice_ai/entity/voice_model.dart';
 export 'src/chat_gpt/entity/chat_gpt_result.dart';
 export 'src/whisper/whisper_config.dart';
 export 'src/chat_gpt/manager/daily_counting_manager/daily_counter.dart';
+export 'src/file_upload/upload_config.dart';
+export 'src/file_upload/upload_service.dart';
 
 class AIKits {
   static final AIKits _instance = AIKits._internal();
