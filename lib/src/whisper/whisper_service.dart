@@ -22,7 +22,6 @@ class WhisperService {
   Future<String?> startTranscription({
     required String path,
     required WhisperConfig config,
-    required String token,
   }) async {
     try {
       log('Start Transcription: $path');
@@ -45,7 +44,6 @@ class WhisperService {
             headers: config.renderApiConfig.headers
               ..addAll({
                 'Content-Type': 'multipart/form-data',
-                'id_token': token,
               })),
       );
       if (response.statusCode == 200) {

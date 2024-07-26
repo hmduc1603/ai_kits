@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:ai_kits/ai_kits.dart';
-import 'package:ai_kits/src/image_ai/entity/image_model.dart';
 import 'package:dio/dio.dart';
 import 'package:is_open_proxy/is_open_proxy.dart';
 

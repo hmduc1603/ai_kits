@@ -22,6 +22,7 @@ export 'src/chat_gpt/manager/imagination_counting_manager/imaginating_counter.da
 export 'src/chat_gpt/entity/chat_gpt_model.dart';
 export 'src/image_ai/entity/image_config.dart';
 export 'src/image_ai/entity/image_result.dart';
+export 'src/image_ai/entity/image_model.dart';
 export 'src/voice_ai/entity/voice_config.dart';
 export 'src/voice_ai/entity/voice_result.dart';
 export 'src/voice_ai/entity/voice_model.dart';
