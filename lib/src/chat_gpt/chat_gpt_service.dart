@@ -68,7 +68,7 @@ class ChatGPTService {
     required ChatGPTConfig config,
     String? systemMessage,
     required String idToken,
-    Map<String, dynamic>? tools,
+    List<Map<String, dynamic>>? tools,
   }) async {
     try {
       log('Prompt An Input: ${prompt.prompt}}', name: 'ApiService');
