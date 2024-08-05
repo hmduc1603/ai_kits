@@ -59,4 +59,35 @@ class WhisperService {
       return null;
     }
   }
+
+  Future<String?> startTranscriptionV3({
+    required String audioUrl,
+    required WhisperConfig config,
+  }) async {
+    try {
+      log('Start Transcription: $audioUrl');
+      if (await IsOpenProxy.isOpenProxy) {
+        throw Exception('Please turn off your VPN or Proxy to continue');
+      }
+      //Call
+      final response = await Dio().post(
+        "${config.renderApiConfig.hostUrl}/transcriptions",
+        data: {
+          "audio_url": audioUrl,
+        },
+        options: Options(headers: config.renderApiConfig.headers),
+      );
+      if (response.statusCode == 200) {
+        // Final Prompting
+        final data = response.data as Map;
+        final result = data["result"] as String;
+        return result;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
 }
