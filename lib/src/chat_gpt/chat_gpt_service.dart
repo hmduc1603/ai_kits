@@ -68,6 +68,7 @@ class ChatGPTService {
     required ChatGPTConfig config,
     String? systemMessage,
     required String idToken,
+    Map<String, dynamic>? tools,
   }) async {
     try {
       log('Prompt An Input: ${prompt.prompt}}', name: 'ApiService');
@@ -82,7 +83,9 @@ class ChatGPTService {
       params.addAll({
         "maxToken": maxToken,
         "temperature": temperature ?? 0.7,
-        "messages": prompts.map((e) => e.toMap()).toList()
+        "messages": prompts.map((e) => e.toMap()).toList(),
+        "tools": tools,
+        "tool_choice": tools != null ? "required" : null,
       });
       final response = await Dio().post(
         config.renderApiConfig.hostUrl,
