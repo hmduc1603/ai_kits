@@ -61,6 +61,7 @@ class WhisperService {
   }
 
   Future<String?> startTranscriptionV3({
+    required String idToken,
     required String audioUrl,
     required WhisperConfig config,
   }) async {
@@ -75,7 +76,12 @@ class WhisperService {
         data: {
           "audio_url": audioUrl,
         },
-        options: Options(headers: config.renderApiConfig.headers),
+        options: Options(
+          headers: config.renderApiConfig.headers
+            ..addAll({
+              "id_token": idToken,
+            }),
+        ),
       );
       if (response.statusCode == 200) {
         // Final Prompting
