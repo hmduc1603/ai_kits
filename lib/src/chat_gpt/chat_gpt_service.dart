@@ -101,13 +101,16 @@ class ChatGPTService {
       if (response.statusCode == 200) {
         // Final Prompting
         final data = response.data as Map;
-        log(data["result"], name: "promptAnInput");
-        if (data["result"] is List && tools != null) {
+        if (data["result"] is Map && tools != null) {
           // Map Tool
-          return prompt.copyWith(
-              result: data["result"][0]["function"]["arguments"]);
+          final result =
+              data["result"]["tool_calls"][0]["function"]["arguments"];
+          log(result, name: "ChatGPTService");
+          return prompt.copyWith(result: result);
         } else {
           // Map String
+          final result = data["result"];
+          log(result, name: "ChatGPTService");
           return prompt.copyWith(result: data["result"]);
         }
       } else {
