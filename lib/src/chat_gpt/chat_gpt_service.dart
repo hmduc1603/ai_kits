@@ -7,6 +7,7 @@ import 'dart:typed_data';
 import 'package:ai_kits/ai_kits.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:is_open_proxy/is_open_proxy.dart';
 import 'package:collection/collection.dart';
 
@@ -128,6 +129,7 @@ class ChatGPTService {
     int? maxToken,
     double? temperature,
     required ChatGPTConfig config,
+    String? debugHostUrl,
     required String idToken,
     List<Map<String, dynamic>>? tools,
   }) async {
@@ -146,7 +148,9 @@ class ChatGPTService {
         "tool_choice": tools != null ? "required" : null,
       });
       final response = await Dio().post(
-        config.renderApiConfig.hostUrl,
+        kDebugMode && debugHostUrl != null
+            ? debugHostUrl
+            : config.renderApiConfig.hostUrl,
         data: params,
         options: Options(
           headers: config.renderApiConfig.headers
