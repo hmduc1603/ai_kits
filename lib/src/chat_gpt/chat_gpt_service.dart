@@ -122,6 +122,64 @@ class ChatGPTService {
     }
   }
 
+  Future<PromptingEntity?> promptAnInputWithCustomMessages(
+    List<dynamic> messages,
+    PromptingEntity prompt, {
+    int? maxToken,
+    double? temperature,
+    required ChatGPTConfig config,
+    required String idToken,
+    List<Map<String, dynamic>>? tools,
+  }) async {
+    try {
+      log('Prompt An Input: ${prompt.prompt}}', name: 'ApiService');
+      if (await IsOpenProxy.isOpenProxy) {
+        throw Exception('Please turn off your VPN or Proxy to continue');
+      }
+      // Call
+      var params = Map.from(config.renderApiConfig.body);
+      params.addAll({
+        "maxToken": maxToken,
+        "temperature": temperature ?? 0.7,
+        "messages": prompt,
+        "tools": tools,
+        "tool_choice": tools != null ? "required" : null,
+      });
+      final response = await Dio().post(
+        config.renderApiConfig.hostUrl,
+        data: params,
+        options: Options(
+          headers: config.renderApiConfig.headers
+            ..addAll({
+              "service_name": "chatGPT",
+              "id_token": idToken,
+            }),
+        ),
+      );
+      if (response.statusCode == 200) {
+        // Final Prompting
+        final data = response.data as Map;
+        if (data["result"] is Map && tools != null) {
+          // Map Tool
+          final result =
+              data["result"]["tool_calls"][0]["function"]["arguments"];
+          log(result, name: "ChatGPTService");
+          return prompt.copyWith(result: result);
+        } else {
+          // Map String
+          final result = data["result"];
+          log(result, name: "ChatGPTService");
+          return prompt.copyWith(result: data["result"]);
+        }
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
+
   Future<ChatGPTResult?> _promptRenderApiRequest({
     double? temperature,
     required PromptingEntity prompt,
