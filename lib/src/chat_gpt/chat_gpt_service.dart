@@ -86,7 +86,6 @@ class ChatGPTService {
         "temperature": temperature ?? 0.7,
         "messages": prompts.map((e) => e.toMap()).toList(),
         "tools": tools,
-        "tool_choice": tools != null ? "required" : null,
       });
       final response = await Dio().post(
         config.renderApiConfig.hostUrl,
@@ -143,9 +142,8 @@ class ChatGPTService {
       params.addAll({
         "maxToken": maxToken,
         "temperature": temperature ?? 0.7,
-        "messages": prompt,
+        "messages": messages,
         "tools": tools,
-        "tool_choice": tools != null ? "required" : null,
       });
       final response = await Dio().post(
         kDebugMode && debugHostUrl != null
