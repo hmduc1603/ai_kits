@@ -49,6 +49,8 @@ class DailyCountingManager {
     }
   }
 
+  DailyCounter? get dailyCounter => LocalStorage().dailyCounter;
+
   checkShouldProceed({
     required Function(bool shouldProceed, DailyCounter? counter)
         onShouldProceed,
