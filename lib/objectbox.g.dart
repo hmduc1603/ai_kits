@@ -16,6 +16,7 @@ import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'src/chat_gpt/entity/chat_session.dart';
 import 'src/chat_gpt/entity/prompting_entity.dart';
+import 'src/gemini/entity/gemini_prompting_entity.dart';
 import 'src/image_ai/entity/image_result.dart';
 import 'src/voice_ai/entity/voice_result.dart';
 
@@ -267,6 +268,35 @@ final _entities = <ModelEntity>[
             flags: 0)
       ],
       relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(7, 3689746519855969355),
+      name: 'GeminiPromptingEntity',
+      lastPropertyId: const IdUid(8, 4783701288922204215),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 7924606270241363672),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(4, 4703525601326521111),
+            name: 'prompt',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 7039464212222077240),
+            name: 'result',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(7, 1558692203168385412),
+            name: 'createdDate',
+            type: 10,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[])
 ];
 
@@ -297,7 +327,7 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(6, 919677987552565480),
+      lastEntityId: const IdUid(7, 3689746519855969355),
       lastIndexId: const IdUid(0, 0),
       lastRelationId: const IdUid(0, 0),
       lastSequenceId: const IdUid(0, 0),
@@ -323,7 +353,11 @@ ModelDefinition getObjectBoxModel() {
         8629723533145629907,
         340495488067769156,
         369155004786313665,
-        4394540679378731461
+        4394540679378731461,
+        9134282191883280304,
+        1578209075176185547,
+        661464666047825186,
+        4783701288922204215
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -650,6 +684,45 @@ ModelDefinition getObjectBoxModel() {
               hasErrorGeneratingSubtitle: hasErrorGeneratingSubtitleParam);
 
           return object;
+        }),
+    GeminiPromptingEntity: EntityDefinition<GeminiPromptingEntity>(
+        model: _entities[4],
+        toOneRelations: (GeminiPromptingEntity object) => [],
+        toManyRelations: (GeminiPromptingEntity object) => {},
+        getId: (GeminiPromptingEntity object) => object.id,
+        setId: (GeminiPromptingEntity object, int id) {
+          object.id = id;
+        },
+        objectToFB: (GeminiPromptingEntity object, fb.Builder fbb) {
+          final promptOffset = fbb.writeString(object.prompt);
+          final resultOffset =
+              object.result == null ? null : fbb.writeString(object.result!);
+          fbb.startTable(9);
+          fbb.addInt64(0, object.id ?? 0);
+          fbb.addOffset(3, promptOffset);
+          fbb.addOffset(5, resultOffset);
+          fbb.addInt64(6, object.createdDate.millisecondsSinceEpoch);
+          fbb.finish(fbb.endTable());
+          return object.id ?? 0;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final promptParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 10, '');
+          final idParam =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 4);
+          final resultParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 14);
+          final createdDateParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0));
+          final object = GeminiPromptingEntity(
+              prompt: promptParam,
+              id: idParam,
+              result: resultParam,
+              createdDate: createdDateParam);
+
+          return object;
         })
   };
 
@@ -834,4 +907,23 @@ class VoiceResult_ {
   /// see [VoiceResult.subtitle]
   static final subtitle =
       QueryStringProperty<VoiceResult>(_entities[3].properties[19]);
+}
+
+/// [GeminiPromptingEntity] entity fields to define ObjectBox queries.
+class GeminiPromptingEntity_ {
+  /// see [GeminiPromptingEntity.id]
+  static final id =
+      QueryIntegerProperty<GeminiPromptingEntity>(_entities[4].properties[0]);
+
+  /// see [GeminiPromptingEntity.prompt]
+  static final prompt =
+      QueryStringProperty<GeminiPromptingEntity>(_entities[4].properties[1]);
+
+  /// see [GeminiPromptingEntity.result]
+  static final result =
+      QueryStringProperty<GeminiPromptingEntity>(_entities[4].properties[2]);
+
+  /// see [GeminiPromptingEntity.createdDate]
+  static final createdDate =
+      QueryIntegerProperty<GeminiPromptingEntity>(_entities[4].properties[3]);
 }
