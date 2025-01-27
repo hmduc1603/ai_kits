@@ -26,6 +26,7 @@ class ChatGPTService {
     PromptingEntity prompt, {
     int? maxToken,
     double? temperature,
+    Map<String, dynamic> additionalHeaders = const {},
     required ChatGPTConfig config,
     required String token,
   }) async {
@@ -39,6 +40,7 @@ class ChatGPTService {
         idToken: token,
         maxToken: maxToken,
         prompt: prompt,
+        additionalHeaders: additionalHeaders,
         prompts: _getOpenAImessages(list, null),
         config: config);
   }
@@ -68,6 +70,7 @@ class ChatGPTService {
     required ChatGPTConfig config,
     String? systemMessage,
     required String idToken,
+    Map<String, dynamic> additionalHeaders = const {},
     List<Map<String, dynamic>>? tools,
   }) async {
     try {
@@ -94,7 +97,8 @@ class ChatGPTService {
             ..addAll({
               "service_name": "chatGPT",
               "id_token": idToken,
-            }),
+            })
+            ..addAll(additionalHeaders),
         ),
       );
       if (response.statusCode == 200) {
@@ -129,6 +133,7 @@ class ChatGPTService {
     required ChatGPTConfig config,
     String? debugHostUrl,
     required String idToken,
+    Map<String, dynamic> additionalHeaders = const {},
     List<Map<String, dynamic>>? tools,
   }) async {
     try {
@@ -154,7 +159,8 @@ class ChatGPTService {
             ..addAll({
               "service_name": "chatGPT",
               "id_token": idToken,
-            }),
+            })
+            ..addAll(additionalHeaders),
         ),
       );
       if (response.statusCode == 200) {
@@ -187,6 +193,7 @@ class ChatGPTService {
     required List<OpenAIChatCompletionChoiceMessageModel> prompts,
     required ChatGPTConfig config,
     required String idToken,
+    Map<String, dynamic> additionalHeaders = const {},
     int? maxToken,
   }) async {
     try {
@@ -209,7 +216,8 @@ class ChatGPTService {
             ..addAll({
               "service_name": "chatGPT",
               "id_token": idToken,
-            }),
+            })
+            ..addAll(additionalHeaders),
         ),
       );
       if (response.statusCode == 200) {
