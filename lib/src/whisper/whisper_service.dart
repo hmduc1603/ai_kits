@@ -5,7 +5,6 @@ import 'dart:developer';
 import 'package:ai_kits/src/chat_gpt/manager/daily_counting_manager/daily_counting_manager.dart';
 import 'package:ai_kits/src/whisper/whisper_config.dart';
 import 'package:dio/dio.dart';
-import 'package:is_open_proxy/is_open_proxy.dart';
 import 'package:http_parser/http_parser.dart';
 
 class WhisperService {
@@ -25,9 +24,7 @@ class WhisperService {
   }) async {
     try {
       log('Start Transcription: $path');
-      if (await IsOpenProxy.isOpenProxy) {
-        throw Exception('Please turn off your VPN or Proxy to continue');
-      }
+
       //Call
       final form = FormData();
       final file = await MultipartFile.fromFile(
@@ -67,9 +64,6 @@ class WhisperService {
   }) async {
     try {
       log('Start Transcription: $audioUrl');
-      if (await IsOpenProxy.isOpenProxy) {
-        throw Exception('Please turn off your VPN or Proxy to continue');
-      }
       //Call
       final response = await Dio().post(
         "${config.renderApiConfig.hostUrl}/transcriptions",

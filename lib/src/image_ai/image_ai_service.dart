@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:ai_kits/ai_kits.dart';
 import 'package:dio/dio.dart';
-import 'package:is_open_proxy/is_open_proxy.dart';
 
 class ImageAIService {
   static final ImageAIService _instance = ImageAIService._internal();
@@ -23,9 +22,6 @@ class ImageAIService {
   }) async {
     try {
       log('requestImage: $prompt', name: 'ImageAIService');
-      if (await IsOpenProxy.isOpenProxy) {
-        throw Exception('Please turn off your VPN or Proxy to continue');
-      }
       final data = config.body;
       if (width != null) {
         data["width"] = width;

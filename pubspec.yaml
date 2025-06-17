@@ -12,7 +12,6 @@ dependencies:
     sdk: flutter
   dart_openai: 4.0.0
   dio: ^5.4.0
-  is_open_proxy: ^0.0.3
   objectbox: ^4.0.3
   objectbox_flutter_libs: any
   json_annotation: ^4.6.0

@@ -7,7 +7,6 @@ import 'package:ai_kits/ai_kits.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:is_open_proxy/is_open_proxy.dart';
 import 'package:collection/collection.dart';
 
 class ChatGPTService {
@@ -31,9 +30,6 @@ class ChatGPTService {
     required String token,
   }) async {
     log('Prompt An Stream Chat: ${prompt.prompt}}', name: 'ApiService');
-    if (await IsOpenProxy.isOpenProxy) {
-      throw Exception('Please turn off your VPN or Proxy to continue');
-    }
     final list = lastPrompts.toList();
     list.add(prompt);
     return _promptRenderApiRequest(

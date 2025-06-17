@@ -5,7 +5,6 @@ import 'dart:math';
 import 'package:ai_kits/ai_kits.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
-import 'package:is_open_proxy/is_open_proxy.dart';
 
 class VoiceAIService {
   static final VoiceAIService _instance = VoiceAIService._internal();
@@ -76,9 +75,7 @@ class VoiceAIService {
   }) async {
     try {
       dev.log('convertMusic: $model - $youtubeUrl');
-      if (await IsOpenProxy.isOpenProxy) {
-        throw Exception('Please turn off your VPN or Proxy to continue');
-      }
+
       final requestId = _generateRandomUUID();
       final response = await Dio().post(
         "${_config.renderApiConfig.hostUrl}/create",
@@ -120,9 +117,7 @@ class VoiceAIService {
   }) async {
     try {
       dev.log('getInstrumentalUrl: $shortid');
-      if (await IsOpenProxy.isOpenProxy) {
-        throw Exception('Please turn off your VPN or Proxy to continue');
-      }
+
       final response = await Dio().post(
         "${_config.renderApiConfig.hostUrl}/instrumentalUrl",
         data: {"shortid": shortid},
@@ -151,9 +146,7 @@ class VoiceAIService {
   }) async {
     try {
       dev.log('getConvertedUrl: $shortid');
-      if (await IsOpenProxy.isOpenProxy) {
-        throw Exception('Please turn off your VPN or Proxy to continue');
-      }
+
       final response = await Dio().post(
         "${_config.renderApiConfig.hostUrl}/convertedUrl",
         data: {"shortid": shortid},
@@ -182,9 +175,7 @@ class VoiceAIService {
   }) async {
     try {
       dev.log('getMusic: ${initialData.requestId}');
-      if (await IsOpenProxy.isOpenProxy) {
-        throw Exception('Please turn off your VPN or Proxy to continue');
-      }
+
       final response = await Dio().post(
         "${_config.renderApiConfig.hostUrl}/info",
         data: {
@@ -223,9 +214,7 @@ class VoiceAIService {
   }) async {
     try {
       dev.log('getNewMusicList');
-      if (await IsOpenProxy.isOpenProxy) {
-        throw Exception('Please turn off your VPN or Proxy to continue');
-      }
+
       final response = await Dio().get(
         "${_config.renderApiConfig.hostUrl}/new?offset=$offset&limit=$limit",
         options: Options(
@@ -251,9 +240,7 @@ class VoiceAIService {
   Future<int?> getAcapellaQueue() async {
     try {
       dev.log('getNewMusicList');
-      if (await IsOpenProxy.isOpenProxy) {
-        throw Exception('Please turn off your VPN or Proxy to continue');
-      }
+
       final response = await Dio().get(
         "${_config.renderApiConfig.hostUrl}/getAcapellaQueue",
         options: Options(
@@ -279,9 +266,7 @@ class VoiceAIService {
   }) async {
     try {
       dev.log('getAcapellaFeed');
-      if (await IsOpenProxy.isOpenProxy) {
-        throw Exception('Please turn off your VPN or Proxy to continue');
-      }
+
       final response = await Dio().get(
         "${_config.renderApiConfig.hostUrl}/feedAcapella?offset=$offset&limit=$limit",
         options: Options(
@@ -311,9 +296,7 @@ class VoiceAIService {
   }) async {
     try {
       dev.log('searchAcapella');
-      if (await IsOpenProxy.isOpenProxy) {
-        throw Exception('Please turn off your VPN or Proxy to continue');
-      }
+
       final response = await Dio().get(
         "${_config.renderApiConfig.hostUrl}/searchAcapella?offset=$offset&limit=$limit&search=$search",
         options: Options(
@@ -347,9 +330,7 @@ class VoiceAIService {
   }) async {
     try {
       dev.log('createAcapellaRequest: $youtubeUrl');
-      if (await IsOpenProxy.isOpenProxy) {
-        throw Exception('Please turn off your VPN or Proxy to continue');
-      }
+
       final requestId = _generateRandomUUID();
       final response = await Dio().post(
         "${_config.renderApiConfig.hostUrl}/createAcapella",
@@ -388,9 +369,7 @@ class VoiceAIService {
   }) async {
     try {
       dev.log('getAcapellaResult: ${initialData.requestId}');
-      if (await IsOpenProxy.isOpenProxy) {
-        throw Exception('Please turn off your VPN or Proxy to continue');
-      }
+
       final response = await Dio().post(
         "${_config.renderApiConfig.hostUrl}/getAcapella",
         data: {

@@ -6,7 +6,6 @@ import 'dart:developer';
 import 'package:ai_kits/ai_kits.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:is_open_proxy/is_open_proxy.dart';
 
 class GeminiService {
   static final GeminiService _instance = GeminiService._internal();
@@ -28,9 +27,6 @@ class GeminiService {
     required String idToken,
   }) async {
     log('Prompt An Stream Chat: ${prompt.prompt}}', name: 'GeminiService');
-    if (await IsOpenProxy.isOpenProxy) {
-      throw Exception('Please turn off your VPN or Proxy to continue');
-    }
     var params = Map.from(config.renderApiConfig.body);
     params.addAll({
       "max_tokens": maxToken,
@@ -70,9 +66,7 @@ class GeminiService {
     required String idToken,
   }) async {
     log('Prompt An Input: ${prompt.prompt}}', name: 'GeminiService');
-    if (await IsOpenProxy.isOpenProxy) {
-      throw Exception('Please turn off your VPN or Proxy to continue');
-    }
+
     // Call
     var params = Map.from(config.renderApiConfig.body);
     params.addAll({
@@ -113,9 +107,7 @@ class GeminiService {
     required String idToken,
   }) async {
     log('Upload file: $url - $mimeType', name: 'GeminiService');
-    if (await IsOpenProxy.isOpenProxy) {
-      throw Exception('Please turn off your VPN or Proxy to continue');
-    }
+
     // Call
     var params = Map.from(config.renderApiConfig.body);
     params.addAll({
