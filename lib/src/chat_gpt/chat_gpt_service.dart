@@ -71,9 +71,7 @@ class ChatGPTService {
   }) async {
     try {
       log('Prompt An Input: ${prompt.prompt}}', name: 'ApiService');
-      if (await IsOpenProxy.isOpenProxy) {
-        throw Exception('Please turn off your VPN or Proxy to continue');
-      }
+
       final list = lastPrompts.toList();
       list.add(prompt);
       final prompts = _getOpenAImessages(list, systemMessage);
@@ -134,9 +132,7 @@ class ChatGPTService {
   }) async {
     try {
       log('Prompt An Input: ${prompt.prompt}}', name: 'ApiService');
-      if (await IsOpenProxy.isOpenProxy) {
-        throw Exception('Please turn off your VPN or Proxy to continue');
-      }
+
       // Call
       var params = Map.from(config.renderApiConfig.body);
       params.addAll({
